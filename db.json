@@ -1,0 +1,192 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "email": "admin@elearning.com",
+      "password": "Admin@123",
+      "role": "admin",
+      "firstName": "Admin",
+      "lastName": "User",
+      "avatar": "https://i.pravatar.cc/150?img=1",
+      "createdAt": "2024-01-01T00:00:00Z"
+    },
+    {
+      "id": "2",
+      "email": "instructor@elearning.com",
+      "password": "Instructor@123",
+      "role": "instructor",
+      "firstName": "محمد",
+      "lastName": "أحمد",
+      "avatar": "https://i.pravatar.cc/150?img=2",
+      "bio": "خبير في علوم الحاسوب",
+      "createdAt": "2024-01-02T00:00:00Z"
+    },
+    {
+      "id": "3",
+      "email": "student@elearning.com",
+      "password": "Student@123",
+      "role": "student",
+      "firstName": "عمر",
+      "lastName": "علي",
+      "avatar": "https://i.pravatar.cc/150?img=3",
+      "enrolledCourses": [
+        "1",
+        "2"
+      ],
+      "createdAt": "2024-01-03T00:00:00Z",
+      "bio": ""
+    }
+  ],
+  "courses": [
+    {
+      "id": "1",
+      "slug": "introduction-to-web-development",
+      "title": "Introduction to Web Development",
+      "titleAr": "مقدمة في تطوير الويب",
+      "description": "Learn the fundamentals of web development including HTML, CSS, and JavaScript",
+      "descriptionAr": "تعلم أساسيات تطوير الويب بما في ذلك HTML و CSS و JavaScript",
+      "instructorId": "2",
+      "thumbnail": "https://picsum.photos/seed/course1/400/300",
+      "duration": "8 weeks",
+      "level": "Beginner",
+      "category": "Programming",
+      "price": 99.99,
+      "rating": 4.5,
+      "studentsEnrolled": 1234,
+      "isPublished": true,
+      "createdAt": "2024-02-01T00:00:00Z",
+      "modules": [
+        {
+          "id": "m1",
+          "title": "HTML Basics",
+          "order": 1,
+          "lessons": [
+            {
+              "id": "l1",
+              "title": "Introduction to HTML",
+              "type": "video",
+              "duration": "15:30",
+              "order": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "slug": "advanced-angular-development",
+      "title": "Advanced Angular Development",
+      "titleAr": "تطوير Angular المتقدم",
+      "description": "Master Angular framework with advanced concepts and best practices",
+      "descriptionAr": "إتقان إطار عمل Angular مع المفاهيم المتقدمة وأفضل الممارسات",
+      "instructorId": "2",
+      "thumbnail": "https://picsum.photos/seed/course2/400/300",
+      "duration": "12 weeks",
+      "level": "Advanced",
+      "category": "Programming",
+      "price": 149.99,
+      "rating": 4.8,
+      "studentsEnrolled": 856,
+      "isPublished": true,
+      "createdAt": "2024-02-15T00:00:00Z"
+    },
+    {
+      "id": "3",
+      "slug": "ui-ux-design-principles",
+      "title": "UI/UX Design Principles",
+      "titleAr": "مبادئ تصميم واجهة المستخدم وتجربة المستخدم",
+      "description": "Learn to create beautiful and functional user interfaces",
+      "descriptionAr": "تعلم كيفية إنشاء واجهات مستخدم جميلة وعملية",
+      "instructorId": "2",
+      "thumbnail": "https://picsum.photos/seed/course3/400/300",
+      "duration": "6 weeks",
+      "level": "Intermediate",
+      "category": "Design",
+      "price": 79.99,
+      "rating": 4.6,
+      "studentsEnrolled": 2103,
+      "isPublished": true,
+      "createdAt": "2024-03-01T00:00:00Z"
+    }
+  ],
+  "enrollments": [
+    {
+      "id": "1",
+      "userId": "3",
+      "courseId": "1",
+      "progress": 45,
+      "enrolledAt": "2024-03-10T00:00:00Z",
+      "lastAccessedAt": "2024-03-15T10:30:00Z"
+    },
+    {
+      "id": "2",
+      "userId": "3",
+      "courseId": "2",
+      "progress": 20,
+      "enrolledAt": "2024-03-12T00:00:00Z",
+      "lastAccessedAt": "2024-03-14T14:20:00Z"
+    },
+    {
+      "id": "be61",
+      "studentId": "current-user-id",
+      "courseId": "2",
+      "progress": 0,
+      "enrolledAt": "2025-11-21T21:11:34.549Z",
+      "lastAccessedAt": "2025-11-21T21:11:34.549Z",
+      "status": "active",
+      "certificateIssued": false
+    },
+    {
+      "id": "ec74",
+      "studentId": "current-user-id",
+      "courseId": "3",
+      "progress": 0,
+      "enrolledAt": "2025-11-21T21:21:43.791Z",
+      "lastAccessedAt": "2025-11-21T21:21:43.791Z",
+      "status": "active",
+      "certificateIssued": false
+    },
+    {
+      "id": "02a0",
+      "studentId": "current-user-id",
+      "courseId": "3",
+      "progress": 0,
+      "enrolledAt": "2025-11-21T21:39:45.041Z",
+      "lastAccessedAt": "2025-11-21T21:39:45.041Z",
+      "status": "active",
+      "certificateIssued": false
+    }
+  ],
+  "assignments": [
+    {
+      "id": "1",
+      "courseId": "1",
+      "title": "Build a Landing Page",
+      "description": "Create a responsive landing page using HTML and CSS",
+      "dueDate": "2024-04-01T23:59:59Z",
+      "totalPoints": 100
+    }
+  ],
+  "submissions": [
+    {
+      "id": "1",
+      "assignmentId": "1",
+      "userId": "3",
+      "content": "https://github.com/student/landing-page",
+      "submittedAt": "2024-03-28T18:30:00Z",
+      "grade": 85,
+      "feedback": "Great work! Good use of CSS Grid."
+    }
+  ],
+  "notifications": [
+    {
+      "id": "1",
+      "userId": "3",
+      "title": "New Course Available",
+      "message": "Check out the new course on Advanced Angular",
+      "type": "info",
+      "isRead": false,
+      "createdAt": "2024-03-15T09:00:00Z"
+    }
+  ]
+}

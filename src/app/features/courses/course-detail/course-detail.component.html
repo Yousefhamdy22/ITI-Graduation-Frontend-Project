@@ -1,0 +1,404 @@
+<!-- Loading State -->
+@if (loading()) {
+  <div class="flex justify-center items-center py-20">
+    <app-loader></app-loader>
+  </div>
+}
+
+<!-- Course Content -->
+@if (!loading() && course()) {
+    <!-- Hero Section -->
+    <div class="bg-gradient-to-r from-primary-600 to-primary-800 text-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <!-- Left: Course Info -->
+          <div class="lg:col-span-2">
+            <!-- Breadcrumb -->
+            <nav class="flex mb-4 text-sm">
+              <a routerLink="/courses" class="hover:underline opacity-90">
+                All Courses
+              </a>
+              <span class="mx-2">/</span>
+              <span>{{ course()!.title }}</span>
+            </nav>
+
+            <!-- Title & Category -->
+            <div class="flex items-center gap-3 mb-4">
+              <app-badge variant="warning">
+                {{ course()!.category }}
+              </app-badge>
+              <app-badge [variant]="getLevelBadgeVariant(course()!.level)">
+                {{ course()!.level }}
+              </app-badge>
+              @if (course()!.isFeatured) {
+                <app-badge variant="success">
+                  ⭐ FEATURED
+                </app-badge>
+              }
+            </div>
+
+            <h1 class="text-4xl font-bold mb-4">{{ course()!.title }}</h1>
+            <p class="text-xl opacity-90 mb-6">{{ course()!.shortDescription }}</p>
+
+            <!-- Stats -->
+            <div class="flex flex-wrap items-center gap-6 text-sm">
+              <div class="flex items-center gap-2">
+                <span class="text-2xl">⭐</span>
+                <span class="font-semibold">{{ course()!.rating.toFixed(1) }}</span>
+                <span class="opacity-75">({{ course()!.totalReviews }} reviews)</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-2xl">👥</span>
+                <span>{{ course()!.totalStudents }} students</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-2xl">📚</span>
+                <span>{{ totalLectures() }} lectures</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-2xl">⏱️</span>
+                <span>{{ formatDuration(totalDuration()) }}</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-2xl">🌐</span>
+                <span>{{ course()!.language }}</span>
+              </div>
+            </div>
+
+            <!-- Instructor -->
+            <div class="flex items-center gap-3 mt-6 pt-6 border-t border-white/20">
+              <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-2xl font-bold">
+                {{ course()!.instructor!.firstName.charAt(0) }}
+              </div>
+              <div>
+                <p class="text-sm opacity-75">Instructor</p>
+                <p class="font-semibold">
+                  {{ course()!.instructor!.firstName }} {{ course()!.instructor!.lastName }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Enrollment Card -->
+          <div class="lg:col-span-1">
+            <app-card class="sticky top-4">
+              <!-- Course Image -->
+              <div class="aspect-video bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden mb-4">
+                @if (course()!.coverImage) {
+                  <img
+                    [src]="course()!.coverImage"
+                    [alt]="course()!.title"
+                    class="w-full h-full object-cover"
+                  />
+                }
+              </div>
+
+              <!-- Price -->
+              <div class="mb-6">
+                @if (course()!.discountPrice) {
+                  <div class="flex items-baseline gap-2">
+                  <span class="text-3xl font-bold text-primary-600 dark:text-primary-400">
+                    ${{ course()!.discountPrice!.toFixed(2) }}
+                  </span>
+                    <span class="text-lg text-gray-500 line-through">
+                      ${{ course()!.price.toFixed(2) }}
+                    </span>
+                  </div>
+                }
+                @if (!course()!.discountPrice) {
+                  <div>
+                    <span class="text-3xl font-bold text-primary-600 dark:text-primary-400">
+                      ${{ course()!.price.toFixed(2) }}
+                    </span>
+                  </div>
+                }
+              </div>
+
+              <!-- Enroll Button -->
+              <div class="space-y-3">
+                @if (!course()!.isEnrolled) {
+                  <app-button
+                    (click)="enrollCourse()"
+                  [disabled]="enrolling()"
+                  variant="primary"
+                  [fullWidth]="true"
+                    class="text-lg py-3"
+                  >
+                    @if (!enrolling()) {
+                      <span>Enroll Now</span>
+                    }
+                    @if (enrolling()) {
+                      <span>Loading...</span>
+                    }
+                  </app-button>
+                }
+
+                @if (course()!.isEnrolled) {
+                  <app-button
+                    [routerLink]="['/courses', course()!.slug, 'lecture', course()!.modules![0]?.lectures![0]?.id]"
+                    variant="success"
+                    [fullWidth]="true"
+                    class="text-lg py-3"
+                  >
+                    Continue Learning
+                  </app-button>
+                }
+
+                <app-button
+                  variant="outline"
+                  [fullWidth]="true"
+                >
+                  Add to Wishlist
+                </app-button>
+              </div>
+
+              <!-- What's Included -->
+              <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                <h3 class="font-semibold mb-3">What's Included</h3>
+                <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                  <li class="flex items-center gap-2">
+                    <span>✓</span>
+                    <span>{{ totalLectures() }} lectures</span>
+                  </li>
+                  <li class="flex items-center gap-2">
+                    <span>✓</span>
+                    <span>{{ formatDuration(totalDuration()) }} on-demand video</span>
+                  </li>
+                  <li class="flex items-center gap-2">
+                    <span>✓</span>
+                    <span>Lifetime access</span>
+                  </li>
+                  <li class="flex items-center gap-2">
+                    <span>✓</span>
+                    <span>Mobile access</span>
+                  </li>
+                  <li class="flex items-center gap-2">
+                    <span>✓</span>
+                    <span>Certificate of completion</span>
+                  </li>
+                </ul>
+              </div>
+            </app-card>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Left: Course Details -->
+        <div class="lg:col-span-2">
+          <!-- Tabs -->
+          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm mb-6">
+            <div class="border-b border-gray-200 dark:border-gray-700">
+              <nav class="flex -mb-px">
+                <button
+                  (click)="setTab('overview')"
+                  [class.border-primary-500]="selectedTab() === 'overview'"
+                  [class.text-primary-600]="selectedTab() === 'overview'"
+                  class="px-6 py-4 text-sm font-medium border-b-2 border-transparent hover:border-gray-300 dark:hover:border-gray-600 transition-colors"
+                >
+                  Overview
+                </button>
+                <button
+                  (click)="setTab('curriculum')"
+                  [class.border-primary-500]="selectedTab() === 'curriculum'"
+                  [class.text-primary-600]="selectedTab() === 'curriculum'"
+                  class="px-6 py-4 text-sm font-medium border-b-2 border-transparent hover:border-gray-300 dark:hover:border-gray-600 transition-colors"
+                >
+                  Curriculum
+                </button>
+                <button
+                  (click)="setTab('instructor')"
+                  [class.border-primary-500]="selectedTab() === 'instructor'"
+                  [class.text-primary-600]="selectedTab() === 'instructor'"
+                  class="px-6 py-4 text-sm font-medium border-b-2 border-transparent hover:border-gray-300 dark:hover:border-gray-600 transition-colors"
+                >
+                  Instructor
+                </button>
+                <button
+                  (click)="setTab('reviews')"
+                  [class.border-primary-500]="selectedTab() === 'reviews'"
+                  [class.text-primary-600]="selectedTab() === 'reviews'"
+                  class="px-6 py-4 text-sm font-medium border-b-2 border-transparent hover:border-gray-300 dark:hover:border-gray-600 transition-colors"
+                >
+                  Reviews
+                </button>
+              </nav>
+            </div>
+
+            <div class="p-6">
+              <!-- Overview Tab -->
+              @if (selectedTab() === 'overview') {
+                <div>
+                <h2 class="text-2xl font-bold mb-4">About This Course</h2>
+                <div class="prose dark:prose-invert max-w-none">
+                  <p class="text-gray-700 dark:text-gray-300">{{ course()!.description }}</p>
+                </div>
+
+                <!-- What You'll Learn -->
+                <div class="mt-8">
+                  <h3 class="text-xl font-bold mb-4">What You'll Learn</h3>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    @for (item of course()!.whatYouWillLearn; track $index) {
+                      <div class="flex items-start gap-2">
+                        <span class="text-green-500 mt-1">✓</span>
+                        <span class="text-gray-700 dark:text-gray-300">{{ item }}</span>
+                      </div>
+                    }
+                  </div>
+                </div>
+
+                <!-- Requirements -->
+                @if (course()!.requirements && course()!.requirements!.length > 0) {
+                  <div class="mt-8">
+                    <h3 class="text-xl font-bold mb-4">Requirements</h3>
+                    <ul class="space-y-2">
+                      @for (req of course()!.requirements; track $index) {
+                        <li class="flex items-start gap-2 text-gray-700 dark:text-gray-300">
+                          <span class="mt-1">•</span>
+                          <span>{{ req }}</span>
+                        </li>
+                      }
+                    </ul>
+                  </div>
+                }
+
+                <!-- Target Audience -->
+                @if (course()!.targetAudience && course()!.targetAudience!.length > 0) {
+                  <div class="mt-8">
+                    <h3 class="text-xl font-bold mb-4">Who This Course Is For</h3>
+                    <ul class="space-y-2">
+                      @for (audience of course()!.targetAudience; track $index) {
+                        <li class="flex items-start gap-2 text-gray-700 dark:text-gray-300">
+                          <span class="mt-1">•</span>
+                          <span>{{ audience }}</span>
+                        </li>
+                      }
+                    </ul>
+                  </div>
+                }
+                </div>
+              }
+
+              <!-- Curriculum Tab -->
+              @if (selectedTab() === 'curriculum') {
+                <div>
+                <h2 class="text-2xl font-bold mb-4">Course Content</h2>
+                <p class="text-gray-600 dark:text-gray-400 mb-6">
+                  {{ course()!.modules.length }} modules • {{ totalLectures() }} lectures • {{ formatDuration(totalDuration()) }}
+                </p>
+
+                <!-- Modules Accordion -->
+                <div class="space-y-3">
+                  @for (module of course()!.modules; track module.id; let i = $index) {
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                    <!-- Module Header -->
+                    <button
+                      (click)="toggleModule(module.id)"
+                      class="w-full flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-750 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                    >
+                      <div class="flex items-center gap-3 text-left">
+                        <span class="text-2xl">{{ isModuleExpanded(module.id) ? '▼' : '▶' }}</span>
+                        <div>
+                          <h3 class="font-semibold text-gray-900 dark:text-white">
+                            {{ i + 1 }}. {{ module.title }}
+                          </h3>
+                          <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                            {{ module.lectures.length }} lectures • {{ formatDuration(module.duration || 0) }}
+                          </p>
+                        </div>
+                      </div>
+                    </button>
+
+                    <!-- Module Lectures -->
+                    @if (isModuleExpanded(module.id)) {
+                      <div class="border-t border-gray-200 dark:border-gray-700">
+                        @for (lecture of module.lectures; track lecture.id) {
+                          <div class="border-b border-gray-200 dark:border-gray-700 last:border-b-0">
+                        <button
+                          (click)="course()!.isEnrolled ? goToLecture(course()!.slug, module.id, lecture.id) : null"
+                          [class.cursor-not-allowed]="!course()!.isEnrolled"
+                          [class.opacity-50]="!course()!.isEnrolled"
+                          class="w-full flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors text-left"
+                        >
+                          <div class="flex items-center gap-3">
+                            <span class="text-xl">{{ getLectureIcon(lecture.contentType) }}</span>
+                            <div>
+                              <p class="font-medium text-gray-900 dark:text-white">{{ lecture.title }}</p>
+                              <p class="text-sm text-gray-600 dark:text-gray-400">
+                                {{ lecture.contentType }} • {{ formatDuration(lecture.duration || 0) }}
+                              </p>
+                            </div>
+                          </div>
+                          <div class="flex items-center gap-2">
+                            @if (lecture.isFree) {
+                              <span class="text-xs bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-1 rounded">
+                                Preview
+                              </span>
+                            }
+                            @if (!course()!.isEnrolled && !lecture.isFree) {
+                              <span class="text-xl">🔒</span>
+                            }
+                          </div>
+                          </button>
+                          </div>
+                        }
+                      </div>
+                    }
+                    </div>
+                  }
+                </div>
+                </div>
+              }
+
+              <!-- Instructor Tab -->
+              @if (selectedTab() === 'instructor') {
+                <div>
+                <div class="flex items-start gap-6">
+                  <div class="w-32 h-32 rounded-full bg-gradient-to-r from-primary-400 to-primary-600 flex items-center justify-center text-white text-5xl font-bold flex-shrink-0">
+                    {{ course()!.instructor!.firstName.charAt(0) }}
+                  </div>
+                  <div class="flex-1">
+                    <h2 class="text-2xl font-bold mb-2">
+                      {{ course()!.instructor!.firstName }} {{ course()!.instructor!.lastName }}
+                    </h2>
+                    <p class="text-gray-600 dark:text-gray-400 mb-4">{{ course()!.instructor!.title || 'Instructor' }}</p>
+                    <p class="text-gray-700 dark:text-gray-300">{{ course()!.instructor!.bio || 'Experienced instructor passionate about teaching.' }}</p>
+                  </div>
+                </div>
+                </div>
+              }              <!-- Reviews Tab -->
+              @if (selectedTab() === 'reviews') {
+                <div>
+                <h2 class="text-2xl font-bold mb-4">Student Feedback</h2>
+                <div class="flex items-center gap-6 mb-8">
+                  <div class="text-center">
+                    <div class="text-5xl font-bold text-primary-600 dark:text-primary-400">
+                      {{ course()!.rating.toFixed(1) }}
+                    </div>
+                    <div class="text-2xl mt-2">⭐⭐⭐⭐⭐</div>
+                    <p class="text-gray-600 dark:text-gray-400 mt-2">{{ course()!.totalReviews }} reviews</p>
+                  </div>
+                  </div>
+                  <p class="text-gray-600 dark:text-gray-400">No reviews yet</p>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Sidebar -->
+        <div class="lg:col-span-1">
+          <!-- Related Courses -->
+          <app-card>
+            <h3 class="text-lg font-bold mb-4">Related Courses</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">No related courses found</p>
+          </app-card>
+        </div>
+      </div>
+    </div>
+}
+
+

@@ -1,0 +1,338 @@
+<!-- Loading State -->
+  <div *ngIf="loading()" class="flex justify-center items-center py-20">
+    <app-loader></app-loader>
+  </div>
+
+  <!-- Dashboard Content -->
+  <div *ngIf="!loading() && dashboardData()" class="bg-gray-50 dark:bg-gray-900 min-h-screen">
+    <!-- Header -->
+    <div class="bg-white dark:bg-gray-800 shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+              Dashboard
+            </h1>
+            <p class="text-gray-600 dark:text-gray-400">
+              Welcome back!
+            </p>
+          </div>
+          <app-button routerLink="/instructor/courses/new" variant="primary">
+            <span class="text-xl mr-2">+</span>
+            Create Course
+          </app-button>
+        </div>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Statistics Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Total Courses -->
+        <app-card>
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
+                <span class="text-2xl">📚</span>
+              </div>
+            </div>
+            <div class="ml-4">
+              <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
+                Total Courses
+              </p>
+              <p class="text-2xl font-bold text-gray-900 dark:text-white">
+                {{ stats()?.totalCourses || 0 }}
+              </p>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                {{ stats()?.publishedCourses || 0 }} published
+              </p>
+            </div>
+          </div>
+        </app-card>
+
+        <!-- Total Students -->
+        <app-card>
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div class="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">
+                <span class="text-2xl">👥</span>
+              </div>
+            </div>
+            <div class="ml-4">
+              <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
+                Total Students
+              </p>
+              <p class="text-2xl font-bold text-gray-900 dark:text-white">
+                {{ stats()?.totalStudents || 0 }}
+              </p>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                {{ stats()?.activeEnrollments || 0 }} active
+              </p>
+            </div>
+          </div>
+        </app-card>
+
+        <!-- Total Revenue -->
+        <app-card>
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center">
+                <span class="text-2xl">💰</span>
+              </div>
+            </div>
+            <div class="ml-4">
+              <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
+                Total Revenue
+              </p>
+              <p class="text-2xl font-bold text-gray-900 dark:text-white">
+                {{ formatCurrency(stats()?.totalRevenue || 0) }}
+              </p>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                {{ formatCurrency(stats()?.monthlyRevenue || 0) }} this month
+              </p>
+            </div>
+          </div>
+        </app-card>
+
+        <!-- Average Rating -->
+        <app-card>
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div class="w-12 h-12 bg-orange-100 dark:bg-orange-900 rounded-lg flex items-center justify-center">
+                <span class="text-2xl">⭐</span>
+              </div>
+            </div>
+            <div class="ml-4">
+              <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
+                Average Rating
+              </p>
+              <p class="text-2xl font-bold text-gray-900 dark:text-white">
+                {{ (stats()?.averageRating || 0).toFixed(1) }}
+              </p>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                {{ stats()?.totalReviews || 0 }} reviews
+              </p>
+            </div>
+          </div>
+        </app-card>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Main Content - 2 columns -->
+        <div class="lg:col-span-2 space-y-6">
+          <!-- Revenue Chart -->
+          <app-card>
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-xl font-bold text-gray-900 dark:text-white">
+                Revenue Overview
+              </h2>
+              <div class="flex gap-2">
+                <button
+                  (click)="changePeriod('week')"
+                  [class.bg-primary-100]="selectedPeriod() === 'week'"
+                  [class.text-primary-600]="selectedPeriod() === 'week'"
+                  class="px-3 py-1 text-sm rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                >
+                  Week
+                </button>
+                <button
+                  (click)="changePeriod('month')"
+                  [class.bg-primary-100]="selectedPeriod() === 'month'"
+                  [class.text-primary-600]="selectedPeriod() === 'month'"
+                  class="px-3 py-1 text-sm rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                >
+                  Month
+                </button>
+                <button
+                  (click)="changePeriod('year')"
+                  [class.bg-primary-100]="selectedPeriod() === 'year'"
+                  [class.text-primary-600]="selectedPeriod() === 'year'"
+                  class="px-3 py-1 text-sm rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                >
+                  Year
+                </button>
+              </div>
+            </div>
+
+            <!-- Simple Bar Chart Visualization -->
+            <div class="space-y-3">
+              <div *ngFor="let item of revenueData()" class="flex items-center gap-4">
+                <span class="text-sm text-gray-600 dark:text-gray-400 w-24">
+                  {{ item.date }}
+                </span>
+                <div class="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-8 relative overflow-hidden">
+                  <div
+                    class="bg-gradient-to-r from-primary-500 to-primary-600 h-full rounded-full flex items-center px-3 text-white text-sm font-medium"
+                    [style.width.%]="(item.amount / (stats()?.totalRevenue || 1)) * 100"
+                  >
+                    {{ formatCurrency(item.amount) }}
+                  </div>
+                </div>
+                <span class="text-sm text-gray-500 dark:text-gray-400 w-20 text-right">
+                  {{ item.enrollmentCount }} enrollments
+                </span>
+              </div>
+
+              <!-- Empty State -->
+              <div *ngIf="revenueData().length === 0" class="text-center py-8 text-gray-500 dark:text-gray-400">
+                No revenue data available
+              </div>
+            </div>
+          </app-card>
+
+          <!-- Top Courses -->
+          <app-card>
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-xl font-bold text-gray-900 dark:text-white">
+                Top Courses
+              </h2>
+              <a routerLink="/instructor/courses" class="text-primary-600 hover:text-primary-700 dark:text-primary-400 text-sm font-medium">
+                View All →
+              </a>
+            </div>
+
+            <div class="space-y-4">
+              <div *ngFor="let course of topCourses()" class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow">
+                <div class="flex items-start justify-between mb-3">
+                  <div class="flex-1">
+                    <h3 class="font-semibold text-gray-900 dark:text-white mb-1">
+                      {{ course.courseTitle }}
+                    </h3>
+                    <div class="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+                      <span>👥 {{ course.totalStudents }} students</span>
+                      <span>⭐ {{ course.rating.toFixed(1) }}</span>
+                      <span>💰 {{ formatCurrency(course.revenue) }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Progress Stats -->
+                <div class="grid grid-cols-3 gap-2 text-center">
+                  <div class="bg-blue-50 dark:bg-blue-900/20 rounded p-2">
+                    <p class="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                      {{ course.activeStudents }}
+                    </p>
+                    <p class="text-xs text-gray-600 dark:text-gray-400">Active</p>
+                  </div>
+                  <div class="bg-green-50 dark:bg-green-900/20 rounded p-2">
+                    <p class="text-2xl font-bold text-green-600 dark:text-green-400">
+                      {{ course.completedStudents }}
+                    </p>
+                    <p class="text-xs text-gray-600 dark:text-gray-400">Completed</p>
+                  </div>
+                  <div class="bg-purple-50 dark:bg-purple-900/20 rounded p-2">
+                    <p class="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                      {{ course.averageProgress }}%
+                    </p>
+                    <p class="text-xs text-gray-600 dark:text-gray-400">Avg Progress</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Empty State -->
+              <div *ngIf="topCourses().length === 0" class="text-center py-8 text-gray-500 dark:text-gray-400">
+                No courses yet
+              </div>
+            </div>
+          </app-card>
+
+          <!-- Recent Enrollments -->
+          <app-card>
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-xl font-bold text-gray-900 dark:text-white">
+                Recent Enrollments
+              </h2>
+              <a routerLink="/instructor/courses" class="text-primary-600 hover:text-primary-700 dark:text-primary-400 text-sm font-medium">
+                View All →
+              </a>
+            </div>
+
+            <div class="space-y-3">
+              <div *ngFor="let enrollment of recentEnrollments()" class="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary-400 to-primary-600 flex items-center justify-center text-white font-semibold">
+                    {{ enrollment.studentName.charAt(0) }}
+                  </div>
+                  <div>
+                    <p class="font-medium text-gray-900 dark:text-white">
+                      {{ enrollment.studentName }}
+                    </p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                      {{ enrollment.courseTitle }}
+                    </p>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <app-badge [variant]="getStatusBadgeVariant(enrollment.status)">
+                    {{ enrollment.status }}
+                  </app-badge>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    {{ formatDate(enrollment.enrolledAt) }}
+                  </p>
+                </div>
+              </div>
+
+              <!-- Empty State -->
+              <div *ngIf="recentEnrollments().length === 0" class="text-center py-8 text-gray-500 dark:text-gray-400">
+                No enrollments yet
+              </div>
+            </div>
+          </app-card>
+        </div>
+
+        <!-- Sidebar - 1 column -->
+        <div class="lg:col-span-1 space-y-6">
+          <!-- Quick Actions -->
+          <app-card>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">
+              Quick Actions
+            </h3>
+            <div class="space-y-2">
+              <app-button routerLink="/instructor/courses/new" variant="primary" [fullWidth]="true">
+                Create Course
+              </app-button>
+              <app-button routerLink="/instructor/courses" variant="outline" [fullWidth]="true">
+                Manage Courses
+              </app-button>
+              <app-button routerLink="/instructor/courses" variant="outline" [fullWidth]="true">
+                View Students
+              </app-button>
+              <app-button routerLink="/instructor/analytics" variant="outline" [fullWidth]="true">
+                View Analytics
+              </app-button>
+            </div>
+          </app-card>
+
+          <!-- Recent Activity -->
+          <app-card>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">
+              Recent Activity
+            </h3>
+            <div class="space-y-3">
+              <div *ngFor="let activity of recentActivity()" class="flex gap-3 pb-3 border-b border-gray-200 dark:border-gray-700 last:border-b-0">
+                <span class="text-2xl">{{ getActivityIcon(activity.type) }}</span>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm text-gray-900 dark:text-white">
+                    <span class="font-medium">{{ activity.studentName }}</span>
+                    {{ activity.message }}
+                  </p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    {{ activity.courseName }}
+                  </p>
+                  <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                    {{ formatDateTime(activity.timestamp) }}
+                  </p>
+                </div>
+              </div>
+
+              <!-- Empty State -->
+              <div *ngIf="recentActivity().length === 0" class="text-center py-4 text-gray-500 dark:text-gray-400 text-sm">
+                No activity yet
+              </div>
+            </div>
+          </app-card>
+        </div>
+      </div>
+    </div>
+  </div>
+

@@ -1,0 +1,7 @@
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+  <app-course-card *ngFor="let course of courses" [course]="course"></app-course-card>
+</div>
+
+<div *ngIf="!courses || courses.length === 0" class="text-center py-20 text-gray-500 text-xl">
+  لا توجد كورسات بهذه الفلاتر
+</div>

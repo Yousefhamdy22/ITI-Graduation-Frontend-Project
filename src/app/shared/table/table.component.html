@@ -1,0 +1,18 @@
+<table class="min-w-full bg-white rounded shadow rtl:text-right">
+  <thead>
+    <tr>
+      @for (header of headers; track header) {
+        <th class="px-4 py-2 border-b font-bold">{{ header }}</th>
+      }
+    </tr>
+  </thead>
+  <tbody>
+    @for (row of rows; track row) {
+      <tr>
+        @for (cell of row; track cell) {
+          <td class="px-4 py-2 border-b">{{ cell }}</td>
+        }
+      </tr>
+    }
+  </tbody>
+</table>

@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global helpers matching the design */
+@layer components {
+  .app-container {
+    @apply max-w-6xl mx-auto px-4;
+  }
+
+  .shadow-soft {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  }
+
+  .btn-primary {
+    @apply bg-[#0E4D67] text-white rounded-xl px-5 py-3 font-semibold hover:opacity-90 transition;
+  }
+
+  .btn-outline {
+    @apply border border-gray-300 rounded-xl px-5 py-3 font-semibold text-gray-800 hover:bg-gray-50 transition;
+  }
+
+  .section-title {
+    @apply text-2xl md:text-3xl font-bold text-gray-900 mb-3;
+  }
+
+  .section-subtitle {
+    @apply text-gray-600 text-base md:text-lg;
+  }
+}

@@ -1,0 +1,7 @@
+<form class="space-y-4 rtl:text-right" (ngSubmit)="onSubmit()" #examForm="ngForm">
+  <input type="text" class="border p-2 w-full rounded" placeholder="اسم الاختبار" [(ngModel)]="exam.title" name="title" required />
+  <textarea class="border p-2 w-full rounded" placeholder="وصف الاختبار" [(ngModel)]="exam.description" name="description" required></textarea>
+  <input type="number" class="border p-2 w-full rounded" placeholder="المدة" [(ngModel)]="exam.duration" name="duration" />
+  <input type="number" class="border p-2 w-full rounded" placeholder="درجة النجاح" [(ngModel)]="exam.passingScore" name="passingScore" />
+  <button type="submit" class="bg-primary-600 text-white px-4 py-2 rounded">Save</button>
+</form>

@@ -57,6 +57,34 @@
     <app-course-list *ngIf="!loading" [courses]="featuredCourses"></app-course-list>
   </section>
 
+    <!-- Role-specific panels -->
+    <section *ngIf="currentRole === 'student'" class="app-container mt-8">
+      <div class="bg-white rounded-2xl shadow-soft p-6">
+        <h3 class="font-bold">الكورسات المسجل بها</h3>
+        <p class="text-sm text-gray-500 mb-4">عدد الكورسات المسجل بها: {{ enrolledCount }}</p>
+        <div class="grid md:grid-cols-3 gap-4">
+          <div *ngFor="let c of myCourses" class="bg-gray-50 p-4 rounded-lg">
+            <h4 class="font-semibold">{{ c.title }}</h4>
+            <p class="text-xs text-gray-500 mt-1">{{ c.category }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section *ngIf="currentRole === 'instructor'" class="app-container mt-8">
+      <div class="bg-white rounded-2xl shadow-soft p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-bold">كورساتي</h3>
+          <button class="px-3 py-1 bg-blue-600 text-white rounded">أنشئ اختبار/شهادة</button>
+        </div>
+        <div class="grid md:grid-cols-3 gap-4">
+          <div *ngFor="let c of myCourses" class="bg-gray-50 p-4 rounded-lg">
+            <h4 class="font-semibold">{{ c.title }}</h4>
+            <p class="text-xs text-gray-500 mt-1">الطلاب: {{ c.studentsCount || 0 }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
   <section class="app-container mt-12">
     <div class="bg-[#F2F7FA] rounded-3xl overflow-hidden shadow-soft">
       <div class="h-56 bg-gray-200 flex items-center justify-center">

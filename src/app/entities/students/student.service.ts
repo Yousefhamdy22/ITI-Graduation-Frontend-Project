@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { delay, map } from 'rxjs/operators';
 import { Student } from './student.model';
 
 @Injectable({ providedIn: 'root' })
@@ -18,6 +18,10 @@ export class StudentService {
 
   private studentsSubject = new BehaviorSubject<Student[]>(this.mockData);
   students$ = this.studentsSubject.asObservable();
+
+  getTotalStudents$() {
+    return this.students$.pipe(map(s => s.length));
+  }
 
   constructor() {
     if (this.useMock) {
@@ -39,5 +43,20 @@ export class StudentService {
 
   loadStudents(students: Student[]) {
     this.studentsSubject.next(students);
+  }
+
+  addStudent(student: Partial<Student>): Student {
+    const s: Student = {
+      id: (Date.now()).toString(),
+      name: student.name || 'طالب جديد',
+      email: student.email || '',
+      phone: student.phone || '',
+      enrolledCourses: student.enrolledCourses || 0,
+      avatar: student.avatar || `https://i.pravatar.cc/150?u=${Date.now()}`,
+      joinDate: student.joinDate || new Date().toISOString().slice(0,10)
+    } as Student;
+    this.mockData.push(s);
+    this.studentsSubject.next(this.mockData);
+    return s;
   }
 }

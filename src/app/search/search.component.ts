@@ -11,7 +11,7 @@ import { Course } from '../entities/courses/course.model';
 @Component({
   selector: 'app-search',
   standalone: true,
-  imports: [CommonModule, RouterModule, SearchPipe],
+  imports: [CommonModule, RouterModule],
   template: `
     <div class="container mx-auto p-6">
       <h2 class="text-2xl font-bold mb-4">Search results</h2>

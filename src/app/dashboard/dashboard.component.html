@@ -1,317 +1,125 @@
-<div class="container mx-auto p-6">
-  <section class="mb-8">
-    <h1 class="text-3xl font-bold mb-2">Dashboard</h1>
-    <p class="text-lg text-gray-600">Manage courses, students, lessons, exams, and instructors</p>
-  </section>
-  <!-- Dashboard stats, tables, charts, etc. will be added here -->
-</div>
-<div class="min-h-screen bg-gray-50">
-  <div class="app-container py-6">
-    <!-- ===== TOP BAR ===== -->
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-      <div class="relative w-full md:w-[420px]">
-        <input
-          type="text"
-          placeholder="Search for anything..."
-          (keyup.enter)="onSearch($event.target.value)"
-          class="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 pr-10 text-sm outline-none focus:ring-2 focus:ring-[#0E4D67]/20"
-        />
-        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
+<div dir="rtl" class="min-h-screen bg-gray-50 text-right">
+  <div class="flex">
+    <!-- Sidebar (right) -->
+    <aside class="w-64 bg-white border-l shadow-sm min-h-screen p-4">
+      <div class="mb-6">
+        <h2 class="text-xl font-bold">منصة رسالة</h2>
       </div>
 
-      <div class="flex items-center gap-3 justify-end">
-        <button class="w-9 h-9 rounded-xl bg-white border border-gray-200 grid place-items-center">🔔</button>
-        <button class="w-9 h-9 rounded-xl bg-white border border-gray-200 grid place-items-center">💼</button>
-        <button class="w-9 h-9 rounded-xl bg-white border border-gray-200 grid place-items-center">✉️</button>
+      <nav class="space-y-2 text-gray-700">
+        <a routerLink="/dashboard" class="block px-3 py-2 rounded-lg hover:bg-gray-100">لوحة التحكم</a>
+        <a routerLink="/students" class="block px-3 py-2 rounded-lg hover:bg-gray-100">قائمة الطلاب</a>
+        <a routerLink="/instructors" class="block px-3 py-2 rounded-lg hover:bg-gray-100">إدارة المعلمين</a>
+        <a routerLink="/courses" class="block px-3 py-2 rounded-lg hover:bg-gray-100">إدارة الدورات</a>
+        <a routerLink="/exams" class="block px-3 py-2 rounded-lg hover:bg-gray-100">إدارة الاختبارات</a>
+        <a class="block px-3 py-2 rounded-lg hover:bg-gray-100">قائمة الأسئلة</a>
+        <a class="block px-3 py-2 rounded-lg hover:bg-gray-100 text-red-600">تسجيل الخروج</a>
+      </nav>
+    </aside>
 
-        <div class="w-10 h-10 rounded-full overflow-hidden border border-gray-200 bg-gray-200">
-          <img src="https://i.pravatar.cc/80" alt="avatar" class="w-full h-full object-cover" />
-        </div>
-      </div>
-    </div>
-
-    <!-- ===== TITLE ===== -->
-    <h1 class="text-2xl font-bold text-gray-900 mb-5">Dashboard</h1>
-
-    <!-- ===== STATS CARDS (real numbers from stats$) ===== -->
-      <ng-container *ngIf="stats$ | async as s">
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
-        <!-- Total Students -->
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-soft p-4 flex items-center justify-between">
-          <div>
-            <p class="text-sm text-gray-500 mb-1">Total Students</p>
-            <p class="text-2xl font-extrabold text-gray-900">{{ s.totalStudents }}</p>
-            <p class="text-xs mt-2 text-emerald-600">↑ auto</p>
-          </div>
-          <div class="w-12 h-12 rounded-2xl grid place-items-center text-xl bg-purple-100 text-purple-600">
-            👤
-          </div>
+    <!-- Main content -->
+    <div class="flex-1 p-6">
+      <!-- Top navbar -->
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h3 class="text-sm text-gray-500">منصة رسالة</h3>
+          <h1 class="text-2xl font-bold">أهلاً بعودتك المستخدم!</h1>
+          <p class="text-sm text-gray-500">إدارة شاملة لجميع عمليات أكاديميتك بسلاسة</p>
         </div>
 
-        <!-- Total Courses -->
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-soft p-4 flex items-center justify-between">
-          <div>
-            <p class="text-sm text-gray-500 mb-1">Total Courses</p>
-            <p class="text-2xl font-extrabold text-gray-900">{{ s.totalCourses }}</p>
-            <p class="text-xs mt-2 text-emerald-600">↑ auto</p>
-          </div>
-          <div class="w-12 h-12 rounded-2xl grid place-items-center text-xl bg-blue-100 text-blue-600">
-            📘
-          </div>
-        </div>
-
-        <!-- Active Enrollments -->
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-soft p-4 flex items-center justify-between">
-          <div>
-            <p class="text-sm text-gray-500 mb-1">Active Enrollments</p>
-            <p class="text-2xl font-extrabold text-gray-900">{{ s.activeEnrollments }}</p>
-            <p class="text-xs mt-2 text-emerald-600">↑ auto</p>
-          </div>
-          <div class="w-12 h-12 rounded-2xl grid place-items-center text-xl bg-emerald-100 text-emerald-600">
-            👥
-          </div>
-        </div>
-
-        <!-- Revenue -->
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-soft p-4 flex items-center justify-between">
-          <div>
-            <p class="text-sm text-gray-500 mb-1">Revenue</p>
-            <p class="text-2xl font-extrabold text-gray-900">{{ s.revenue }} ج.م</p>
-            <p class="text-xs mt-2 text-emerald-600">↑ auto</p>
-          </div>
-          <div class="w-12 h-12 rounded-2xl grid place-items-center text-xl bg-amber-100 text-amber-700">
-            💲
-          </div>
-        </div>
-      </div>
-      </ng-container>
-      <ng-container *ngIf="!(stats$ | async)">
-      <!-- Skeleton while loading -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6 animate-pulse">
-        <div class="h-24 bg-white rounded-2xl border border-gray-100"></div>
-        <div class="h-24 bg-white rounded-2xl border border-gray-100"></div>
-        <div class="h-24 bg-white rounded-2xl border border-gray-100"></div>
-        <div class="h-24 bg-white rounded-2xl border border-gray-100"></div>
-      </div>
-      </ng-container>
-
-    <!-- ===== CHARTS + NOTIFICATIONS ===== -->
-    <div class="grid grid-cols-1 xl:grid-cols-3 gap-4 mb-6">
-      <!-- Students Growth (placeholder line chart) -->
-      <div class="xl:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-soft p-5">
-        <div class="flex items-center justify-between mb-3">
-          <h2 class="font-bold text-gray-900">Students Growth</h2>
-          <span class="text-xs text-gray-500">Last 8 months</span>
-        </div>
-
-        <div class="h-56 bg-gray-50 rounded-xl p-3">
-          <svg viewBox="0 0 400 160" class="w-full h-full">
-            <!-- grid -->
-            <g opacity="0.08" stroke="black">
-              <line x1="0" y1="20" x2="400" y2="20" />
-              <line x1="0" y1="60" x2="400" y2="60" />
-              <line x1="0" y1="100" x2="400" y2="100" />
-              <line x1="0" y1="140" x2="400" y2="140" />
-            </g>
-            <!-- simple polyline (static placeholder) -->
-            <polyline
-              fill="none"
-              stroke="#2563eb"
-              stroke-width="3"
-              points="0,120 50,90 100,70 150,80 200,50 250,30 300,45 350,20"
-            />
-          </svg>
-
-          <div class="flex justify-between text-xs text-gray-500 mt-2 px-2">
-            <span>Feb</span><span>Mar</span><span>Apr</span><span>May</span>
-            <span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Notifications -->
-      <div class="bg-white rounded-2xl border border-gray-100 shadow-soft p-5">
-        <h2 class="font-bold text-gray-900 mb-4">Notifications</h2>
-
-        <div class="space-y-3">
-          <div class="flex items-start gap-3">
-            <div class="w-9 h-9 rounded-xl grid place-items-center text-sm bg-blue-100 text-blue-600">👤</div>
-            <div>
-              <p class="text-sm font-semibold text-gray-900">New student registered</p>
-              <p class="text-xs text-gray-500">2 minutes ago</p>
-            </div>
-          </div>
-
-          <div class="flex items-start gap-3">
-            <div class="w-9 h-9 rounded-xl grid place-items-center text-sm bg-indigo-100 text-indigo-600">📘</div>
-            <div>
-              <p class="text-sm font-semibold text-gray-900">Course updated · React Pro</p>
-              <p class="text-xs text-gray-500">1 hour ago</p>
-            </div>
-          </div>
-
-          <div class="flex items-start gap-3">
-            <div class="w-9 h-9 rounded-xl grid place-items-center text-sm bg-emerald-100 text-emerald-600">✉️</div>
-            <div>
-              <p class="text-sm font-semibold text-gray-900">You received a new message</p>
-              <p class="text-xs text-gray-500">3 hours ago</p>
-            </div>
-          </div>
-
-          <div class="flex items-start gap-3">
-            <div class="w-9 h-9 rounded-xl grid place-items-center text-sm bg-amber-100 text-amber-700">💲</div>
-            <div>
-              <p class="text-sm font-semibold text-gray-900">New payment processed</p>
-              <p class="text-xs text-gray-500">1 day ago</p>
+        <div class="flex items-center gap-3">
+          <button class="w-10 h-10 rounded-full bg-white border grid place-items-center">🔔</button>
+          <div class="flex items-center gap-2">
+            <span class="text-sm">مرحبا، مستخدم</span>
+            <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-200">
+              <img src="https://i.pravatar.cc/40" alt="avatar" class="w-full h-full object-cover"/>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- ===== LOWER GRID ===== -->
-    <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
-      <!-- Recent Enrollments -->
-      <div class="xl:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-soft p-5">
+      <!-- Centered cards -->
+      <div class="flex flex-col items-center mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-4xl">
+          <div class="bg-white rounded-xl shadow p-5 flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-500 mb-1">إجمالي المعلمين</p>
+              <p class="text-2xl font-extrabold">1</p>
+              <p class="text-xs text-green-600 mt-1">%55+ من الشهر الماضي</p>
+            </div>
+            <div class="w-12 h-12 rounded-lg bg-blue-50 text-blue-600 grid place-items-center text-xl">👨‍🏫</div>
+          </div>
+
+          <div class="bg-white rounded-xl shadow p-5 flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-500 mb-1">إجمالي الطلب</p>
+              <p class="text-2xl font-extrabold">0</p>
+              <p class="text-xs text-green-600 mt-1">%5+ من الشهر الماضي</p>
+            </div>
+            <div class="w-12 h-12 rounded-lg bg-purple-50 text-purple-600 grid place-items-center text-xl">👥</div>
+          </div>
+        </div>
+      </div>
+
+        <!-- Admin actions -->
+        <div class="flex justify-end gap-3 mb-6 max-w-4xl mx-auto">
+          <a routerLink="/courses/new" class="px-4 py-2 bg-green-600 text-white rounded-lg">أضف دورة</a>
+          <a routerLink="/exams/new" class="px-4 py-2 bg-indigo-600 text-white rounded-lg">أنشئ اختبار</a>
+        </div>
+
+      <!-- Student table section -->
+      <section class="bg-white rounded-xl shadow p-5">
         <div class="flex items-center justify-between mb-4">
-          <h2 class="font-bold text-gray-900">Recent Enrollments</h2>
-          <button class="text-sm text-[#0E4D67] font-semibold hover:underline">View all</button>
+          <div>
+            <h2 class="text-lg font-semibold">قائمة الطلاب</h2>
+            <p class="text-sm text-gray-500">قائمة كاملة بجميع الطلاب المسجلين</p>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <div class="relative">
+              <input [(ngModel)]="query" (input)="onSearch()" type="text" placeholder="بحث بالاسم أو رقم الهاتف..." class="border rounded-lg px-3 py-2 w-64" />
+              <button *ngIf="query" (click)="clearSearch()" class="absolute left-2 top-2 text-sm">مسح</button>
+            </div>
+            <button class="px-3 py-2 bg-gray-100 rounded-lg">Filter</button>
+          </div>
         </div>
 
         <div class="overflow-x-auto">
-          <table class="w-full text-sm">
-            <thead class="text-gray-500">
-              <tr class="border-b">
-                <th class="text-left py-2">Student</th>
-                <th class="text-left py-2">Course</th>
-                <th class="text-left py-2">Date</th>
-                <th class="text-left py-2">Status</th>
+          <table class="w-full text-sm table-auto">
+            <thead>
+              <tr class="bg-gray-50 text-gray-600">
+                <th class="p-2">ID</th>
+                <th class="p-2">تاريخ الانضمام</th>
+                <th class="p-2">الدورة المشترك بها</th>
+                <th class="p-2">اسم الطالب</th>
+                <th class="p-2">رقم الهاتف</th>
+                <th class="p-2">الجنس</th>
               </tr>
             </thead>
-
             <tbody>
-              <tr class="border-b last:border-0">
-                <td class="py-3 font-medium text-gray-900">Ahmed Ali</td>
-                <td class="py-3 text-gray-700">Angular 20</td>
-                <td class="py-3 text-gray-500">Nov 20</td>
-                <td class="py-3">
-                  <span class="px-2 py-1 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700">Completed</span>
-                </td>
-              </tr>
-              <tr class="border-b last:border-0">
-                <td class="py-3 font-medium text-gray-900">Sara Mohamed</td>
-                <td class="py-3 text-gray-700">Python Basics</td>
-                <td class="py-3 text-gray-500">Nov 19</td>
-                <td class="py-3">
-                  <span class="px-2 py-1 rounded-lg text-xs font-semibold bg-amber-50 text-amber-700">In Progress</span>
-                </td>
-              </tr>
-              <tr class="border-b last:border-0">
-                <td class="py-3 font-medium text-gray-900">Omar Samy</td>
-                <td class="py-3 text-gray-700">React Pro</td>
-                <td class="py-3 text-gray-500">Nov 18</td>
-                <td class="py-3">
-                  <span class="px-2 py-1 rounded-lg text-xs font-semibold bg-gray-100 text-gray-700">New</span>
-                </td>
+              <tr *ngFor="let s of pagedStudents" class="border-b hover:bg-gray-50 cursor-pointer" (click)="goToStudent(s.id)">
+                <td class="p-2">{{ s.id }}</td>
+                <td class="p-2">{{ s.joinDate }}</td>
+                <td class="p-2">{{ s.enrolledCourses || '-' }}</td>
+                <td class="p-2 font-medium">{{ s.name }}</td>
+                <td class="p-2">{{ s.phone }}</td>
+                <td class="p-2">{{ s.gender || '-' }}</td>
               </tr>
             </tbody>
-
           </table>
         </div>
-      </div>
 
-      <!-- Right Column -->
-      <div class="space-y-4">
-        <!-- Courses Popularity (bars) -->
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-soft p-5">
-          <h2 class="font-bold text-gray-900 mb-4">Courses Popularity</h2>
-
-          <div class="flex items-end justify-between gap-3 h-40">
-            <div class="flex flex-col items-center gap-2 flex-1">
-              <div class="w-8 rounded-lg bg-blue-500/90" style="height: 55%;"></div>
-              <span class="text-xs text-gray-600">Angular</span>
-            </div>
-            <div class="flex flex-col items-center gap-2 flex-1">
-              <div class="w-8 rounded-lg bg-blue-500/90" style="height: 40%;"></div>
-              <span class="text-xs text-gray-600">React</span>
-            </div>
-            <div class="flex flex-col items-center gap-2 flex-1">
-              <div class="w-8 rounded-lg bg-blue-500/90" style="height: 70%;"></div>
-              <span class="text-xs text-gray-600">C#</span>
-            </div>
-            <div class="flex flex-col items-center gap-2 flex-1">
-              <div class="w-8 rounded-lg bg-blue-500/90" style="height: 85%;"></div>
-              <span class="text-xs text-gray-600">Python</span>
-            </div>
+        <!-- Pagination -->
+        <div class="flex items-center justify-between mt-4">
+          <div class="text-sm text-gray-600">إجمالي: {{ filteredStudents.length }}</div>
+          <div class="flex items-center gap-2">
+            <button (click)="prevPage()" class="px-3 py-1 bg-gray-100 rounded">السابق</button>
+            <div class="px-3">{{ page }} / {{ totalPages() }}</div>
+            <button (click)="nextPage()" class="px-3 py-1 bg-gray-100 rounded">التالي</button>
           </div>
         </div>
-
-        <!-- Popular Courses -->
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-soft p-5">
-          <h2 class="font-bold text-gray-900 mb-4">Popular Courses</h2>
-
-          <div class="space-y-3">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl grid place-items-center text-sm bg-blue-100 text-blue-600">⚙️</div>
-              <div class="flex-1">
-                <p class="text-sm font-semibold text-gray-900">Angular 20 Masterclass</p>
-                <p class="text-xs text-gray-500">1240 students</p>
-              </div>
-            </div>
-
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl grid place-items-center text-sm bg-indigo-100 text-indigo-600">📎</div>
-              <div class="flex-1">
-                <p class="text-sm font-semibold text-gray-900">Full-Stack C# Bootcamp</p>
-                <p class="text-xs text-gray-500">980 students</p>
-              </div>
-            </div>
-
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl grid place-items-center text-sm bg-emerald-100 text-emerald-600">🤖</div>
-              <div class="flex-1">
-                <p class="text-sm font-semibold text-gray-900">AI & Machine Learning</p>
-                <p class="text-xs text-gray-500">860 students</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Courses Progress -->
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-soft p-5">
-          <h2 class="font-bold text-gray-900 mb-4">Courses Progress</h2>
-          <div class="space-y-3">
-            <div>
-              <div class="flex justify-between text-xs text-gray-700 mb-1">
-                <span>Angular 20</span><span>70%</span>
-              </div>
-              <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                <div class="h-full bg-blue-500 rounded-full" style="width: 70%;"></div>
-              </div>
-            </div>
-            <div>
-              <div class="flex justify-between text-xs text-gray-700 mb-1">
-                <span>Python Basics</span><span>45%</span>
-              </div>
-              <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                <div class="h-full bg-blue-500 rounded-full" style="width: 45%;"></div>
-              </div>
-            </div>
-            <div>
-              <div class="flex justify-between text-xs text-gray-700 mb-1">
-                <span>React Pro</span><span>55%</span>
-              </div>
-              <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                <div class="h-full bg-blue-500 rounded-full" style="width: 55%;"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
+      </section>
     </div>
-
   </div>
 </div>
 

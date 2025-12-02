@@ -107,4 +107,16 @@ private mockData: Course[] = [
       ? of(this.mockData.filter(c => c.isBestseller).slice(0, 6)).pipe(delay(300))
       : this.http.get<Course[]>('/api/courses/featured');
   }
+
+  createCourse(course: Partial<Course>): Observable<Course> {
+    const newCourse: Course = {
+      ...(course as Course),
+      id: (Date.now()).toString(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.mockData.push(newCourse);
+    this.courses$.next(this.mockData);
+    return of(newCourse).pipe(delay(200));
+  }
 }

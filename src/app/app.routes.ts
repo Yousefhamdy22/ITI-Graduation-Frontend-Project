@@ -2,12 +2,21 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  // Home
+  // Default -> login
   {
     path: '',
     pathMatch: 'full',
-    loadComponent: () =>
-      import('./home/home.component').then(m => m.HomeComponent),
+    loadComponent: () => import('./auth/login.component').then(m => m.LoginComponent),
+  },
+
+  // Home (after login for non-admin)
+  {
+    path: 'home',
+    loadComponent: () => import('./home/home.component').then(m => m.HomeComponent),
+  },
+  {
+    path: 'register',
+    loadComponent: () => import('./auth/register.component').then(m => m.RegisterComponent),
   },
 
   // Dashboard
@@ -15,6 +24,8 @@ export const routes: Routes = [
     path: 'dashboard',
     loadComponent: () =>
       import('./dashboard/dashboard.component').then(m => m.DashboardComponent),
+    data: { role: 'admin' },
+    canActivate: [() => import('./auth/role.guard').then(m => m.RoleGuard as any)],
   },
   
 
@@ -138,6 +149,10 @@ export const routes: Routes = [
             .then(m => m.ExamsComponent),
       },
       {
+        path: 'new',
+        loadComponent: () => import('./entities/exams/exam-form/exam-form.component').then(m => m.ExamFormComponent),
+      },
+      {
         path: ':id',
         loadComponent: () =>
           import('./entities/exams/exam-player/exam-player.component')
@@ -150,6 +165,10 @@ export const routes: Routes = [
   {
     path: 'search',
     loadComponent: () => import('./search/search.component').then(m => m.SearchComponent),
+  },
+  {
+    path: 'login',
+    loadComponent: () => import('./auth/login.component').then(m => m.LoginComponent),
   },
 
   // Page not found / errors

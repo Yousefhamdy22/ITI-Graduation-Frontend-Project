@@ -100,4 +100,21 @@ export class InstructorService {
   loadInstructors(instructors: Instructor[]) {
     this.instructorsSubject.next(instructors);
   }
+
+  addInstructor(instructor: Partial<Instructor>): Instructor {
+    const i: Instructor = {
+      id: (Date.now()).toString(),
+      name: instructor.name || 'مدرب جديد',
+      email: instructor.email || '',
+      bio: instructor.bio || '',
+      avatar: instructor.avatar || `https://i.pravatar.cc/150?u=${Date.now()}`,
+      expertise: instructor.expertise || [],
+      coursesCount: instructor.coursesCount || 0,
+      studentsCount: instructor.studentsCount || 0,
+      rating: instructor.rating || 0,
+    } as Instructor;
+    this.mockData.push(i);
+    this.instructorsSubject.next(this.mockData);
+    return i;
+  }
 }

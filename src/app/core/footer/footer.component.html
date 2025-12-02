@@ -1,5 +1,6 @@
-<footer class="bg-white border-t border-gray-100 mt-10">
-  <div class="app-container py-10 grid grid-cols-1 md:grid-cols-4 gap-8">
+<ng-container *ngIf="user$ | async">
+  <footer class="bg-white border-t border-gray-100 mt-10">
+    <div class="app-container py-10 grid grid-cols-1 md:grid-cols-4 gap-8">
     <!-- Brand -->
     <div class="md:col-span-2">
       <div class="flex items-center gap-2 font-bold text-xl text-gray-900 mb-3">
@@ -37,7 +38,8 @@
     </div>
   </div>
 
-  <div class="bg-gray-50 py-4 text-center text-sm text-gray-500">
-    جميع الحقوق محفوظة © TechLearn 2025
-  </div>
-</footer>
+    <div class="bg-gray-50 py-4 text-center text-sm text-gray-500">
+      جميع الحقوق محفوظة © TechLearn 2025
+    </div>
+  </footer>
+</ng-container>

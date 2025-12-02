@@ -61,6 +61,7 @@ export const routes: Routes = [
           import('./entities/students/students.component')
             .then(m => m.StudentsComponent),
       },
+      
       {
         path: 'new',
         loadComponent: () =>
@@ -147,9 +148,14 @@ export const routes: Routes = [
 
   // Fallback
   {
+    path: 'search',
+    loadComponent: () => import('./search/search.component').then(m => m.SearchComponent),
+  },
+
+  // Page not found / errors
+  {
     path: '**',
-    loadComponent: () =>
-      import('./home/home.component').then(m => m.HomeComponent),
+    loadComponent: () => import('./notfound/notfound').then(m => m.Notfound),
   },
 ];
 

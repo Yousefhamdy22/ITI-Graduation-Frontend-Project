@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CourseService } from '../course.service';
 import { Course } from '../course.model';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-course-details',
@@ -15,10 +16,12 @@ import { Course } from '../course.model';
 export class CourseDetailsComponent implements OnInit {
   course: Course | null = null;
   loading = true;
+  safePromoUrl: SafeResourceUrl | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private courseService: CourseService
+    , private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
@@ -28,6 +31,7 @@ export class CourseDetailsComponent implements OnInit {
     this.courseService.getCourseById(id).subscribe({
       next: (c) => {
         this.course = c;
+        this.safePromoUrl = c?.promoVideoUrl ? this.sanitizer.bypassSecurityTrustResourceUrl(c.promoVideoUrl) : null;
         this.loading = false;
       },
       error: () => this.loading = false

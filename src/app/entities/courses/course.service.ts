@@ -11,12 +11,74 @@ export class CourseService {
 
   private useMock = true;
 
-  private mockData: Course[] = [
-    { id: '1', title: 'تعلم Angular من الصفر إلى الاحتراف 2025', categoryKey: 'web', price: 599, oldPrice: 1499, rating: 4.8, reviewsCount: 3421, studentsCount: 12850, instructorName: 'محمد أحمد', image: 'https://img-c.udemycdn.com/course/480x270/4561060_2b2e_3.jpg', isBestseller: true },
-    { id: '2', title: 'الذكاء الاصطناعي وتعلم الآلة بالعربي', categoryKey: 'ai', price: 799, oldPrice: 1999, rating: 4.9, reviewsCount: 5678, studentsCount: 18420, instructorName: 'د. سارة علي', image: 'https://img-c.udemycdn.com/course/480x270/4123456_8b93_5.jpg', isBestseller: true },
-    { id: '3', title: 'DevOps كاملة: Docker + Kubernetes + CI/CD', categoryKey: 'devops', price: 899, oldPrice: 2299, rating: 4.7, reviewsCount: 2890, studentsCount: 9870, instructorName: 'أحمد خالد', image: 'https://img-c.udemycdn.com/course/480x270/3456789_ab12.jpg', isBestseller: false },
-    { id: '4', title: 'أمن المعلومات واختراق الأنظمة الأخلاقي CEH v12', categoryKey: 'security', price: 999, oldPrice: 2499, rating: 4.6, reviewsCount: 4123, studentsCount: 15670, instructorName: 'عمر حسن', image: 'https://img-c.udemycdn.com/course/480x270/2345678_def4.jpg', isBestseller: false }
-  ];
+private mockData: Course[] = [
+  {
+    id: '1',
+    title: 'تعلم Angular من الصفر إلى الاحتراف 2025',
+    subtitle: 'دورة شاملة للمبتدئين والمحترفين',
+    description: 'دورة شاملة تبدأ معك من الأساسيات حتى بناء مشاريع احترافية باستخدام Angular 17.',
+    categoryKey: 'web',
+    category: 'Web Development',
+    level: 'Beginner to Advanced',
+    hours: 18,
+    duration: 18,
+    lessonsCount: 25,
+    price: 599,
+    oldPrice: 1499,
+    rating: 4.8,
+    reviewsCount: 3421,
+    studentsCount: 12850,
+    image: 'https://img-c.udemycdn.com/course/480x270/4561060_2b2e_3.jpg',
+    promoVideoUrl: 'https://www.youtube.com/embed/2OHbjep_WjQ',
+    learningObjectives: [
+      'فهم أساسيات Angular',
+      'إنشاء Components وModules',
+      'التعامل مع Services و Dependency Injection',
+      'ربط Angular مع API باستخدام HttpClient',
+      'بناء لوحة تحكم Dashboard كاملة'
+    ],
+    instructorName: 'محمد أحمد',
+    instructorTitle: 'Senior Frontend Engineer',
+    instructorAvatar: 'https://randomuser.me/api/portraits/men/32.jpg',
+    isBestseller: true,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    id: '2',
+    title: 'الذكاء الاصطناعي وتعلم الآلة بالعربي',
+    subtitle: 'دورة متقدمة لتعلم AI و ML بالعربي',
+    description: 'دورة متقدمة لشرح أساسيات وخوارزميات الذكاء الاصطناعي وتطبيقاتها العملية.',
+    categoryKey: 'ai',
+    category: 'Artificial Intelligence',
+    level: 'Intermediate',
+    hours: 22,
+    duration: 22,
+    lessonsCount: 30,
+    price: 799,
+    oldPrice: 1999,
+    rating: 4.9,
+    reviewsCount: 5678,
+    studentsCount: 18420,
+    image: 'https://img-c.udemycdn.com/course/480x270/4123456_8b93_5.jpg',
+    promoVideoUrl: 'https://www.youtube.com/embed/aircAruvnKk',
+    learningObjectives: [
+      'مقدمة في الذكاء الاصطناعي',
+      'فهم خوارزميات تعلم الآلة',
+      'تنفيذ نماذج ML باستخدام Python',
+      'تحليل البيانات وتدريب الموديل',
+      'تحسين ودقة النماذج'
+    ],
+    instructorName: 'د. سارة علي',
+    instructorTitle: 'AI Researcher',
+    instructorAvatar: 'https://randomuser.me/api/portraits/women/44.jpg',
+    isBestseller: true,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }
+];
+
+
 
   courses$ = new BehaviorSubject<Course[]>(this.mockData);
 

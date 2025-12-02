@@ -5,28 +5,29 @@ export interface Course {
   subtitle?: string;
   description?: string;
   categoryKey?: string;
+  category?: string;
   level?: string;
 
   hours?: number;
-
   duration?: number;
-
   lessonsCount?: number;
 
   price?: number;
   oldPrice?: number;
 
   rating?: number;
-
-reviews?: number;
-reviewsCount?: number;
-studentsCount?: number;
+  reviews?: number;
+  reviewsCount?: number;
+  studentsCount?: number;
 
   image?: string;
   promoVideoUrl?: string;
 
+  learningObjectives?: string[];
+
   instructorId?: string;
   instructorName?: string;
+  instructorTitle?: string;
   instructorAvatar?: string;
 
   isBestseller?: boolean;
@@ -34,4 +35,3 @@ studentsCount?: number;
   updatedAt?: string | Date;
   createdAt?: string | Date;
 }
-

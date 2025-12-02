@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 
 import { InstructorService } from './instructor.service';
 import { Instructor } from './instructor.model';
@@ -20,7 +20,7 @@ export class InstructorsComponent implements OnInit {
 
   query = { search: '' };
 
-  constructor(private instructorService: InstructorService) {}
+  constructor(private instructorService: InstructorService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadInstructors();
@@ -58,5 +58,11 @@ export class InstructorsComponent implements OnInit {
 
   onSearch() {
     this.filterInstructors();
+  }
+
+  navigateToInstructor(id?: string, event?: Event) {
+    if (!id) return;
+    if (event) { event.preventDefault(); }
+    this.router.navigate(['/instructors', id]);
   }
 }

@@ -1,0 +1,22 @@
+/* Certificate view styles */
+:host { display: block; }
+
+.certificate-container {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  .certificate-container {
+    border: 8px solid #0E4D67 !important;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+  }
+  
+  body {
+    background: white !important;
+  }
+}

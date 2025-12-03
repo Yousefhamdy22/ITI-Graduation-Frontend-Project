@@ -1,0 +1,49 @@
+<div class="p-4">
+  <h2 class="text-xl mb-4">تجميع امتحان من الأسئلة المحددة</h2>
+  <div class="mb-3">
+    <label class="block">الكورس</label>
+    <select [(ngModel)]="courseId" class="border p-2 w-full">
+      <option value="">-- اختر كورس --</option>
+      <option *ngFor="let c of courses" [value]="c.id">{{c.title}}</option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label class="block">عنوان الامتحان</label>
+    <input [(ngModel)]="title" class="border p-2 w-full" />
+  </div>
+
+  <div class="grid grid-cols-3 gap-3 mb-4">
+    <div>
+      <label class="block">المدة (دقائق)</label>
+      <input type="number" [(ngModel)]="duration" class="border p-2 w-full" />
+    </div>
+    <div>
+      <label class="block">النسبة للنجاح (%)</label>
+      <input type="number" [(ngModel)]="passingScore" class="border p-2 w-full" />
+    </div>
+    <div class="flex items-end">
+      <button (click)="createExam()" class="bg-blue-600 text-white px-4 py-2 rounded">إنشاء الامتحان</button>
+      <button (click)="back()" class="ml-3 border px-4 py-2 rounded">العودة</button>
+    </div>
+  </div>
+
+  <div>
+    <h3 class="font-semibold mb-2">الأسئلة المحددة ({{questions.length}})</h3>
+    <div *ngIf="questions.length === 0">لم تقم بتحديد أسئلة. عد إلى صفحة الأسئلة لاختيارها.</div>
+    <ul>
+      <li *ngFor="let q of questions" class="mb-2 border p-3 rounded">
+        <div class="flex justify-between">
+          <div>{{q.text}}</div>
+          <div class="w-32">
+            <label class="block text-sm">النقاط</label>
+            <input type="number" [(ngModel)]="points[q.id]" class="border p-1 w-full" />
+          </div>
+        </div>
+        <div class="mt-2 text-sm text-gray-600">
+          <div *ngIf="q.options && q.options.length">خيارات: {{q.options.join(', ')}}</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

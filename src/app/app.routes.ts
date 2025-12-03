@@ -27,6 +27,12 @@ export const routes: Routes = [
     data: { role: 'admin' },
     canActivate: [() => import('./auth/role.guard').then(m => m.RoleGuard as any)],
   },
+
+  // Student landing
+  {
+    path: 'student',
+    loadComponent: () => import('./student/student-landing.component').then(m => m.StudentLandingComponent),
+  },
   
 
   // ======================
@@ -65,6 +71,8 @@ export const routes: Routes = [
   // Students 
   {
     path: 'students',
+    data: { role: 'admin' },
+    canActivate: [() => import('./auth/role.guard').then(m => m.RoleGuard as any)],
     children: [
       {
         path: '',
@@ -92,6 +100,12 @@ export const routes: Routes = [
             .then(m => m.StudentFormComponent),
       },
     ],
+  },
+
+  // Instructor landing
+  {
+    path: 'instructor',
+    loadComponent: () => import('./instructor/instructor-landing.component').then(m => m.InstructorLandingComponent),
   },
 
   // ======================
@@ -150,13 +164,61 @@ export const routes: Routes = [
       },
       {
         path: 'new',
-        loadComponent: () => import('./entities/exams/exam-form/exam-form.component').then(m => m.ExamFormComponent),
+        loadComponent: () => import('./entities/exams/exam-course-picker/exam-course-picker.component').then(m => m.ExamCoursePickerComponent),
+      },
+      {
+        path: 'assemble',
+        loadComponent: () => import('./entities/exams/exam-assemble/exam-assemble.component').then(m => m.ExamAssembleComponent),
       },
       {
         path: ':id',
         loadComponent: () =>
           import('./entities/exams/exam-player/exam-player.component')
             .then(m => m.ExamPlayerComponent),
+      },
+    ],
+  },
+
+  // Questions management
+  {
+    path: 'questions',
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./entities/questions/question-list/question-list.component').then(m => m.QuestionListComponent),
+      },
+      {
+        path: 'new',
+        loadComponent: () => import('./entities/questions/question-form/question-form.component').then(m => m.QuestionFormComponent),
+      },
+      {
+        path: ':id/edit',
+        loadComponent: () => import('./entities/questions/question-form/question-form.component').then(m => m.QuestionFormComponent),
+      },
+    ],
+  },
+
+  // Certificates
+  {
+    path: 'certificates',
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./entities/certificates/certificates.component')
+            .then(m => m.CertificatesComponent),
+      },
+      {
+        path: 'new',
+        loadComponent: () =>
+          import('./entities/certificates/certificate-form/certificate-form.component')
+            .then(m => m.CertificateFormComponent),
+      },
+      {
+        path: ':id',
+        loadComponent: () =>
+          import('./entities/certificates/certificate-view/certificate-view.component')
+            .then(m => m.CertificateViewComponent),
       },
     ],
   },

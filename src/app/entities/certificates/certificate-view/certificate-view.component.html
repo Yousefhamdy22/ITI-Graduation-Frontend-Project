@@ -1,0 +1,59 @@
+<div class="min-h-screen bg-gray-100 py-10 px-6">
+  <div class="max-w-4xl mx-auto">
+    <!-- Action Buttons (hide on print) -->
+    <div class="flex gap-3 mb-6 no-print">
+      <button (click)="print()" class="bg-blue-600 text-white px-6 py-2 rounded">طباعة الشهادة</button>
+      <button (click)="back()" class="bg-gray-100 px-6 py-2 rounded">رجوع</button>
+    </div>
+
+    <!-- Certificate Container -->
+    <div *ngIf="certificate" class="certificate-container bg-white p-12 rounded-lg shadow-xl border-8 border-[#0E4D67]">
+      <!-- Header -->
+      <div class="text-center mb-8">
+        <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-[#0E4D67] text-white flex items-center justify-center text-3xl">🎓</div>
+        <h1 class="text-4xl font-bold text-[#0E4D67] mb-2">شهادة إتمام</h1>
+        <p class="text-lg text-gray-600">منصة TechLearn التعليمية</p>
+      </div>
+
+      <!-- Certificate Body -->
+      <div class="text-center space-y-6">
+        <p class="text-xl text-gray-700">تشهد هذه الشهادة بأن</p>
+        
+        <h2 class="text-5xl font-bold text-[#0E4D67] my-6">{{ certificate.studentName }}</h2>
+        
+        <p class="text-xl text-gray-700">قد أتم بنجاح دورة</p>
+        
+        <h3 class="text-3xl font-bold text-gray-800 my-4">{{ certificate.courseName }}</h3>
+        
+        <div class="flex justify-center items-center gap-8 my-8">
+          <div class="text-center">
+            <p class="text-sm text-gray-500 mb-1">الدرجة النهائية</p>
+            <p class="text-4xl font-bold text-green-600">{{ certificate.grade }}%</p>
+          </div>
+          
+          <div class="text-center">
+            <p class="text-sm text-gray-500 mb-1">تاريخ الإصدار</p>
+            <p class="text-lg font-semibold">{{ certificate.issueDate | date: 'dd/MM/yyyy' }}</p>
+          </div>
+        </div>
+
+        <div class="border-t-2 border-gray-200 pt-8 mt-12">
+          <p class="text-gray-600 mb-2">تحت إشراف</p>
+          <p class="text-xl font-bold text-gray-800">{{ certificate.instructorName || 'المدرب' }}</p>
+          <div class="w-40 h-px bg-gray-400 mx-auto mt-4"></div>
+          <p class="text-sm text-gray-500 mt-2">توقيع المدرب</p>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="text-center mt-12 text-sm text-gray-500">
+        <p>رقم الشهادة: {{ certificate.id }}</p>
+        <p class="mt-2">© TechLearn 2025 - جميع الحقوق محفوظة</p>
+      </div>
+    </div>
+
+    <div *ngIf="!certificate" class="text-center py-20">
+      <p class="text-gray-500">الشهادة غير موجودة</p>
+    </div>
+  </div>
+</div>

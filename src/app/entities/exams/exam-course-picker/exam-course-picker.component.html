@@ -1,0 +1,13 @@
+<div class="p-6 max-w-2xl mx-auto">
+  <h2 class="text-xl font-bold mb-4">أولاً: اختر الكورس للامتحان</h2>
+  <div class="mb-4">
+    <select [(ngModel)]="selectedCourseId" class="border p-2 w-full">
+      <option value="">-- اختر كورس --</option>
+      <option *ngFor="let c of courses" [value]="c.id">{{c.title}}</option>
+    </select>
+  </div>
+  <div class="flex gap-3">
+    <button (click)="choose()" class="bg-blue-600 text-white px-4 py-2 rounded">اختر</button>
+    <button (click)="cancel()" class="border px-4 py-2 rounded">الغاء</button>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+<div class="fixed top-4 left-4 z-50 flex flex-col-reverse gap-2">
+  <div *ngFor="let t of (toasts$ | async)" class="max-w-sm w-full shadow-lg rounded p-3 text-sm" [ngClass]="{
+    'bg-green-500 text-white': t.type === 'success',
+    'bg-red-500 text-white': t.type === 'error',
+    'bg-yellow-500 text-white': t.type === 'warning',
+    'bg-gray-800 text-white': t.type === 'info'
+  }">
+    <div class="flex justify-between items-start gap-2">
+      <div class="flex-1">{{ t.message }}</div>
+      <button (click)="dismiss(t.id)" class="ml-2 text-xs opacity-80">✕</button>
+    </div>
+  </div>
+</div>

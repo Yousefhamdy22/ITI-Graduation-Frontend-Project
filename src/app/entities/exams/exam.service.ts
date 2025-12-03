@@ -68,6 +68,13 @@ export class ExamService {
       : this.http.get<Exam>(`/api/exams/${id}`);
   }
 
+  updateExam(id: string, patch: Partial<Exam>) {
+    const idx = this.mockData.findIndex(e => e.id === id);
+    if (idx === -1) return;
+    this.mockData[idx] = { ...this.mockData[idx], ...patch };
+    this.examsSubject.next([...this.mockData]);
+  }
+
   getExamsByCourse(courseId: string): Observable<Exam[]> {
     return this.useMock
       ? of(this.mockData.filter(e => e.courseId === courseId)).pipe(delay(300))

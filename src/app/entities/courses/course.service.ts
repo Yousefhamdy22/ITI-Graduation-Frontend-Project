@@ -38,6 +38,7 @@ private mockData: Course[] = [
       'بناء لوحة تحكم Dashboard كاملة'
     ],
     instructorName: 'محمد أحمد',
+    instructorId: '1',
     instructorTitle: 'Senior Frontend Engineer',
     instructorAvatar: 'https://randomuser.me/api/portraits/men/32.jpg',
     isBestseller: true,
@@ -70,6 +71,7 @@ private mockData: Course[] = [
       'تحسين ودقة النماذج'
     ],
     instructorName: 'د. سارة علي',
+    instructorId: '2',
     instructorTitle: 'AI Researcher',
     instructorAvatar: 'https://randomuser.me/api/portraits/women/44.jpg',
     isBestseller: true,

@@ -34,12 +34,12 @@ export class LoginComponent {
     }
 
     if (role === 'student') {
-      this.studentService.getStudents().subscribe(list => {
+        this.studentService.getStudents().subscribe(list => {
         const pick = list && list.length ? list[0] : null;
         const id = pick ? pick.id : undefined;
         const name = pick ? pick.name : 'طالب تجريبي';
         this.auth.loginAs('student', name, id);
-        this.router.navigate(['/home']);
+        this.router.navigate(['/student']);
       });
       return;
     }
@@ -50,7 +50,7 @@ export class LoginComponent {
         const id = pick ? pick.id : undefined;
         const name = pick ? pick.name : 'مدرس تجريبي';
         this.auth.loginAs('instructor', name, id);
-        this.router.navigate(['/home']);
+        this.router.navigate(['/instructor']);
       });
       return;
     }
@@ -64,7 +64,7 @@ export class LoginComponent {
         const id = pick ? pick.id : undefined;
         const name = pick ? pick.name : this.name;
         const user = this.auth.loginAs('student', name, id);
-        this.router.navigate(['/home']);
+        this.router.navigate(['/student']);
       });
       return;
     }
@@ -75,7 +75,7 @@ export class LoginComponent {
         const id = pick ? pick.id : undefined;
         const name = pick ? pick.name : this.name;
         this.auth.loginAs('instructor', name, id);
-        this.router.navigate(['/home']);
+        this.router.navigate(['/instructor']);
       });
       return;
     }
@@ -87,12 +87,12 @@ export class LoginComponent {
 
   guest() {
     // map guest to a mock student for demo
-    this.studentService.getStudents().subscribe(list => {
-      const pick = list && list.length ? list[0] : null;
-      const id = pick ? pick.id : undefined;
-      const name = pick ? pick.name : 'زائر';
-      this.auth.loginAs('student', name, id);
-      this.router.navigate(['/home']);
-    });
+        this.studentService.getStudents().subscribe(list => {
+        const pick = list && list.length ? list[0] : null;
+        const id = pick ? pick.id : undefined;
+        const name = pick ? pick.name : 'زائر';
+        this.auth.loginAs('student', name, id);
+        this.router.navigate(['/student']);
+      });
   }
 }

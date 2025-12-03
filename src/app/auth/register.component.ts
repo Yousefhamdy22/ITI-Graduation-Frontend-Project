@@ -32,12 +32,12 @@ export class RegisterComponent {
     if (this.role === 'student') {
       const s = this.studentService.addStudent({ name: this.name || 'طالب جديد', email: this.email, phone: this.phone });
       this.auth.loginAs('student', s.name, s.id);
-      this.router.navigate(['/home']);
+      this.router.navigate(['/student']);
       return;
     }
     const i = this.instructorService.addInstructor({ name: this.name || 'مدرب جديد', email: this.email });
     this.auth.loginAs('instructor', i.name, i.id);
-    this.router.navigate(['/home']);
+    this.router.navigate(['/instructor']);
   }
 
   cancel() {

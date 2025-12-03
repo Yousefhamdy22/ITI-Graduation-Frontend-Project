@@ -1,0 +1,31 @@
+<div class="min-h-screen bg-gray-50 p-6">
+  <div class="max-w-6xl mx-auto">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-3xl font-bold">الشهادات</h1>
+      <button (click)="createNew()" class="bg-[#0E4D67] text-white px-6 py-2 rounded">إنشاء شهادة جديدة</button>
+    </div>
+
+    <div *ngIf="certificates.length === 0" class="text-center py-20">
+      <p class="text-gray-500">لا توجد شهادات</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div *ngFor="let cert of certificates" 
+           (click)="viewCertificate(cert.id)"
+           class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition cursor-pointer border-2 border-gray-100">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-12 h-12 rounded-full bg-[#0E4D67] text-white flex items-center justify-center text-xl">🎓</div>
+          <div class="flex-1">
+            <h3 class="font-bold text-lg">{{ cert.studentName }}</h3>
+            <p class="text-sm text-gray-500">{{ cert.courseName }}</p>
+          </div>
+        </div>
+        
+        <div class="flex justify-between items-center pt-4 border-t">
+          <span class="text-2xl font-bold text-green-600">{{ cert.grade }}%</span>
+          <span class="text-sm text-gray-500">{{ cert.issueDate | date: 'dd/MM/yyyy' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -2,7 +2,10 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ExamService } from '../exam.service';
+import { AuthService } from '../../../auth/auth.service';
+import { CourseService } from '../../courses/course.service';
 import { Exam } from '../exam.model';
+import { ToastService } from '../../../shared/toast.service';
 
 @Component({
   selector: 'app-exam-player',
@@ -21,10 +24,32 @@ export class ExamPlayerComponent implements OnInit, OnDestroy {
   timeRemaining: number = 0;
   timerInterval: any;
 
+  isInstructorOfCourse = false;
+  editingModel = false;
+  modelAnswers: { [questionId: string]: string } = {};
+
   constructor(
     private route: ActivatedRoute,
-    private examService: ExamService
+    private examService: ExamService,
+    private auth: AuthService,
+    private courseService: CourseService,
+    private toast: ToastService
   ) {}
+
+  saveModelAnswers() {
+    if (!this.exam) return;
+    this.examService.updateExam(this.exam.id, { modelAnswers: this.modelAnswers });
+    this.editingModel = false;
+    this.toast.show('تم حفظ الإجابات النموذجية', 'success');
+  }
+
+  toggleEditModel() {
+    this.editingModel = !this.editingModel;
+    if (!this.editingModel && this.exam) {
+      // reload saved answers
+      this.modelAnswers = this.exam.modelAnswers ? { ...this.exam.modelAnswers } : {};
+    }
+  }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id')!;
@@ -34,6 +59,15 @@ export class ExamPlayerComponent implements OnInit, OnDestroy {
         if (exam) {
           this.timeRemaining = exam.duration * 60; // convert to seconds
           this.startTimer();
+          // load model answers if exist
+          this.modelAnswers = exam.modelAnswers ? { ...exam.modelAnswers } : {};
+          // check if current user is instructor for this course
+          const user = this.auth.currentUser;
+          if (user && user.role === 'instructor') {
+            this.courseService.getCourseById(exam.courseId).subscribe(c => {
+              if (c) this.isInstructorOfCourse = (c as any).instructorId === user.id || c.instructorName === user.name;
+            });
+          }
         }
         this.loading = false;
       },

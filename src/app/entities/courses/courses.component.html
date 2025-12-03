@@ -26,8 +26,7 @@
 
   <div *ngIf="!loading && filteredCourses.length > 0"
        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-    <a *ngFor="let course of filteredCourses" [routerLink]="['/courses', course.id]"
-       class="block bg-white rounded-2xl shadow-lg hover:shadow-2xl transition group">
+    <div *ngFor="let course of filteredCourses" class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition group">
       <img [src]="course.image" class="w-full h-48 object-cover group-hover:scale-105 transition">
       <div class="p-5">
         <div class="flex justify-between items-start mb-3">
@@ -38,13 +37,25 @@
         </div>
         <h3 class="font-bold text-lg line-clamp-2 mb-2">{{ course.title }}</h3>
         <p class="text-gray-600 text-sm mb-3">{{ course.instructorName }}</p>
-        <div class="flex items-center gap-2 text-sm">
+        <div class="flex items-center gap-2 text-sm mb-3">
           <span class="font-bold text-yellow-600">{{ course.rating }}</span>
           <span class="text-yellow-500">★★★★★</span>
           <span class="text-gray-500">({{ course.reviewsCount || course.reviews }})</span>
         </div>
+        <div class="flex items-center gap-2">
+          <a [routerLink]="['/courses', course.id]" class="px-4 py-2 border rounded">عرض</a>
+          <ng-container *ngIf="auth.currentUser?.role === 'student'">
+            <button (click)="toggleEnroll(course.id)" class="px-4 py-2 bg-indigo-600 text-white rounded">
+              {{ (auth.currentUser && isCurrentUserEnrolled(course.id)) ? 'إلغاء الاشتراك' : 'اشترك الآن' }}
+            </button>
+          </ng-container>
+          <ng-container *ngIf="auth.currentUser?.role === 'instructor' && (course.instructorId === auth.currentUser.id || course.instructorName === auth.currentUser.name)">
+            <a [routerLink]="['/courses', course.id, 'edit']" class="px-4 py-2 border rounded">تعديل</a>
+            <a [routerLink]="['/courses', course.id]" class="px-4 py-2 bg-yellow-500 text-white rounded">ادارة الدروس</a>
+          </ng-container>
+        </div>
       </div>
-    </a>
+    </div>
   </div>
 
   <div *ngIf="!loading && filteredCourses.length === 0" class="text-center py-24 text-xl text-gray-500">

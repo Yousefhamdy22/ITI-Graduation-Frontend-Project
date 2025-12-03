@@ -1,24 +1,41 @@
 <header *ngIf="user$ | async as user" class="bg-white border-b border-gray-100">
   <div class="app-container flex items-center justify-between py-4">
     <!-- Logo -->
-    <a routerLink="/home" class="flex items-center gap-2 font-bold text-xl text-gray-900">
+    <a [routerLink]="user.role === 'instructor' ? '/instructor' : (user.role === 'student' ? '/student' : '/home')" class="flex items-center gap-2 font-bold text-xl text-gray-900">
       <span class="w-9 h-9 rounded-xl bg-[#0E4D67] text-white flex items-center justify-center">T</span>
       TechLearn
     </a>
 
     <!-- Nav -->
     <nav class="hidden md:flex items-center gap-6 text-gray-700 font-medium">
-      <a routerLink="/home" routerLinkActive="text-[#0E4D67]" class="hover:text-[#0E4D67] transition">الرئيسية</a>
-      <a routerLink="/courses" routerLinkActive="text-[#0E4D67]" class="hover:text-[#0E4D67] transition">الكورسات</a>
-      <a routerLink="/students" routerLinkActive="text-[#0E4D67]" class="hover:text-[#0E4D67] transition">الطلاب</a>
-      <a routerLink="/instructors" routerLinkActive="text-[#0E4D67]" class="hover:text-[#0E4D67] transition">المدربين</a>
-      <a routerLink="/dashboard" *ngIf="user.role === 'admin'" class="hover:text-[#0E4D67] transition">لوحة التحكم</a>
+      <ng-container *ngIf="user.role === 'admin'">
+        <a [routerLink]="'/home'" routerLinkActive="text-[#0E4D67]" class="hover:text-[#0E4D67] transition">الرئيسية</a>
+        <a routerLink="/dashboard" class="hover:text-[#0E4D67] transition">لوحة التحكم</a>
+      </ng-container>
+
+      <ng-container *ngIf="user.role === 'student'">
+        <a routerLink="/student" routerLinkActive="text-[#0E4D67]" class="hover:text-[#0E4D67] transition">الرئيسية</a>
+        <a routerLink="/courses" routerLinkActive="text-[#0E4D67]" class="hover:text-[#0E4D67] transition">الكورسات</a>
+        <a routerLink="/instructors" routerLinkActive="text-[#0E4D67]" class="hover:text-[#0E4D67] transition">المدربين</a>
+      </ng-container>
+
+      <ng-container *ngIf="user.role === 'instructor'">
+        <a [routerLink]="'/instructor'" routerLinkActive="text-[#0E4D67]" class="hover:text-[#0E4D67] transition">الرئيسية</a>
+        <a routerLink="/courses" routerLinkActive="text-[#0E4D67]" class="hover:text-[#0E4D67] transition">الكورسات</a>
+        <a routerLink="/instructors" routerLinkActive="text-[#0E4D67]" class="hover:text-[#0E4D67] transition">المدربين</a>
+        <a routerLink="/certificates" routerLinkActive="text-[#0E4D67]" class="hover:text-[#0E4D67] transition">الشهادات</a>
+      </ng-container>
     </nav>
 
     <!-- User / Auth -->
     <div class="flex items-center gap-3">
       <div class="text-sm text-gray-700 ml-3">مرحبًا، <span class="font-semibold">{{ user.name }}</span></div>
+      <ng-container *ngIf="user.role === 'instructor'">
+        <a routerLink="/exams/new" class="px-3 py-1 bg-indigo-600 text-white rounded text-sm">إنشاء اختبار</a>
+        <a routerLink="/certificates/new" class="px-3 py-1 bg-yellow-600 text-white rounded text-sm">إنشاء شهادة</a>
+      </ng-container>
       <button (click)="logout()" class="bg-red-500 text-white px-4 py-2 rounded">خروج</button>
     </div>
   </div>
+  <app-toast-container></app-toast-container>
 </header>

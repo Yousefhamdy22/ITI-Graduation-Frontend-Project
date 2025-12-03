@@ -12,6 +12,35 @@
     </div>
   </div>
 
+  <!-- Instructor model answer controls -->
+  <div *ngIf="!loading && exam" class="max-w-4xl mx-auto p-4">
+    <div class="flex justify-end gap-3 mb-3">
+      <div *ngIf="isInstructorOfCourse">
+        <button *ngIf="!editingModel" (click)="toggleEditModel()" class="px-3 py-1 bg-yellow-500 text-white rounded">تعديل الإجابات النموذجية</button>
+        <button *ngIf="editingModel" (click)="saveModelAnswers()" class="px-3 py-1 bg-green-600 text-white rounded">حفظ الإجابات النموذجية</button>
+        <button *ngIf="editingModel" (click)="toggleEditModel()" class="px-3 py-1 border rounded">إلغاء</button>
+      </div>
+    </div>
+
+    <div *ngIf="!editingModel && exam.modelAnswers && (exam.modelAnswers | json) !== '{}'" class="bg-white p-4 rounded shadow mb-4">
+      <h3 class="font-semibold mb-2">الإجابات النموذجية</h3>
+      <ul class="space-y-2">
+        <li *ngFor="let q of exam.questions">
+          <div class="font-semibold">{{ q.text }}</div>
+          <div class="text-sm text-gray-700">{{ exam.modelAnswers?.[q.id] || '-' }}</div>
+        </li>
+      </ul>
+    </div>
+
+    <div *ngIf="editingModel" class="bg-white p-4 rounded shadow mb-4">
+      <h3 class="font-semibold mb-2">تحرير الإجابات النموذجية</h3>
+      <div *ngFor="let q of exam.questions" class="mb-3">
+        <div class="font-semibold mb-1">{{ q.text }}</div>
+        <textarea [(ngModel)]="modelAnswers[q.id]" class="w-full border rounded p-2" rows="3" placeholder="ضع الإجابة النموذجية هنا"></textarea>
+      </div>
+    </div>
+  </div>
+
   <!-- Loading State -->
   <div *ngIf="loading" class="flex items-center justify-center min-h-[calc(100vh-100px)]">
     <div class="text-center">

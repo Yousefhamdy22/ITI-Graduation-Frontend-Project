@@ -1,0 +1,52 @@
+<div class="app-container py-6">
+  <div class="grid md:grid-cols-3 gap-6">
+    <div class="md:col-span-2">
+      <!-- Render Home component so student still sees the regular homepage content -->
+      <app-home></app-home>
+    </div>
+
+    <aside class="bg-white p-4 rounded shadow">
+      <div class="flex items-center gap-3 mb-4">
+        <img *ngIf="studentRecord?.avatar" [src]="studentRecord.avatar" alt="avatar" class="w-16 h-16 rounded-full" />
+        <div>
+          <div class="font-semibold text-lg">{{ studentRecord?.name }}</div>
+          <div class="text-sm text-gray-500">انضم: {{ studentRecord?.joinDate }}</div>
+        </div>
+      </div>
+
+      <div *ngIf="!editing">
+        <div class="text-sm mb-2">البريد: <strong>{{ studentRecord?.email }}</strong></div>
+        <div class="text-sm mb-2">الهاتف: {{ studentRecord?.phone }}</div>
+        <div class="text-sm mb-4">دورات مسجلة: {{ studentRecord?.enrolledCourses }}</div>
+        <div class="flex gap-2">
+          <button class="btn-primary" (click)="startEdit()">تعديل الملف</button>
+        </div>
+        <hr class="my-4" />
+        <h4 class="font-semibold mb-2">شهاداتي</h4>
+        <div *ngIf="certificates.length === 0">لا توجد شهادات</div>
+        <ul class="space-y-2">
+          <li *ngFor="let cert of certificates" class="flex justify-between items-center">
+            <div>
+              <div class="font-semibold">{{ cert.courseName }}</div>
+              <div class="text-sm text-gray-500">معدل: {{ cert.grade }}%</div>
+            </div>
+            <div>
+              <a [routerLink]="['/certificates', cert.id]" class="px-3 py-1 border rounded">عرض</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div *ngIf="editing">
+        <label class="block text-sm">الهاتف</label>
+        <input [(ngModel)]="editPhone" class="w-full border rounded px-2 py-1 mb-2" />
+        <label class="block text-sm">رابط صورة الملف</label>
+        <input [(ngModel)]="editAvatar" class="w-full border rounded px-2 py-1 mb-3" />
+        <div class="flex gap-2">
+          <button class="px-3 py-1 bg-green-600 text-white rounded" (click)="saveProfile()">حفظ</button>
+          <button class="px-3 py-1 border rounded" (click)="cancelEdit()">إلغاء</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>

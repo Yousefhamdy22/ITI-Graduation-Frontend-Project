@@ -6,6 +6,8 @@ export interface Exam {
   duration: number;
   passingScore: number;
   questions: Question[];
+  modelAnswers?: { [questionId: string]: string };
+  modelAnswerSummary?: string;
 }
 
 export interface Question {
@@ -13,4 +15,5 @@ export interface Question {
   text: string;
   options: string[];
   correctOption: number;
+  points?: number; // optional points assigned when used in an exam
 }

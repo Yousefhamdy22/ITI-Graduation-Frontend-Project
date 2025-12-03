@@ -1,0 +1,2 @@
+/* minimal styles, rely on tailwind in project */
+:host { display:block }

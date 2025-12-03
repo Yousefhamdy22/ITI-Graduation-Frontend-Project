@@ -5,6 +5,8 @@ import { RouterModule } from '@angular/router';
 
 import { StudentService } from './student.service';
 import { Student } from './student.model';
+import { AuthService } from '../../auth/auth.service';
+import { CourseService } from '../courses/course.service';
 
 @Component({
   selector: 'app-students',
@@ -20,7 +22,7 @@ export class StudentsComponent implements OnInit {
 
   query = { search: '' };
 
-  constructor(private studentService: StudentService) {}
+  constructor(private studentService: StudentService, private auth: AuthService, private courseService: CourseService) {}
 
   ngOnInit(): void {
     this.loadStudents();
@@ -28,6 +30,24 @@ export class StudentsComponent implements OnInit {
 
   loadStudents() {
     this.loading = true;
+    const user = this.auth.currentUser;
+    if (user && user.role === 'instructor') {
+      // only show students enrolled in this instructor's courses
+      this.courseService.getCourses().subscribe(courses => {
+        const myCourseIds = (courses || []).filter(c => (c as any).instructorId === user.id || c.instructorName === user.name).map(c => c.id);
+        this.studentService.getStudents().subscribe({
+          next: (students) => {
+            const filtered = (students || []).filter(s => (s.enrolledCourseIds || []).some(id => myCourseIds.includes(id)));
+            this.students = filtered;
+            this.filteredStudents = filtered;
+            this.loading = false;
+          },
+          error: (err) => { console.error(err); this.loading = false; }
+        });
+      });
+      return;
+    }
+
     this.studentService.getStudents().subscribe({
       next: (students) => {
         console.log('✅ الطلاب وصلوا:', students);

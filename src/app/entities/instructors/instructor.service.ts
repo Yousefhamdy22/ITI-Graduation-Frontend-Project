@@ -117,4 +117,21 @@ export class InstructorService {
     this.instructorsSubject.next(this.mockData);
     return i;
   }
+
+  updateInstructor(id: string, patch: Partial<Instructor>) {
+    const idx = this.mockData.findIndex(x => x.id === id);
+    if (idx === -1) return null;
+    const updated = { ...this.mockData[idx], ...patch } as Instructor;
+    this.mockData[idx] = updated;
+    this.instructorsSubject.next([...this.mockData]);
+    return updated;
+  }
+
+  deleteInstructor(id: string) {
+    const idx = this.mockData.findIndex(i => i.id === id);
+    if (idx === -1) return false;
+    this.mockData.splice(idx, 1);
+    this.instructorsSubject.next([...this.mockData]);
+    return true;
+  }
 }

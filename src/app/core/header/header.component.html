@@ -1,9 +1,10 @@
 <header *ngIf="user$ | async as user" class="bg-white border-b border-gray-100">
   <div class="app-container flex items-center justify-between py-4">
     <!-- Logo -->
-    <a [routerLink]="user.role === 'instructor' ? '/instructor' : (user.role === 'student' ? '/student' : '/home')" class="flex items-center gap-2 font-bold text-xl text-gray-900">
+    <a [routerLink]="user.role === 'instructor' ? '/instructor' : (user.role === 'student' ? '/student' : '/home')"
+       class="flex items-center gap-2 font-bold text-xl text-gray-900">
       <span class="w-9 h-9 rounded-xl bg-[#0E4D67] text-white flex items-center justify-center">T</span>
-      TechLearn
+      مستقبل تِك
     </a>
 
     <!-- Nav -->
@@ -16,14 +17,17 @@
       <ng-container *ngIf="user.role === 'student'">
         <a routerLink="/student" routerLinkActive="text-[#0E4D67]" class="hover:text-[#0E4D67] transition">الرئيسية</a>
         <a routerLink="/courses" routerLinkActive="text-[#0E4D67]" class="hover:text-[#0E4D67] transition">الكورسات</a>
-        <a routerLink="/instructors" routerLinkActive="text-[#0E4D67]" class="hover:text-[#0E4D67] transition">المدربين</a>
+        <a routerLink="/instructors" routerLinkActive="text-[#0E4D67]"
+           class="hover:text-[#0E4D67] transition">المدربين</a>
       </ng-container>
 
       <ng-container *ngIf="user.role === 'instructor'">
         <a [routerLink]="'/instructor'" routerLinkActive="text-[#0E4D67]" class="hover:text-[#0E4D67] transition">الرئيسية</a>
         <a routerLink="/courses" routerLinkActive="text-[#0E4D67]" class="hover:text-[#0E4D67] transition">الكورسات</a>
-        <a routerLink="/instructors" routerLinkActive="text-[#0E4D67]" class="hover:text-[#0E4D67] transition">المدربين</a>
-        <a routerLink="/certificates" routerLinkActive="text-[#0E4D67]" class="hover:text-[#0E4D67] transition">الشهادات</a>
+        <a routerLink="/instructors" routerLinkActive="text-[#0E4D67]"
+           class="hover:text-[#0E4D67] transition">المدربين</a>
+        <a routerLink="/certificates" routerLinkActive="text-[#0E4D67]"
+           class="hover:text-[#0E4D67] transition">الشهادات</a>
       </ng-container>
     </nav>
 

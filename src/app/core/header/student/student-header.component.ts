@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../../auth/auth.service';
@@ -11,12 +11,11 @@ import { AuthService } from '../../../auth/auth.service';
   styleUrls: ['./student-header.component.css']
 })
 export class StudentHeaderComponent {
-  user: any = null;
+  @Input() user: any = null;
 
   constructor(private auth: AuthService, private router: Router) {}
 
   ngOnInit() {
-    this.user = this.auth.currentUser;
   }
 
   logout() {

@@ -20,32 +20,21 @@ import { StudentHeaderComponent } from './student/student-header.component';
 export class RoleHeaderComponent {
   user$!: Observable<any>;
   snapshotUser: any = null;
+  // No localStorage usage: auth state is in-memory only
 
   constructor(private auth: AuthService, private router: Router) {}
 
   ngOnInit() {
     this.user$ = this.auth.user$;
 
-    // subscribe to user changes and keep a snapshot fallback
+    // subscribe to user changes and keep a snapshot (in-memory) for quick access
     this.auth.user$.subscribe(u => {
-      // store non-null values
-      if (u) {
-        this.snapshotUser = u;
-      } else {
-        // try to recover from localStorage in case the observable temporarily emits null
-        try {
-          const raw = localStorage.getItem('elearning_user');
-          if (raw) this.snapshotUser = JSON.parse(raw);
-        } catch (e) {
-          // ignore
-        }
-      }
+      this.snapshotUser = u || null;
     });
 
-    // On navigation end, refresh snapshot from currentUser to catch timing issues
+    // On navigation end, log currentUser for debugging
     this.router.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe(() => {
       const cur = this.auth.currentUser;
-      if (cur) this.snapshotUser = cur;
     });
   }
 }

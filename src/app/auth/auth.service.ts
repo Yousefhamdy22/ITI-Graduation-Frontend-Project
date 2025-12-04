@@ -11,25 +11,14 @@ export interface User {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private key = 'elearning_user';
-  private userSubject = new BehaviorSubject<User | null>(this.loadUser());
+  // In-memory only authentication state (no localStorage)
+  private userSubject = new BehaviorSubject<User | null>(null);
   user$ = this.userSubject.asObservable();
 
   constructor() {}
 
-  private loadUser(): User | null {
-    try {
-      const raw = localStorage.getItem(this.key);
-      return raw ? JSON.parse(raw) : null;
-    } catch {
-      return null;
-    }
-  }
-
   private saveUser(u: User | null) {
-    if (u) localStorage.setItem(this.key, JSON.stringify(u));
-    else localStorage.removeItem(this.key);
-    console.log('[AuthService] saveUser ->', u);
+    // Do not persist to localStorage by request — keep in-memory only
     this.userSubject.next(u);
   }
 

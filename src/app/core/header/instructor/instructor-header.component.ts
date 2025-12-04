@@ -16,7 +16,6 @@ export class InstructorHeaderComponent {
   constructor(private auth: AuthService, private router: Router) {}
 
   ngOnInit() {
-    console.log('[InstructorHeader] ngOnInit - user (input/current):', this.user, this.auth.currentUser);
   }
 
   logout() {

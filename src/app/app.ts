@@ -22,7 +22,6 @@ import {FooterComponent} from './core/footer/footer.component';
   standalone: true,
   imports: [RouterOutlet, HeaderComponent, FooterComponent],
   templateUrl: './app.html'
-  // styleUrl: './app.scss',
 })
 export class AppComponent {
 }

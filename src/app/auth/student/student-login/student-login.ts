@@ -1,19 +1,19 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { AuthService, Role } from './auth.service';
-import { StudentService } from '../entities/students/student.service';
-import { InstructorService } from '../entities/instructors/instructor.service';
+import {Component} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {Router, RouterModule} from '@angular/router';
+import {AuthService, Role} from '../../auth.service';
+import {StudentService} from '../../../entities/students/student.service';
+import {InstructorService} from '../../../entities/instructors/instructor.service';
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
+  selector: 'app-student-login',
   imports: [CommonModule, FormsModule, RouterModule],
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  templateUrl: './student-login.html',
+  styleUrl: './student-login.scss',
 })
-export class LoginComponent {
+export class StudentLogin {
+
   name = 'مستخدم';
   role: Role = 'student';
   email = '';
@@ -24,7 +24,8 @@ export class LoginComponent {
     private router: Router,
     private studentService: StudentService,
     private instructorService: InstructorService
-  ) {}
+  ) {
+  }
 
   loginAs(role: Role) {
     if (role === 'admin') {
@@ -34,7 +35,7 @@ export class LoginComponent {
     }
 
     if (role === 'student') {
-        this.studentService.getStudents().subscribe(list => {
+      this.studentService.getStudents().subscribe(list => {
         const pick = list && list.length ? list[0] : null;
         const id = pick ? pick.id : undefined;
         const name = pick ? pick.name : 'طالب تجريبي';
@@ -87,12 +88,12 @@ export class LoginComponent {
 
   guest() {
     // map guest to a mock student for demo
-        this.studentService.getStudents().subscribe(list => {
-        const pick = list && list.length ? list[0] : null;
-        const id = pick ? pick.id : undefined;
-        const name = pick ? pick.name : 'زائر';
-        this.auth.loginAs('student', name, id);
-        this.router.navigate(['/student']);
-      });
+    this.studentService.getStudents().subscribe(list => {
+      const pick = list && list.length ? list[0] : null;
+      const id = pick ? pick.id : undefined;
+      const name = pick ? pick.name : 'زائر';
+      this.auth.loginAs('student', name, id);
+      this.router.navigate(['/student']);
+    });
   }
 }

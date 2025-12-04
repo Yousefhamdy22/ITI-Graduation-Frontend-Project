@@ -1,12 +1,11 @@
-
-import { Routes } from '@angular/router';
+import {Routes} from '@angular/router';
 
 export const routes: Routes = [
   // Default -> login
   {
     path: '',
     pathMatch: 'full',
-    loadComponent: () => import('./auth/login.component').then(m => m.LoginComponent),
+    loadComponent: () => import('./auth/student/student-login/student-login').then(m => m.StudentLogin),
   },
 
   // Home (after login for non-admin)
@@ -16,7 +15,7 @@ export const routes: Routes = [
   },
   {
     path: 'register',
-    loadComponent: () => import('./auth/register.component').then(m => m.RegisterComponent),
+    loadComponent: () => import('./auth/student/student-register/student-register').then(m => m.StudentRegister),
   },
 
   // Dashboard
@@ -24,7 +23,7 @@ export const routes: Routes = [
     path: 'dashboard',
     loadComponent: () =>
       import('./dashboard/dashboard.component').then(m => m.DashboardComponent),
-    data: { role: 'admin' },
+    data: {role: 'admin'},
     canActivate: [() => import('./auth/role.guard').then(m => m.RoleGuard as any)],
   },
 
@@ -33,7 +32,7 @@ export const routes: Routes = [
     path: 'student',
     loadComponent: () => import('./student/student-landing.component').then(m => m.StudentLandingComponent),
   },
-  
+
 
   // ======================
   {
@@ -57,7 +56,7 @@ export const routes: Routes = [
           import('./entities/courses/course-details/course-details.component')
             .then(m => m.CourseDetailsComponent),
       },
-	  
+
       {
         path: ':id/edit',
         loadComponent: () =>
@@ -67,11 +66,11 @@ export const routes: Routes = [
     ],
   },
 
-  
-  // Students 
+
+  // Students
   {
     path: 'students',
-    data: { role: 'admin' },
+    data: {role: 'admin'},
     canActivate: [() => import('./auth/role.guard').then(m => m.RoleGuard as any)],
     children: [
       {
@@ -80,7 +79,7 @@ export const routes: Routes = [
           import('./entities/students/students.component')
             .then(m => m.StudentsComponent),
       },
-      
+
       {
         path: 'new',
         loadComponent: () =>
@@ -230,7 +229,7 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    loadComponent: () => import('./auth/login.component').then(m => m.LoginComponent),
+    loadComponent: () => import('./auth/student/student-login/student-login').then(m => m.StudentLogin),
   },
 
   // Page not found / errors
@@ -239,4 +238,3 @@ export const routes: Routes = [
     loadComponent: () => import('./notfound/notfound').then(m => m.Notfound),
   },
 ];
-

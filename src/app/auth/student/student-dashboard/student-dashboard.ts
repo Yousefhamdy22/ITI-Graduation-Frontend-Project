@@ -1,19 +1,16 @@
 import {Component, OnInit} from '@angular/core';
 import {HomeComponent} from "../../../home/home.component";
-import {NgForOf, NgIf} from "@angular/common";
+import {CommonModule, NgForOf, NgIf} from "@angular/common";
 import {AuthService} from '../../auth.service';
 import {StudentService} from '../../../entities/students/student.service';
 import {CourseService} from '../../../entities/courses/course.service';
 import {CertificateService} from '../../../entities/certificates/certificate.service';
 import {ToastService} from '../../../shared/toast.service';
+import {RouterModule} from '@angular/router';
 
 @Component({
   selector: 'app-student-dashboard',
-  imports: [
-    HomeComponent,
-    NgForOf,
-    NgIf
-  ],
+  imports: [CommonModule, RouterModule, HomeComponent],
   templateUrl: './student-dashboard.html',
   styleUrl: './student-dashboard.scss',
 })

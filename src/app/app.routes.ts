@@ -30,7 +30,7 @@ export const routes: Routes = [
   // Student landing
   {
     path: 'student',
-    loadComponent: () => import('./student/student-landing.component').then(m => m.StudentLandingComponent),
+    loadComponent: () => import('./auth/student/student-dashboard/student-dashboard').then(m => m.StudentDashboard),
   },
 
 

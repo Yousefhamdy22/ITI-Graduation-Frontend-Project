@@ -231,6 +231,10 @@ export const routes: Routes = [
     path: 'login',
     loadComponent: () => import('./auth/student/student-login/student-login').then(m => m.StudentLogin),
   },
+  {
+    path: 'admin',
+    loadComponent: () => import('./auth/Admin/admin-login/admin-login').then(m => m.AdminLogin),
+  },
 
   // Page not found / errors
   {

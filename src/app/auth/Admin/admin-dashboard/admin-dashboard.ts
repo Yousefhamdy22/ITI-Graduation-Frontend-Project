@@ -11,6 +11,7 @@ import {CourseService} from '../../../entities/courses/course.service';
 import {ToastService} from '../../../shared/toast.service';
 import {AuthService} from '../../auth.service';
 import {CommonModule} from '@angular/common';
+// header is provided globally by RoleHeaderComponent
 
 @Component({
   selector: 'app-admin-dashboard',

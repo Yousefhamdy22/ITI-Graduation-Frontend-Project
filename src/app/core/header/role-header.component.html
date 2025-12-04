@@ -1,0 +1,17 @@
+<div class="fixed top-0 left-0 right-0 z-50">
+  <ng-container *ngIf="user$ | async as user; else useSnapshot">
+    <app-admin-header *ngIf="user.role === 'admin'"></app-admin-header>
+    <app-instructor-header *ngIf="user.role === 'instructor'" [user]="user"></app-instructor-header>
+    <app-student-header *ngIf="user.role === 'student'"></app-student-header>
+  </ng-container>
+
+  <ng-template #useSnapshot>
+    <ng-container *ngIf="snapshotUser as user">
+      <app-admin-header *ngIf="user.role === 'admin'"></app-admin-header>
+      <app-instructor-header *ngIf="user.role === 'instructor'" [user]="user"></app-instructor-header>
+      <app-student-header *ngIf="user.role === 'student'"></app-student-header>
+    </ng-container>
+  </ng-template>
+
+  <app-toast-container></app-toast-container>
+</div>

@@ -29,6 +29,7 @@ export class AuthService {
   private saveUser(u: User | null) {
     if (u) localStorage.setItem(this.key, JSON.stringify(u));
     else localStorage.removeItem(this.key);
+    console.log('[AuthService] saveUser ->', u);
     this.userSubject.next(u);
   }
 

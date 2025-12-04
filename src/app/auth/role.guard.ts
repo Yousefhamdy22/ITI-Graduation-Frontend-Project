@@ -8,7 +8,14 @@ export const RoleGuard: CanActivateFn = (route, state) => {
   const required = route.data?.['role'] as string | undefined;
   const user = auth.currentUser;
   if (!user) {
-    router.navigate(['/login']);
+    // Redirect to role-specific login pages when available
+    if (required === 'admin') {
+      router.navigate(['/admin']);
+    } else if (required === 'instructor') {
+      router.navigate(['/instructor-login']);
+    } else {
+      router.navigate(['/login']);
+    }
     return false;
   }
   if (required && user.role !== required) {

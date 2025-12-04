@@ -239,6 +239,8 @@ export const routes: Routes = [
   {
     path: 'instructor',
     loadComponent: () => import('./auth/instructor/instructor-dashboard/instructor-dashboard').then(m => m.InstructorDashboard),
+    data: { role: 'instructor' },
+    canActivate: [() => import('./auth/role.guard').then(m => m.RoleGuard as any)],
   },
 
   // Page not found / errors

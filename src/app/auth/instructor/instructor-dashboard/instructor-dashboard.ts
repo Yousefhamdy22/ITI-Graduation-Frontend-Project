@@ -6,7 +6,7 @@ import {CourseService} from '../../../entities/courses/course.service';
 import {StudentService} from '../../../entities/students/student.service';
 import {InstructorService} from '../../../entities/instructors/instructor.service';
 import {ToastService} from '../../../shared/toast.service';
-import {RouterModule} from '@angular/router';
+import {RouterModule, Router} from '@angular/router';
 import {FormsModule} from '@angular/forms';
 
 @Component({
@@ -30,8 +30,14 @@ export class InstructorDashboard {
     private courseService: CourseService,
     private studentService: StudentService,
     private instructorService: InstructorService,
-    private toast: ToastService
+    private toast: ToastService,
+    private router: Router
   ) {
+  }
+
+  logout() {
+    this.auth.logout();
+    this.router.navigate(['/']);
   }
 
   ngOnInit(): void {

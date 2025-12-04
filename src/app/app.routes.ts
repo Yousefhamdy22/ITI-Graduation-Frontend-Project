@@ -102,10 +102,7 @@ export const routes: Routes = [
   },
 
   // Instructor landing
-  {
-    path: 'instructor',
-    loadComponent: () => import('./instructor/instructor-landing.component').then(m => m.InstructorLandingComponent),
-  },
+
 
   // ======================
   // Instructors
@@ -239,7 +236,10 @@ export const routes: Routes = [
     path: 'instructor-login',
     loadComponent: () => import('./auth/instructor/instructor-login/instructor-login').then(m => m.InstructorLogin),
   },
- 
+  {
+    path: 'instructor',
+    loadComponent: () => import('./auth/instructor/instructor-dashboard/instructor-dashboard').then(m => m.InstructorDashboard),
+  },
 
   // Page not found / errors
   {

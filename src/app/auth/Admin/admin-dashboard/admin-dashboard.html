@@ -1,1 +1,239 @@
-<p>admin-dashboard works!</p>
+<div dir="rtl" class="min-h-screen bg-gray-50 text-right font-sans">
+  <div class="flex">
+    <app-sidebar></app-sidebar>
+
+    <div class="flex-1 p-8">
+      <div class="mb-8 pb-4 border-b border-gray-200">
+        <h1 class="text-2xl font-extrabold text-gray-800">منصة رسالة التعليمية</h1>
+      </div>
+
+      <div class="flex flex-col items-center mb-10">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-6xl">
+          <div
+            class="bg-white rounded-2xl shadow-lg p-6 flex items-center justify-between border-b-4 border-purple-500 transform hover:scale-[1.02] transition-transform duration-300">
+            <div>
+              <p class="text-sm text-gray-500 mb-2">إجمالي الطلاب</p>
+              <p class="text-3xl font-extrabold text-gray-900">{{ totalStudents || 0 }}</p>
+              <p class="text-xs text-green-600 mt-2 font-medium">تسجيلات جديدة: {{ totalEnrollments || 0 }}</p>
+            </div>
+            <div class="w-14 h-14 rounded-full bg-purple-50 text-purple-600 grid place-items-center text-2xl">👥</div>
+          </div>
+
+          <div
+            class="bg-white rounded-2xl shadow-lg p-6 flex items-center justify-between border-b-4 border-blue-500 transform hover:scale-[1.02] transition-transform duration-300">
+            <div>
+              <p class="text-sm text-gray-500 mb-2">إجمالي المدربين</p>
+              <p class="text-3xl font-extrabold text-gray-900">{{ totalInstructors || 0 }}</p>
+              <p class="text-xs text-blue-600 mt-2 font-medium">مدربين نشطين</p>
+            </div>
+            <div class="w-14 h-14 rounded-full bg-blue-50 text-blue-600 grid place-items-center text-2xl">👨‍🏫</div>
+          </div>
+
+          <div
+            class="bg-white rounded-2xl shadow-lg p-6 flex items-center justify-between border-b-4 border-yellow-500 transform hover:scale-[1.02] transition-transform duration-300">
+            <div>
+              <p class="text-sm text-gray-500 mb-2">إجمالي الدورات</p>
+              <p class="text-3xl font-extrabold text-gray-900">{{ totalCourses || 0 }}</p>
+              <p class="text-xs text-yellow-600 mt-2 font-medium">دورات متاحة حاليًا</p>
+            </div>
+            <div class="w-14 h-14 rounded-full bg-yellow-50 text-yellow-600 grid place-items-center text-2xl">📚</div>
+          </div>
+
+          <div
+            class="bg-white rounded-2xl shadow-lg p-6 flex items-center justify-between border-b-4 border-green-500 transform hover:scale-[1.02] transition-transform duration-300">
+            <div>
+              <p class="text-sm text-gray-500 mb-2">إجمالي التسجيلات</p>
+              <p class="text-3xl font-extrabold text-gray-900">{{ totalEnrollments || 0 }}</p>
+              <p class="text-xs text-green-600 mt-2 font-medium">إجمالي عمليات التسجيل</p>
+            </div>
+            <div class="w-14 h-14 rounded-full bg-green-50 text-green-600 grid place-items-center text-2xl">📝</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="max-w-6xl mx-auto mb-8">
+        <div class="bg-white rounded-2xl shadow-lg p-6">
+          <div class="flex items-center justify-between mb-4 border-b pb-3 border-gray-100">
+            <div>
+              <h3 class="text-lg font-semibold text-gray-800">📈 اتجاه التسجيلات</h3>
+              <p class="text-sm text-gray-500 mt-1">معدل التسجيلات الجديدة (آخر 6 أشهر)</p>
+            </div>
+            <div class="text-base font-medium text-indigo-600">المجموع: {{ totalEnrollments || 0 }}</div>
+          </div>
+
+          <app-trend-chart [data]="enrollmentTrend" [labels]="trendLabels" [width]="640"
+                           [height]="150"></app-trend-chart>
+        </div>
+      </div>
+
+      <div class="flex justify-start gap-4 mb-8 max-w-6xl mx-auto">
+        <a routerLink="/courses/new"
+           class="px-6 py-3 bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-700 transition-colors duration-200 shadow-md shadow-indigo-500/50">
+          ➕ أضف دورة جديدة
+        </a>
+        <a routerLink="/exams/new"
+           class="px-6 py-3 bg-green-600 text-white font-medium rounded-xl hover:bg-green-700 transition-colors duration-200 shadow-md shadow-green-500/50">
+          ✏️ أنشئ اختبارًا جديدًا
+        </a>
+        <a routerLink="/certificates/new"
+           class="px-6 py-3 bg-yellow-600 text-white font-medium rounded-xl hover:bg-yellow-700 transition-colors duration-200 shadow-md shadow-yellow-500/50">
+          🎖️ إنشاء شهادة
+        </a>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+        <section class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+          <div
+            class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-5 border-b pb-3 border-gray-100">
+            <div>
+              <h2 class="text-xl font-semibold text-gray-800">قائمة الطلاب 🎓</h2>
+              <p class="text-sm text-gray-500 mt-1">قائمة كاملة بجميع الطلاب المسجلين</p>
+            </div>
+
+            <div class="flex items-center gap-3 mt-4 sm:mt-0">
+              <div class="relative">
+                <input [(ngModel)]="query" (input)="onSearch()" type="text" placeholder="بحث بالاسم أو الهاتف..."
+                       class="border border-gray-300 rounded-xl px-4 py-2 w-full sm:w-64 focus:ring-indigo-500 focus:border-indigo-500 transition-all"/>
+                <button *ngIf="query" (click)="clearSearch()"
+                        class="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 hover:text-red-500 transition-colors">
+                  مسح
+                </button>
+              </div>
+              <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors">تصفية
+              </button>
+            </div>
+          </div>
+
+          <div class="mb-5 flex flex-wrap gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100">
+            <input [(ngModel)]="newStudentName" placeholder="اسم الطالب الكامل"
+                   class="flex-1 border rounded-lg px-3 py-2 min-w-[150px]"/>
+            <input [(ngModel)]="newStudentEmail" placeholder="البريد الإلكتروني" type="email"
+                   class="flex-1 border rounded-lg px-3 py-2 min-w-[150px]"/>
+            <button (click)="addStudent()"
+                    class="px-4 py-2 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+              ➕ أضف طالب
+            </button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm table-auto border-collapse">
+              <thead>
+              <tr class="bg-indigo-50 text-indigo-700 uppercase">
+                <th class="p-3 font-semibold rounded-tr-xl">ID</th>
+                <th class="p-3 font-semibold">اسم الطالب</th>
+                <th class="p-3 font-semibold">الهاتف</th>
+                <th class="p-3 font-semibold">الدورات</th>
+                <th class="p-3 font-semibold">تاريخ الانضمام</th>
+                <th class="p-3 font-semibold rounded-tl-xl">إجراء</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let s of pagedStudents" class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                <td class="p-3 text-center text-gray-600">{{ s.id }}</td>
+                <td class="p-3 font-medium text-gray-800 whitespace-nowrap">{{ s.name }}</td>
+                <td class="p-3 text-gray-600">{{ s.phone }}</td>
+                <td class="p-3 text-center text-indigo-600 font-semibold">{{ s.enrolledCourses || '-' }}</td>
+                <td class="p-3 text-gray-500 whitespace-nowrap">{{ s.joinDate }}</td>
+                <td class="p-3">
+                  <div class="flex gap-2 justify-center">
+                    <button (click)="goToStudent(s.id)"
+                            class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                      عرض
+                    </button>
+                    <button (click)="deleteStudent(s.id)"
+                            class="px-3 py-1 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+                      حذف
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="flex items-center justify-between mt-5 pt-3 border-t border-gray-100">
+            <div class="text-sm text-gray-600 font-medium">إجمالي الطلاب: <span
+              class="font-bold">{{ filteredStudents.length }}</span></div>
+            <div class="flex items-center gap-2">
+              <button (click)="prevPage()" [disabled]="page === 1"
+                      class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg disabled:opacity-50 hover:bg-gray-200 transition-colors">
+                ➡️ السابق
+              </button>
+              <div class="px-3 py-2 text-sm font-semibold text-gray-800 border rounded-lg">الصفحة: {{ page }}
+                من {{ totalPages() }}
+              </div>
+              <button (click)="nextPage()" [disabled]="page === totalPages()"
+                      class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg disabled:opacity-50 hover:bg-gray-200 transition-colors">
+                التالي ⬅️
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+          <div
+            class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-5 border-b pb-3 border-gray-100">
+            <div>
+              <h2 class="text-xl font-semibold text-gray-800">قائمة المدربين 👨‍🏫</h2>
+              <p class="text-sm text-gray-500 mt-1">عرض سريع لجميع المدربين والمشرفين</p>
+            </div>
+            <div class="flex items-center gap-3 mt-4 sm:mt-0">
+              <input [(ngModel)]="instructorQuery" (input)="onInstructorSearch()" placeholder="بحث بالاسم..."
+                     class="border border-gray-300 rounded-xl px-4 py-2 w-full sm:w-48 focus:ring-blue-500 focus:border-blue-500 transition-all"/>
+              <button (click)="onInstructorSearch()"
+                      class="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors">تصفية
+              </button>
+            </div>
+          </div>
+
+          <div class="mb-5 flex flex-wrap gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100">
+            <input [(ngModel)]="newInstructorName" placeholder="اسم المدرب الكامل"
+                   class="flex-1 border rounded-lg px-3 py-2 min-w-[150px]"/>
+            <input [(ngModel)]="newInstructorEmail" placeholder="البريد الإلكتروني" type="email"
+                   class="flex-1 border rounded-lg px-3 py-2 min-w-[150px]"/>
+            <button (click)="addInstructor()"
+                    class="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors">
+              ➕ أضف مدرب
+            </button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm table-auto border-collapse">
+              <thead>
+              <tr class="bg-blue-50 text-blue-700 uppercase">
+                <th class="p-3 font-semibold rounded-tr-xl">ID</th>
+                <th class="p-3 font-semibold">الاسم</th>
+                <th class="p-3 font-semibold">البريد الإلكتروني</th>
+                <th class="p-3 font-semibold">الدورات</th>
+                <th class="p-3 font-semibold rounded-tl-xl">إجراء</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let i of filteredInstructors"
+                  class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                <td class="p-3 text-center text-gray-600">{{ i.id }}</td>
+                <td class="p-3 font-medium text-gray-800 whitespace-nowrap">{{ i.name }}</td>
+                <td class="p-3 text-gray-600 truncate max-w-[150px]">{{ i.email }}</td>
+                <td class="p-3 text-center text-blue-600 font-semibold">{{ i.coursesCount || 0 }}</td>
+                <td class="p-3">
+                  <div class="flex gap-2 justify-center">
+                    <button (click)="goToInstructor(i.id)"
+                            class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                      عرض
+                    </button>
+                    <button (click)="deleteInstructor(i.id)"
+                            class="px-3 py-1 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+                      حذف
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { combineLatest, map } from 'rxjs';
-import { CourseService } from '../entities/courses/course.service';
-import { StudentService } from '../entities/students/student.service';
-import { InstructorService } from '../entities/instructors/instructor.service';
+import {Injectable} from '@angular/core';
+import {combineLatest, map} from 'rxjs';
+import {CourseService} from '../../../entities/courses/course.service';
+import {StudentService} from '../../../entities/students/student.service';
+import {InstructorService} from '../../../entities/instructors/instructor.service';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class DashboardService {
   stats$;
 

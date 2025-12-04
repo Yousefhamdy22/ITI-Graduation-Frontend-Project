@@ -22,7 +22,7 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     loadComponent: () =>
-      import('./dashboard/dashboard.component').then(m => m.DashboardComponent),
+      import('./auth/Admin/admin-dashboard/admin-dashboard').then(m => m.AdminDashboard),
     data: {role: 'admin'},
     canActivate: [() => import('./auth/role.guard').then(m => m.RoleGuard as any)],
   },
@@ -30,7 +30,7 @@ export const routes: Routes = [
   // Student landing
   {
     path: 'student',
-    loadComponent: () => import('./student/student-landing.component').then(m => m.StudentLandingComponent),
+    loadComponent: () => import('./auth/student/student-dashboard/student-dashboard').then(m => m.StudentDashboard),
   },
 
 
@@ -102,10 +102,7 @@ export const routes: Routes = [
   },
 
   // Instructor landing
-  {
-    path: 'instructor',
-    loadComponent: () => import('./instructor/instructor-landing.component').then(m => m.InstructorLandingComponent),
-  },
+
 
   // ======================
   // Instructors
@@ -230,6 +227,18 @@ export const routes: Routes = [
   {
     path: 'login',
     loadComponent: () => import('./auth/student/student-login/student-login').then(m => m.StudentLogin),
+  },
+  {
+    path: 'admin',
+    loadComponent: () => import('./auth/Admin/admin-login/admin-login').then(m => m.AdminLogin),
+  },
+  {
+    path: 'instructor-login',
+    loadComponent: () => import('./auth/instructor/instructor-login/instructor-login').then(m => m.InstructorLogin),
+  },
+  {
+    path: 'instructor',
+    loadComponent: () => import('./auth/instructor/instructor-dashboard/instructor-dashboard').then(m => m.InstructorDashboard),
   },
 
   // Page not found / errors

@@ -1,1 +1,36 @@
-<p>instructor-login works!</p>
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f8fafc] to-white">
+  <div class="w-full max-w-lg bg-white p-8 rounded-xl shadow-lg">
+    <div class="flex items-center gap-4 mb-6">
+      <div class="w-12 h-12 rounded-lg bg-[#0E4D67] text-white flex items-center justify-center text-xl font-bold">T
+      </div>
+      <div>
+        <h1 class="text-2xl font-bold">مرحبًا عزيزى المدرب في مستقبل تِك</h1>
+        <p class="text-sm text-gray-500">سجّل دخولك للمتابعة إلى المنصة</p>
+      </div>
+    </div>
+
+    <form (ngSubmit)="login()" class="space-y-4">
+      <div>
+        <label class="block text-sm mb-1">البريد الإلكتروني</label>
+        <input [(ngModel)]="email" name="email" type="email" required class="w-full border rounded px-3 py-2"/>
+      </div>
+
+      <div>
+        <label class="block text-sm mb-1">كلمة المرور</label>
+        <input [(ngModel)]="password" name="password" type="password" required class="w-full border rounded px-3 py-2"/>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <input id="remember" type="checkbox" class="w-4 h-4"/>
+          <label for="remember" class="text-sm text-gray-600">تذكرني</label>
+        </div>
+      </div>
+
+      <div class="flex gap-3">
+        <button type="submit" class="flex-1 bg-[#0E4D67] text-white px-4 py-2 rounded">تسجيل الدخول</button>
+      </div>
+    </form>
+
+  </div>
+</div>

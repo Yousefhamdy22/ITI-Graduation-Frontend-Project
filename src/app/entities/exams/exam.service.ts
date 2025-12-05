@@ -1,0 +1,90 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { delay, map } from 'rxjs/operators';
+import { Exam, Question } from './exam.model';
+
+@Injectable({ providedIn: 'root' })
+export class ExamService {
+  private useMock = true;
+
+  private mockData: Exam[] = [
+    {
+      id: '1',
+      courseId: '1',
+      title: 'اختبار Angular الأساسي',
+      description: 'اختبار شامل لأساسيات Angular',
+      duration: 60,
+      passingScore: 70,
+      questions: [
+        { id: '1', text: 'ما هو Angular؟', options: ['Framework', 'Library', 'Language', 'IDE'], correctOption: 0 },
+        { id: '2', text: 'ما هو Standalone Component؟', options: ['Component عادي', 'Component لا يحتاج NgModule', 'Component مُشفر', 'Component للـ Server'], correctOption: 1 }
+      ]
+    },
+    {
+      id: '2',
+      courseId: '1',
+      title: 'اختبار الـ Routing في Angular',
+      description: 'اختبار متقدم على الـ routing',
+      duration: 45,
+      passingScore: 75,
+      questions: [
+        { id: '3', text: 'كيف تعرّف route؟', options: ['في Component', 'في Routes array', 'في Service', 'في HTML'], correctOption: 1 },
+        { id: '4', text: 'ما هو ActivatedRoute؟', options: ['Router مستخدم', 'معلومات الـ route الحالي', 'Service للـ Navigation', 'HTTP Client'], correctOption: 1 }
+      ]
+    },
+    {
+      id: '3',
+      courseId: '2',
+      title: 'اختبار React الأساسي',
+      description: 'اختبار أساسيات React',
+      duration: 50,
+      passingScore: 70,
+      questions: [
+        { id: '5', text: 'ما هو JSX؟', options: ['تكويس مثل XML مع JavaScript', 'لغة برمجة', 'HTML محسّن', 'CSS framework'], correctOption: 0 },
+        { id: '6', text: 'ما هي React Hooks؟', options: ['دوال لـ state management', 'طريقة تصيد الأخطاء', 'HTTP client', 'Router library'], correctOption: 0 }
+      ]
+    }
+  ];
+
+  private examsSubject = new BehaviorSubject<Exam[]>(this.mockData);
+  exams$ = this.examsSubject.asObservable();
+
+  constructor(private http: HttpClient) {
+    if (this.useMock) {
+      this.examsSubject.next(this.mockData);
+    }
+  }
+
+  getExams(): Observable<Exam[]> {
+    return this.useMock
+      ? of(this.mockData).pipe(delay(300))
+      : this.http.get<Exam[]>('/api/exams');
+  }
+
+  getExamById(id: string): Observable<Exam | null> {
+    return this.useMock
+      ? of(this.mockData.find(e => e.id === id) || null).pipe(delay(300))
+      : this.http.get<Exam>(`/api/exams/${id}`);
+  }
+
+  getExamsByCourse(courseId: string): Observable<Exam[]> {
+    return this.useMock
+      ? of(this.mockData.filter(e => e.courseId === courseId)).pipe(delay(300))
+      : this.http.get<Exam[]>(`/api/courses/${courseId}/exams`);
+  }
+
+  submitExam(examId: string, answers: number[]): Observable<{ score: number; passed: boolean }> {
+    return this.useMock
+      ? of({ score: 85, passed: true }).pipe(delay(500))
+      : this.http.post<{ score: number; passed: boolean }>(`/api/exams/${examId}/submit`, { answers });
+  }
+
+  getTotalExams$(): Observable<number> {
+    return this.exams$.pipe(map(exams => exams.length));
+  }
+
+  loadExams(exams: Exam[]) {
+    this.examsSubject.next(exams);
+  }
+}

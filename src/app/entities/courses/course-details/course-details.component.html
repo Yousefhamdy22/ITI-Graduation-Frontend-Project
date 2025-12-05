@@ -1,0 +1,308 @@
+
+<section class="rtl:text-right">
+  <!-- =======================
+       TOP HERO (Udemy-like)
+  ======================== -->
+  <div class="bg-[#0E4D67] text-white">
+    <div class="app-container py-10 md:py-12">
+
+      <!-- Loading Hero -->
+      <div *ngIf="loading" class="animate-pulse">
+        <div class="h-4 w-40 bg-white/20 rounded mb-3"></div>
+        <div class="h-8 w-2/3 bg-white/20 rounded mb-3"></div>
+        <div class="h-5 w-1/2 bg-white/20 rounded mb-6"></div>
+        <div class="h-4 w-72 bg-white/20 rounded"></div>
+      </div>
+
+      <!-- Hero Content -->
+      <div *ngIf="!loading && course as c">
+        <p class="text-white/80 mb-2 text-sm">
+          الكورسات / {{ c.categoryKey || 'Tech' }}
+        </p>
+
+        <h1 class="text-3xl md:text-4xl font-extrabold mb-3 leading-snug">
+          {{ c.title }}
+        </h1>
+
+        <p class="text-white/90 text-lg mb-5 max-w-3xl">
+          {{ c.subtitle || c.description || 'مسار عملي شامل لبناء مهاراتك التقنية.' }}
+        </p>
+
+        <!-- rating row -->
+        <div class="flex flex-wrap gap-3 items-center text-sm">
+          <div class="flex items-center gap-1">
+            <span class="font-bold text-white">{{ c.rating || 0 }}</span>
+
+            <div class="flex items-center text-amber-300">
+              <ng-container *ngFor="let _ of [1,2,3,4,5]; let i = index">
+                <span class="text-base leading-none">
+                  {{ (c.rating || 0) >= i+1 ? '★' : '☆' }}
+                </span>
+              </ng-container>
+            </div>
+
+            <span class="text-white/80">
+              ({{ c.reviewsCount || 0 }} تقييم)
+            </span>
+          </div>
+
+          <span class="text-white/70">•</span>
+          <div>{{ $any(c).studentsCount || 0 }} طالب</div>
+
+          <span class="text-white/70">•</span>
+          <div>{{ c.hours || c.duration || 0 }} ساعة</div>
+
+          <span class="text-white/70">•</span>
+          <div>المستوى: {{ c.level || 'Beginner' }}</div>
+        </div>
+
+        <!-- instructor -->
+        <div class="mt-4 text-sm text-white/90">
+          أنشأه <span class="font-semibold">{{ c.instructorName || 'Tech Instructor' }}</span>
+        </div>
+      </div>
+
+      <!-- Not Found Hero -->
+      <div *ngIf="!loading && !course" class="py-10 text-center">
+        <h2 class="text-2xl font-bold">الكورس غير موجود</h2>
+        <p class="text-white/80 mt-2">ارجعي لقائمة الكورسات وجربي تاني.</p>
+        <a routerLink="/courses" class="btn-primary mt-5 inline-block bg-white text-[#0E4D67]">
+          رجوع للكورسات
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================
+       BODY GRID
+  ======================== -->
+  <div *ngIf="!loading && course as c" class="app-container grid lg:grid-cols-3 gap-8 py-8">
+
+    <!-- ===== Left Column (Main Content) ===== -->
+    <div class="lg:col-span-2 space-y-6">
+
+      <!-- Preview / Promo -->
+      <div class="bg-white rounded-2xl shadow-soft border border-gray-100 overflow-hidden">
+        <div class="h-64 md:h-80 bg-gray-100 flex items-center justify-center">
+          <ng-container *ngIf="c.promoVideoUrl; else noVideo">
+            <iframe
+              class="w-full h-full"
+              [src]="c.promoVideoUrl"
+              title="Promo Video"
+              allowfullscreen>
+            </iframe>
+          </ng-container>
+          <ng-template #noVideo>
+            <span class="text-gray-500">Preview Video</span>
+          </ng-template>
+        </div>
+      </div>
+
+      <!-- What you'll learn -->
+      <div class="bg-white rounded-2xl shadow-soft border border-gray-100 p-6">
+        <h2 class="text-xl font-bold text-gray-900 mb-4">
+          ماذا ستتعلم في هذا الكورس؟
+        </h2>
+
+        <div class="grid md:grid-cols-2 gap-3 text-sm text-gray-700">
+          <div class="flex gap-2">
+            <span class="text-emerald-600 font-bold">✔</span>
+            بناء تطبيق Angular كامل من الصفر
+          </div>
+          <div class="flex gap-2">
+            <span class="text-emerald-600 font-bold">✔</span>
+            فهم Standalone Components و SSR
+          </div>
+          <div class="flex gap-2">
+            <span class="text-emerald-600 font-bold">✔</span>
+            التعامل مع Routing و Services و RxJS
+          </div>
+          <div class="flex gap-2">
+            <span class="text-emerald-600 font-bold">✔</span>
+            عمل CRUD حقيقي للـ Entities
+          </div>
+        </div>
+      </div>
+
+      <!-- Course content (Sections) -->
+      <div class="bg-white rounded-2xl shadow-soft border border-gray-100 p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-bold text-gray-900">محتوى الكورس</h2>
+          <div class="text-sm text-gray-500">
+            {{ c.lessonsCount || 0 }} درس • {{ c.hours || c.duration || 0 }} ساعة
+          </div>
+        </div>
+
+        <div class="space-y-3 text-sm">
+          <details class="border border-gray-100 rounded-xl p-4">
+            <summary class="font-semibold cursor-pointer text-gray-900">
+              القسم 1 — Introduction
+            </summary>
+            <ul class="mt-3 text-gray-600 space-y-2">
+              <li>Lesson 1: Setup & Tools</li>
+              <li>Lesson 2: Core Concepts</li>
+              <li>Lesson 3: First Project</li>
+            </ul>
+          </details>
+
+          <details class="border border-gray-100 rounded-xl p-4">
+            <summary class="font-semibold cursor-pointer text-gray-900">
+              القسم 2 — Advanced Topics
+            </summary>
+            <ul class="mt-3 text-gray-600 space-y-2">
+              <li>Lesson 1: Architecture</li>
+              <li>Lesson 2: Performance</li>
+              <li>Lesson 3: Deployment</li>
+            </ul>
+          </details>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="bg-white rounded-2xl shadow-soft border border-gray-100 p-6">
+        <h2 class="text-xl font-bold text-gray-900 mb-3">وصف الكورس</h2>
+        <p class="text-gray-700 leading-relaxed">
+          {{ c.description || 'لا يوجد وصف تفصيلي حالياً.' }}
+        </p>
+      </div>
+
+      <!-- Instructor -->
+      <div class="bg-white rounded-2xl shadow-soft border border-gray-100 p-6">
+        <h2 class="text-xl font-bold text-gray-900 mb-4">المدرب</h2>
+
+        <div class="flex gap-4 items-start">
+          <img
+            *ngIf="c.instructorAvatar; else noAvatar"
+            [src]="c.instructorAvatar"
+            class="w-14 h-14 rounded-full object-cover"
+            alt="instructor"
+          />
+          <ng-template #noAvatar>
+            <div class="w-14 h-14 rounded-full bg-gray-200"></div>
+          </ng-template>
+
+          <div>
+            <p class="font-bold text-gray-900">
+              {{ c.instructorName || 'Tech Instructor' }}
+            </p>
+            <p class="text-gray-600 text-sm mt-1">
+              Senior Engineer — خبرة عملية في بناء منتجات حقيقية.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reviews -->
+      <div class="bg-white rounded-2xl shadow-soft border border-gray-100 p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-bold text-gray-900">آراء المتدربين</h2>
+          <div class="text-sm text-gray-500">
+            {{ c.reviewsCount || 0 }} تقييم
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="bg-gray-50 rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2 text-sm">
+              <span class="font-bold text-gray-900">مُتدرب</span>
+              <span class="text-amber-500">★★★★★</span>
+            </div>
+            <p class="text-gray-700 text-sm">
+              الكورس عملي جدًا وساعدني أفهم Angular من الصفر.
+            </p>
+          </div>
+
+          <div class="bg-gray-50 rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2 text-sm">
+              <span class="font-bold text-gray-900">مُتدربة</span>
+              <span class="text-amber-500">★★★★☆</span>
+            </div>
+            <p class="text-gray-700 text-sm">
+              محتوى قوي والتطبيقات الواقعية فرّقت معايا.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ -->
+      <div class="bg-white rounded-2xl shadow-soft border border-gray-100 p-6">
+        <h2 class="text-xl font-bold text-gray-900 mb-4">الأسئلة الشائعة</h2>
+
+        <div class="space-y-2 text-sm">
+          <details class="border border-gray-100 rounded-xl p-4">
+            <summary class="font-semibold cursor-pointer text-gray-900">
+              هل يوجد شهادة؟
+            </summary>
+            <p class="text-gray-600 mt-2">نعم، شهادة حضور بعد إنهاء الكورس.</p>
+          </details>
+
+          <details class="border border-gray-100 rounded-xl p-4">
+            <summary class="font-semibold cursor-pointer text-gray-900">
+              هل أقدر أتابع من الموبايل؟
+            </summary>
+            <p class="text-gray-600 mt-2">نعم، المنصة متوافقة مع كل الأجهزة.</p>
+          </details>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Right Column (Sticky price card Udemy-like) ===== -->
+    <aside class="lg:sticky lg:top-6 h-fit space-y-4">
+      <div class="bg-white rounded-2xl shadow-soft border border-gray-100 overflow-hidden">
+        <div class="h-40 bg-gray-100">
+          <img
+            *ngIf="c.image"
+            [src]="c.image"
+            class="w-full h-full object-cover"
+            alt="course"
+          />
+        </div>
+
+        <div class="p-6">
+          <div class="flex items-baseline gap-2 mb-3">
+            <div class="text-2xl font-extrabold text-gray-900">
+              {{ c.price || 0 }} ج.م
+            </div>
+            <div *ngIf="c.oldPrice" class="text-sm text-gray-400 line-through">
+              {{ c.oldPrice }} ج.م
+            </div>
+          </div>
+
+          <button class="btn-primary w-full py-3 text-base mb-2">
+            اشترك الآن
+          </button>
+
+          <button
+            class="w-full border border-gray-200 rounded-xl py-3 text-sm font-semibold text-gray-800 hover:bg-gray-50"
+          >
+            أضف للعربة
+          </button>
+
+          <ul class="mt-5 text-sm text-gray-700 space-y-2">
+            <li class="flex gap-2"><span>✔</span> وصول مدى الحياة</li>
+            <li class="flex gap-2"><span>✔</span> مشاريع عملية</li>
+            <li class="flex gap-2"><span>✔</span> دعم من المدرب</li>
+            <li class="flex gap-2"><span>✔</span> شهادة إتمام</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-soft border border-gray-100 p-6">
+        <h3 class="font-bold text-gray-900 mb-3">معلومات سريعة</h3>
+        <ul class="text-gray-600 text-sm space-y-2">
+          <li>المدة: {{ c.hours || c.duration || 0 }} ساعة</li>
+          <li>الدروس: {{ c.lessonsCount || 0 }}</li>
+          <li>المستوى: {{ c.level || 'Beginner' }}</li>
+          <li>التصنيف: {{ c.categoryKey || 'Tech' }}</li>
+        </ul>
+
+        <a
+          class="mt-4 inline-block text-sm font-semibold text-[#0E4D67] hover:underline"
+          [routerLink]="['/courses', c.id, 'edit']"
+        >
+          تعديل الكورس
+        </a>
+      </div>
+    </aside>
+  </div>
+</section>

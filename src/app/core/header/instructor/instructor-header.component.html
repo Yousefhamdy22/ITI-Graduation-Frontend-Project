@@ -1,0 +1,21 @@
+<header class="bg-white border-b border-gray-100">
+  <div class="app-container flex items-center justify-between py-3">
+    <a routerLink="/instructor" class="flex items-center gap-2 font-bold text-xl text-gray-900">
+      <span class="w-9 h-9 rounded-xl bg-[#0E4D67] text-white flex items-center justify-center">T</span>
+      مستقبل تِك
+    </a>
+
+    <nav class="flex items-center gap-4 text-gray-700 font-medium">
+      <a routerLink="/instructor" routerLinkActive="text-[#0E4D67]" class="hover:text-[#0E4D67] transition">الرئيسية</a>
+      <a routerLink="/courses" routerLinkActive="text-[#0E4D67]" class="hover:text-[#0E4D67] transition">الكورسات</a>
+      <a routerLink="/students" routerLinkActive="text-[#0E4D67]" class="hover:text-[#0E4D67] transition">الطلاب</a>
+      <a routerLink="/certificates" routerLinkActive="text-[#0E4D67]" class="hover:text-[#0E4D67] transition">الشهادات</a>
+    </nav>
+
+    <div class="flex items-center gap-3">
+      <div class="text-sm text-gray-700">مرحبًا، <span class="font-semibold">{{ user?.name }}</span></div>
+      <a routerLink="/exams/new" class="px-3 py-1 bg-indigo-600 text-white rounded text-sm">إنشاء اختبار</a>
+      <button (click)="logout()" class="bg-red-500 text-white px-3 py-1 rounded">خروج</button>
+    </div>
+  </div>
+</header>

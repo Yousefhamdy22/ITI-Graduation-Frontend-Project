@@ -1,0 +1,66 @@
+<div dir="rtl" class="min-h-screen bg-gray-50 text-right font-sans flex flex-col">
+  <app-role-header></app-role-header>
+
+  <div class="flex-1 pt-20">
+    <div class="app-container py-6">
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="md:col-span-2">
+          <app-home></app-home>
+        </div>
+
+        <aside class="bg-white p-4 rounded shadow">
+          <div class="flex items-center gap-3 mb-4">
+            <img *ngIf="user?.avatar" [src]="user.avatar" alt="avatar" class="w-16 h-16 rounded-full"/>
+            <div>
+              <div class="font-semibold text-lg">{{ user?.name }}</div>
+              <div class="text-sm text-gray-500">بصفتي مدرب</div>
+            </div>
+          </div>
+
+          <div *ngIf="!editing">
+            <div class="text-sm mb-2">البريد: <strong>{{ user?.email }}</strong></div>
+            <div class="text-sm mb-2">عدد الكورسات: {{ myCourses.length }}</div>
+            <div class="text-sm mb-4">طلاب إجمالي: {{ totalStudentsCount() }}</div>
+            <div class="flex gap-2 mb-3">
+              <button class="btn-primary" (click)="startEdit()">تعديل الملف</button>
+              <button class="px-3 py-1 bg-blue-600 text-white rounded text-sm" (click)="createNewExam()">إنشاء اختبار جديد</button>
+            </div>
+            <hr class="my-3"/>
+            <h4 class="font-semibold mb-2">كورساتي</h4>
+            <ul class="space-y-2 mb-3">
+              <li *ngFor="let c of myCourses" class="flex justify-between items-center">
+                <div class="text-sm">{{ c.title }}</div>
+                <a [routerLink]="['/courses', c.id]" class="px-2 py-1 border rounded">ادارة</a>
+              </li>
+            </ul>
+            <h4 class="font-semibold mb-2">الطلاب المسجلون مؤخراً</h4>
+            <div *ngFor="let c of myCourses" class="mb-3">
+              <div class="text-sm font-semibold">{{ c.title }}</div>
+              <div class="text-xs text-gray-500">{{ recentStudentsNames(c.id) }}</div>
+            </div>
+          </div>
+
+          <div *ngIf="editing">
+            <label class="block text-sm">نبذة</label>
+            <textarea [(ngModel)]="editBio" class="w-full border rounded px-2 py-1 mb-2"></textarea>
+            <label class="block text-sm">رابط الصورة</label>
+            <input [(ngModel)]="editAvatar" class="w-full border rounded px-2 py-1 mb-3"/>
+            <div class="flex gap-2">
+              <button class="px-3 py-1 bg-green-600 text-white rounded" (click)="saveProfile()">حفظ</button>
+              <button class="px-3 py-1 border rounded" (click)="cancelEdit()">إلغاء</button>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <app-footer></app-footer>
+
+  <app-exam-form-modal 
+    *ngIf="showExamModal"
+    (close)="closeExamModal()"
+    (success)="onExamFormSuccess()">
+  </app-exam-form-modal>
+</div>
+

@@ -1,0 +1,3 @@
+/* minimal positioning; project uses tailwind but keep fallback styles */
+:host { pointer-events: none }
+div[role='toast'] { pointer-events: auto }

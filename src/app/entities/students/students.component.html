@@ -1,0 +1,42 @@
+<div class="max-w-7xl mx-auto px-6 py-12" dir="rtl">
+  <h1 class="text-4xl font-bold mb-10">جميع الطلاب</h1>
+
+  <div class="mb-8">
+    <input type="text" [(ngModel)]="query.search" (input)="onSearch()"
+           placeholder="ابحث في الطلاب..."
+           class="w-full px-6 py-4 rounded-xl border text-lg">
+  </div>
+
+  <div *ngIf="loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 py-8">
+    <div *ngFor="let _ of [1,2,3,4,5,6,7,8]" class="bg-gray-200 rounded-2xl h-64 animate-pulse"></div>
+  </div>
+
+  <div *ngIf="!loading && filteredStudents.length > 0"
+       class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+    <a *ngFor="let student of filteredStudents" [routerLink]="['/students', student.id]"
+       class="block bg-white rounded-2xl shadow-lg hover:shadow-2xl transition group">
+      <div class="h-48 bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
+        <img *ngIf="student.avatar" [src]="student.avatar" 
+             class="w-24 h-24 rounded-full border-4 border-white object-cover"
+             [alt]="student.name">
+      </div>
+      <div class="p-5">
+        <h3 class="font-bold text-lg mb-2">{{ student.name }}</h3>
+        <p class="text-gray-600 text-sm mb-3">{{ student.email }}</p>
+        <div class="flex items-center gap-2 text-sm text-gray-500 mb-2">
+          <span>📞 {{ student.phone }}</span>
+        </div>
+        <div class="flex items-center gap-2 text-sm">
+          <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-semibold">
+            {{ student.enrolledCourses }} كورسات
+          </span>
+        </div>
+        <p class="text-xs text-gray-400 mt-3">انضم: {{ student.joinDate }}</p>
+      </div>
+    </a>
+  </div>
+
+  <div *ngIf="!loading && filteredStudents.length === 0" class="text-center py-24 text-xl text-gray-500">
+    لا توجد طلاب
+  </div>
+</div>

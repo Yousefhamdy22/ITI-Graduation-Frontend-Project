@@ -1,0 +1,245 @@
+<section class="rtl:text-right min-h-screen bg-gray-50 flex flex-col" dir="rtl">
+  <app-role-header></app-role-header>
+
+  <div class="flex-1 pt-20">
+    <!-- ====================== -->
+    <!-- 1) Loading State       -->
+    <!-- ====================== -->
+    <div *ngIf="loading" class="bg-[#0E4D67] text-white">
+      <div class="app-container py-10 md:py-12 animate-pulse">
+        <div class="h-4 w-40 bg-white/20 rounded mb-3"></div>
+        <div class="h-8 w-2/3 bg-white/20 rounded mb-3"></div>
+        <div class="h-5 w-1/2 bg-white/20 rounded mb-6"></div>
+        <div class="h-4 w-72 bg-white/20 rounded"></div>
+      </div>
+    </div>
+
+    <!-- ====================== -->
+    <!-- 2) Not Found State     -->
+    <!-- ====================== -->
+    <div *ngIf="!loading && !course" class="bg-[#0E4D67] text-white">
+      <div class="app-container py-10 text-center">
+        <div class="max-w-xl mx-auto bg-white/5 p-8 rounded-xl">
+          <h2 class="text-2xl font-bold mb-3">الكورس غير موجود</h2>
+          <p class="text-white/80 mb-6">
+            لم نتمكن من العثور على هذا الكورس. ربما تمت إزالته أو أن الرابط غير صحيح.
+          </p>
+
+          <div class="flex justify-center gap-4">
+            <a routerLink="/courses" class="inline-block bg-white text-[#0E4D67] px-4 py-2 rounded-lg font-semibold">
+              رجوع للكورسات
+            </a>
+            <a routerLink="/instructors"
+              class="inline-block bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg">
+              استعرض المدربين
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================== -->
+    <!-- 3) Main Content        -->
+    <!-- ====================== -->
+    <ng-container *ngIf="!loading && course">
+
+      <!-- Hero Section -->
+      <div class="bg-[#0E4D67] text-white">
+        <div class="app-container py-10 md:py-12">
+
+          <p class="text-white/80 mb-2 text-sm">
+            الكورسات / {{ course.category || course.categoryKey || 'Tech' }}
+          </p>
+
+          <h1 class="text-3xl md:text-4xl font-extrabold mb-3 leading-snug">
+            {{ course.title }}
+          </h1>
+
+          <p class="text-white/90 text-lg mb-5 max-w-3xl">
+            {{ course.subtitle || course.description || 'مسار عملي شامل لبناء مهاراتك التقنية.' }}
+          </p>
+
+          <!-- Rating Row -->
+          <div class="flex flex-wrap gap-3 items-center text-sm">
+
+            <div class="flex items-center gap-1">
+              <span class="font-bold text-white">{{ course.rating || 0 }}</span>
+
+              <div class="flex items-center text-amber-300">
+                <ng-container *ngFor="let i of [0,1,2,3,4]">
+                  <span class="text-base leading-none">
+                    {{ (course.rating || 0) > i ? '★' : '☆' }}
+                  </span>
+                </ng-container>
+              </div>
+
+              <span class="text-white/80">
+                ({{ course.reviewsCount || 0 }} تقييم)
+              </span>
+            </div>
+
+            <span class="text-white/70">•</span>
+            <div>{{ course.studentsCount || 0 }} طالب</div>
+
+            <span class="text-white/70">•</span>
+            <div>{{ course.hours || course.duration || 0 }} ساعة</div>
+
+            <span class="text-white/70">•</span>
+            <div>المستوى: {{ course.level || 'Beginner' }}</div>
+
+          </div>
+
+          <div class="mt-4 text-sm text-white/90">
+            أنشأه <span class="font-semibold">{{ course.instructorName }}</span>
+          </div>
+          <div *ngIf="isInstructor" class="mt-4">
+            <a [routerLink]="['/courses', course?.id, 'edit']"
+              class="inline-block bg-white text-[#0E4D67] px-4 py-2 rounded-lg mr-2">تعديل الكورس</a>
+            <a [routerLink]="['/courses', course?.id]"
+              class="inline-block bg-white/20 text-white px-4 py-2 rounded-lg">إدارة الدروس</a>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Body Grid -->
+      <div class="app-container grid lg:grid-cols-3 gap-10 py-12">
+
+        <!-- Left Column -->
+        <div class="lg:col-span-2 space-y-8">
+
+          <!-- Promo Video -->
+          <div *ngIf="course?.promoVideoUrl; else noVideo" class="card overflow-hidden">
+
+            <div class="h-64 md:h-80 bg-gray-100 flex items-center justify-center">
+              <iframe class="w-full h-full" [src]="safePromoUrl" title="Promo Video" allowfullscreen>
+              </iframe>
+            </div>
+          </div>
+
+          <ng-template #noVideo>
+            <div class="card p-8 text-center text-gray-500">
+              Preview Video Not Available
+            </div>
+          </ng-template>
+
+          <!-- Content -->
+          <div class="card p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-5">محتوى الكورس</h2>
+            <ng-container *ngFor="let obj of course?.learningObjectives || []">
+              <p class="text-gray-700 mb-3 flex items-start gap-2">
+                <span class="text-green-600 font-bold">✔</span>
+                <span>{{ obj }}</span>
+              </p>
+            </ng-container>
+          </div>
+
+          <!-- Lessons Section -->
+          <div class="card p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">الدروس ({{ lessons.length }})</h2>
+
+            <div *ngIf="lessons.length === 0" class="text-center py-12 text-gray-500">
+              لم يتم إضافة دروس لهذا الكورس بعد
+            </div>
+
+            <div *ngIf="lessons.length > 0" class="space-y-3">
+              <a *ngFor="let lesson of lessons; let i = index"
+                [routerLink]="['/lessons', lesson.id, { courseId: course.id }]"
+                class="block p-5 border-2 border-gray-200 rounded-xl hover:border-[#0E4D67] hover:bg-blue-50 transition-all duration-200">
+                <div class="flex items-start justify-between">
+                  <div class="flex-1">
+                    <div class="font-semibold text-gray-900">{{ i + 1 }}. {{ lesson.title }}</div>
+                    <p class="text-sm text-gray-600 mt-1">{{ lesson.description }}</p>
+                  </div>
+                  <div class="text-sm text-gray-500 mr-4">
+                    {{ lesson.duration }} دقيقة
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="card p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-5">وصف الكورس</h2>
+            <p class="text-gray-700 leading-relaxed">
+              {{ course?.description || 'لا يوجد وصف تفصيلي حالياً.' }}
+            </p>
+          </div>
+
+          <!-- Instructor -->
+          <div class="card p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">المدرب</h2>
+
+            <div class="flex gap-4 items-start">
+              <img *ngIf="course?.instructorAvatar; else noAvatar" [src]="course?.instructorAvatar"
+                class="w-14 h-14 rounded-full object-cover" />
+
+              <ng-template #noAvatar>
+                <div class="w-14 h-14 rounded-full bg-gray-200"></div>
+              </ng-template>
+
+              <div>
+                <p class="font-bold text-gray-900">{{ course?.instructorName }}</p>
+                <p class="text-gray-600 text-sm mt-1">
+                  {{ course?.instructorTitle || 'خبرة عملية في بناء منتجات حقيقية.' }}
+                </p>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Column -->
+        <aside class="lg:sticky lg:top-6 h-fit space-y-6">
+
+          <div class="card overflow-hidden">
+            <img *ngIf="course?.image" [src]="course?.image" class="w-full h-40 object-cover" />
+
+            <div class="p-8">
+              <div class="flex items-baseline gap-3 mb-6">
+                <div class="text-3xl font-extrabold text-[#0E4D67]">
+                  {{ course?.price || 0 }} ج.م
+                </div>
+                <div *ngIf="course?.oldPrice" class="text-base text-gray-400 line-through">
+                  {{ course?.oldPrice }} ج.م
+                </div>
+              </div>
+
+              <button *ngIf="!isInstructor && auth.currentUser?.role === 'student'" (click)="toggleEnroll()"
+                class="btn-primary w-full py-4 text-lg mb-3">
+                {{ enrolled ? 'إلغاء التسجيل' : 'اشترك الآن' }}
+              </button>
+              <button *ngIf="!isInstructor && !auth.currentUser" (click)="toggleEnroll()"
+                class="btn-primary w-full py-4 text-lg mb-3">اشترك الآن</button>
+
+              <div *ngIf="isInstructor" class="mt-4 border-t pt-4">
+                <h3 class="font-semibold mb-2">الطلاب المسجلون في هذا الكورس</h3>
+                <div *ngIf="studentsInCourse.length === 0">لا يوجد طلاب مسجلون.</div>
+                <ul *ngIf="studentsInCourse.length" class="space-y-2">
+                  <li *ngFor="let s of studentsInCourse" class="flex justify-between items-center">
+                    <div>
+                      <div class="font-semibold">{{ s.name }}</div>
+                      <div class="text-sm text-gray-500">{{ s.email }}</div>
+                    </div>
+                    <div>
+                      <a [routerLink]="['/students', s.id]" class="px-3 py-1 border rounded">عرض</a>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+            </div>
+          </div>
+
+        </aside>
+
+      </div>
+
+    </ng-container>
+
+  </div>
+
+  <app-footer></app-footer>
+</section>

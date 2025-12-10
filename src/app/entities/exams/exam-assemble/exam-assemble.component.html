@@ -1,0 +1,162 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6" dir="rtl">
+  <div class="max-w-5xl mx-auto bg-white rounded-2xl shadow-2xl p-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-800 mb-2">تجميع اختبار متقدم</h1>
+      <p class="text-gray-600">ترتيب وضبط الأسئلة المختارة قبل إنشاء الاختبار</p>
+    </div>
+
+    <form class="space-y-6">
+      <!-- Row 1: Basic Info -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-lg font-semibold text-gray-700 mb-2">عنوان الاختبار *</label>
+          <input 
+            [(ngModel)]="title" 
+            name="title"
+            type="text"
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none transition"
+            placeholder="مثال: اختبار Angular الأساسي"
+          />
+        </div>
+
+        <div>
+          <label class="block text-lg font-semibold text-gray-700 mb-2">اختر الكورس *</label>
+          <select 
+            [(ngModel)]="courseId" 
+            name="courseId"
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none transition bg-white">
+            <option value="">-- اختر كورس --</option>
+            <option *ngFor="let c of courses" [value]="c.id">{{ c.title }}</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Row 2: Duration & Passing Score -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div>
+          <label class="block text-lg font-semibold text-gray-700 mb-2">مدة الاختبار (دقائق) *</label>
+          <input 
+            [(ngModel)]="duration" 
+            name="duration"
+            type="number"
+            min="1"
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none transition"
+          />
+        </div>
+
+        <div>
+          <label class="block text-lg font-semibold text-gray-700 mb-2">نقطة النجاح (%) *</label>
+          <input 
+            [(ngModel)]="passingScore" 
+            name="passingScore"
+            type="number"
+            min="0" 
+            max="100"
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none transition"
+          />
+        </div>
+
+        <div class="flex items-end">
+          <p class="text-sm text-gray-600">
+            <strong>إجمالي النقاط:</strong> <span class="text-blue-600 font-bold text-lg">{{ getTotalPoints() }}</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Questions List -->
+      <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6">
+        <h3 class="text-2xl font-bold text-gray-800 mb-4">
+          الأسئلة المحددة ({{ questions.length }})
+        </h3>
+
+        <div *ngIf="questions.length === 0" class="text-center py-12">
+          <p class="text-gray-600 text-lg mb-4">لم تقم بتحديد أسئلة بعد</p>
+          <a routerLink="/questions" class="text-blue-600 hover:text-blue-800 font-semibold">
+            ← العودة لاختيار الأسئلة
+          </a>
+        </div>
+
+        <div *ngIf="questions.length > 0" class="space-y-4">
+          <div *ngFor="let q of questions; let i = index" 
+               class="p-4 bg-white rounded-lg border-2 border-gray-200 hover:border-blue-400 transition">
+            
+            <!-- Question Header -->
+            <div class="flex items-start justify-between gap-4 mb-3">
+              <div class="flex-1">
+                <p class="font-bold text-gray-800 text-lg">{{ i + 1 }}. {{ q.text }}</p>
+              </div>
+              
+              <!-- Points Input -->
+              <div class="flex items-center gap-2 flex-shrink-0">
+                <label class="text-sm font-medium text-gray-700">درجة:</label>
+                <input 
+                  [(ngModel)]="points[q.id]" 
+                  name="points-{{q.id}}"
+                  type="number"
+                  min="1"
+                  max="10"
+                  class="w-16 px-2 py-1 border border-gray-300 rounded text-center text-sm"
+                />
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="flex gap-2">
+                <button 
+                  (click)="moveQuestionUp(i)"
+                  [disabled]="i === 0"
+                  type="button"
+                  class="px-3 py-1 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white rounded transition text-sm font-medium">
+                  ↑ أعلى
+                </button>
+                <button 
+                  (click)="moveQuestionDown(i)"
+                  [disabled]="i === questions.length - 1"
+                  type="button"
+                  class="px-3 py-1 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white rounded transition text-sm font-medium">
+                  ↓ أسفل
+                </button>
+                <button 
+                  (click)="removeQuestion(q.id)"
+                  type="button"
+                  class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded transition text-sm font-medium">
+                  ✕ حذف
+                </button>
+              </div>
+            </div>
+
+            <!-- Question Options -->
+            <div *ngIf="q.options && q.options.length > 0" class="pl-4 text-sm text-gray-600">
+              <p class="font-medium mb-1">الخيارات:</p>
+              <div class="space-y-1">
+                <p *ngFor="let opt of q.options; let idx = index" class="text-xs">
+                  <span class="inline-block w-6 h-6 rounded-full bg-gray-200 text-center leading-6 text-xs mr-2">
+                    {{ String.fromCharCode(65 + idx) }}
+                  </span>
+                  {{ opt }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex gap-4 justify-end pt-6 border-t-2 border-gray-200">
+        <button 
+          (click)="back()"
+          type="button"
+          class="px-6 py-3 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-lg font-bold transition transform hover:scale-105">
+          ← رجوع
+        </button>
+        <button 
+          (click)="createExam()"
+          type="button"
+          [disabled]="!title || !courseId || questions.length === 0"
+          class="px-8 py-3 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 disabled:opacity-50 text-white rounded-lg font-bold transition transform hover:scale-105">
+          ✓ إنشاء الاختبار
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

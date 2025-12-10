@@ -1,0 +1,167 @@
+<div class="rtl:text-right">
+
+  <!-- Hero Section -->
+  <section class="bg-[#0E4D67] text-white">
+    <div class="app-container py-16 md:py-20 grid md:grid-cols-2 gap-10 items-center">
+      <div>
+        <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-5">
+          منصة تعليمية رائدة
+        </h1>
+        <p class="text-white/90 text-lg mb-8 leading-relaxed">
+          تعلم التكنولوجيا بعمق واشتغل على مشاريع حقيقية مع أفضل المدربين في المجال.
+        </p>
+        <div class="flex gap-4">
+          <a routerLink="/courses" class="btn-primary bg-white text-[#0E4D67] hover:bg-gray-100">تصفح الكورسات</a>
+          <button class="btn-outline border-white text-white hover:bg-white/10">اعرف المزيد</button>
+        </div>
+      </div>
+
+      <div
+        class="h-72 md:h-96 rounded-3xl bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/20">
+        <span class="text-white/70 text-xl">🎓 تعليم متقدم</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="app-container -mt-8 mb-16">
+    <div class="card p-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+      <div class="p-4 hover:bg-gray-50 rounded-xl transition-all duration-200">
+        <p class="text-gray-500 mb-2 text-sm font-medium">عدد الكورسات</p>
+        <p class="text-4xl font-bold text-[#0E4D67]">120+</p>
+      </div>
+      <div class="p-4 hover:bg-gray-50 rounded-xl transition-all duration-200">
+        <p class="text-gray-500 mb-2 text-sm font-medium">طلاب نشطون</p>
+        <p class="text-4xl font-bold text-[#0E4D67]">25K+</p>
+      </div>
+      <div class="p-4 hover:bg-gray-50 rounded-xl transition-all duration-200">
+        <p class="text-gray-500 mb-2 text-sm font-medium">مدربين</p>
+        <p class="text-4xl font-bold text-[#0E4D67]">40+</p>
+      </div>
+      <div class="p-4 hover:bg-gray-50 rounded-xl transition-all duration-200">
+        <p class="text-gray-500 mb-2 text-sm font-medium">مشاريع عملية</p>
+        <p class="text-4xl font-bold text-[#0E4D67]">300+</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Courses Section -->
+  <section class="app-container mb-16">
+    <div class="mb-10">
+      <h2 class="section-title">كورسات مميزة</h2>
+      <p class="section-subtitle">ابدأ بأقوى الكورسات المطلوبة في سوق العمل.</p>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="grid md:grid-cols-3 gap-8">
+      <div class="h-96 bg-gray-200 rounded-2xl animate-pulse"></div>
+      <div class="h-96 bg-gray-200 rounded-2xl animate-pulse"></div>
+      <div class="h-96 bg-gray-200 rounded-2xl animate-pulse"></div>
+    </div>
+
+    <!-- Courses Grid -->
+    <div *ngIf="!loading && featuredCourses.length > 0" class="grid md:grid-cols-3 gap-8">
+      <a *ngFor="let course of featuredCourses" [routerLink]="['/courses', course.id]" class="block group">
+        <div class="card-hover h-full flex flex-col">
+          <!-- Image with fallback -->
+          <div class="w-full h-52 overflow-hidden relative bg-gradient-to-br from-[#0E4D67] to-blue-500">
+            <img [src]="course.image" [alt]="course.title"
+              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+              onerror="this.style.display='none'">
+            <div *ngIf="!course.image"
+              class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#0E4D67] to-blue-500">
+              <div class="text-white text-center">
+                <div class="text-5xl mb-3">📚</div>
+                <div class="text-sm font-semibold line-clamp-2 px-4">{{ course.title }}</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Content -->
+          <div class="p-6 flex flex-col flex-1">
+            <div class="flex justify-between items-start mb-4">
+              <span *ngIf="course?.isBestseller"
+                class="bg-yellow-100 text-yellow-800 text-xs px-3 py-1 rounded-full font-medium">بيست سيلر</span>
+              <span class="text-2xl font-bold text-[#0E4D67]">{{ course?.price }} جنيه</span>
+            </div>
+            <h3 class="font-bold text-xl mb-3 line-clamp-2 text-gray-900">{{ course.title }}</h3>
+            <p class="text-gray-600 text-sm mb-4">👨‍🏫 {{ course.instructorName }}</p>
+            <div class="flex items-center gap-2 text-sm mt-auto">
+              <span class="font-bold text-yellow-600">{{ course.rating }}</span>
+              <span class="text-yellow-500">★★★★★</span>
+              <span class="text-gray-500">({{ course.reviewsCount || course.reviews }})</span>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div *ngIf="!loading && featuredCourses.length === 0" class="text-center py-16 text-gray-500">
+      <p class="text-lg">لا توجد كورسات متاحة الآن</p>
+    </div>
+  </section>
+
+  <!-- Student Section - enrolled courses -->
+  <section *ngIf="currentRole === 'student'" class="app-container mb-16">
+    <div class="card p-8 border-t-4 border-[#0E4D67]">
+      <h3 class="section-title mb-2">الكورسات المسجل بها</h3>
+      <p class="section-subtitle mb-8">عدد الكورسات المسجل بها: <span class="font-bold text-[#0E4D67]">{{ enrolledCount
+          }}</span></p>
+
+      <div *ngIf="myCourses.length > 0" class="grid md:grid-cols-3 gap-6">
+        <div *ngFor="let c of myCourses" class="card-hover p-6">
+          <h4 class="font-bold text-lg mb-2 line-clamp-2">{{ c.title }}</h4>
+          <p class="text-sm text-gray-600 mb-4">📂 {{ c.category }}</p>
+          <a [routerLink]="['/courses', c.id]" class="btn-primary w-full text-center text-sm">
+            الدخول للكورس
+          </a>
+        </div>
+      </div>
+
+      <div *ngIf="myCourses.length === 0" class="text-center py-12 text-gray-500">
+        <p class="text-lg mb-6">لم تسجل في أي كورسات بعد</p>
+        <a routerLink="/courses" class="btn-primary">
+          استكشف الكورسات
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Instructor Section - my courses -->
+  <section *ngIf="currentRole === 'instructor'" class="app-container mb-16">
+    <div class="card p-8 border-t-4 border-[#0E4D67]">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h3 class="section-title mb-1">كورساتي</h3>
+          <p class="section-subtitle">الكورسات التي تقوم بتدريسها</p>
+        </div>
+        <a routerLink="/courses/new" class="btn-primary">
+          + كورس جديد
+        </a>
+      </div>
+
+      <div *ngIf="myCourses.length > 0" class="grid md:grid-cols-3 gap-6">
+        <div *ngFor="let c of myCourses" class="card-hover p-6">
+          <h4 class="font-bold text-lg mb-2 line-clamp-2">{{ c.title }}</h4>
+          <p class="text-sm text-gray-600 mb-4">👥 الطلاب: {{ c.studentsCount || 0 }}</p>
+          <div class="flex gap-2">
+            <a [routerLink]="['/courses', c.id]" class="flex-1 btn-primary text-center text-sm py-2">
+              عرض
+            </a>
+            <a [routerLink]="['/courses', c.id, 'edit']" class="flex-1 btn-outline text-center text-sm py-2">
+              تعديل
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="myCourses.length === 0" class="text-center py-12 text-gray-500">
+        <p class="text-lg mb-6">لم تنشئ أي كورسات بعد</p>
+        <a routerLink="/courses/new" class="btn-primary">
+          أنشئ كورس جديد
+        </a>
+      </div>
+    </div>
+  </section>
+
+</div>

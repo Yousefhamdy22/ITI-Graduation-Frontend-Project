@@ -1,0 +1,169 @@
+<div dir="rtl" class="min-h-screen bg-gray-50 flex flex-col">
+  <app-role-header></app-role-header>
+
+  <div class="flex-1 pt-20">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="flex items-center justify-center min-h-[calc(100vh-100px)]">
+      <div class="text-center">
+        <div class="animate-spin w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full mx-auto mb-4"></div>
+        <p class="text-gray-600">جاري تحميل الدرس...</p>
+      </div>
+    </div>
+
+    <!-- Lesson Content -->
+    <ng-container *ngIf="!loading && lesson">
+      <div class="app-container py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          <!-- Main Content -->
+          <div class="lg:col-span-3 space-y-6">
+            <!-- Video Player -->
+            <div class="bg-white rounded-2xl shadow-soft border border-gray-100 overflow-hidden">
+              <div class="relative bg-black aspect-video">
+                <iframe
+                  *ngIf="safeVideoUrl"
+                  [src]="safeVideoUrl"
+                  class="w-full h-full"
+                  allowfullscreen
+                  frameborder="0">
+                </iframe>
+                <div *ngIf="!safeVideoUrl" class="w-full h-full flex items-center justify-center text-white">
+                  <span>فيديو غير متاح</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Lesson Info -->
+            <div class="bg-white rounded-2xl shadow-soft border border-gray-100 p-6">
+              <div class="flex items-start justify-between mb-4">
+                <div>
+                  <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ lesson.title }}</h1>
+                  <div class="flex flex-wrap gap-4 text-gray-600 text-sm">
+                    <span class="flex items-center gap-2">
+                      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 11-2 0 1 1 0 012 0zm-1 5a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
+                      </svg>
+                      {{ lesson.duration }} دقيقة
+                    </span>
+                    <span>الدرس رقم: {{ currentLessonIndex + 1 }} من {{ allLessons.length }}</span>
+                  </div>
+                </div>
+
+                <!-- Instructor Actions -->
+                <div *ngIf="isInstructor" class="flex gap-2">
+                  <button (click)="startEditDescription()" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+                    </svg>
+                  </button>
+                  <button (click)="deleteLesson()" class="p-2 text-red-600 hover:bg-red-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Description Edit Mode -->
+              <div *ngIf="editingDescription && isInstructor" class="mb-6 p-4 bg-gray-50 rounded-lg">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">وصف الدرس</label>
+                <textarea [(ngModel)]="editedDescription" class="w-full border rounded-lg p-2 mb-3" rows="4"></textarea>
+                <div class="flex gap-2">
+                  <button (click)="saveDescription()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">حفظ</button>
+                  <button (click)="cancelEditDescription()" class="px-4 py-2 border rounded-lg hover:bg-gray-100">إلغاء</button>
+                </div>
+              </div>
+
+              <!-- Description View Mode -->
+              <div *ngIf="!editingDescription" class="prose prose-sm max-w-none">
+                <h2 class="text-lg font-bold text-gray-900 mb-3">وصف الدرس</h2>
+                <p class="text-gray-700 leading-relaxed whitespace-pre-line">{{ lesson.description }}</p>
+              </div>
+
+              <!-- Completion Status -->
+              <div class="mt-6 pt-6 border-t border-gray-200">
+                <button 
+                  *ngIf="!completed"
+                  (click)="markAsCompleted()"
+                  class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition">
+                  ✓ تم مشاهدة الدرس
+                </button>
+                <div *ngIf="completed" class="flex items-center gap-2 text-green-600 font-bold text-lg">
+                  <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                  </svg>
+                  تم مشاهدة الدرس
+                </div>
+              </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="flex gap-4">
+              <button 
+                *ngIf="getPreviousLesson()"
+                (click)="goToPreviousLesson()"
+                class="flex-1 py-3 px-6 bg-gray-200 hover:bg-gray-300 text-gray-900 font-bold rounded-lg transition flex items-center gap-2 justify-center">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                </svg>
+                الدرس السابق
+              </button>
+              <button 
+                *ngIf="getNextLesson()"
+                (click)="goToNextLesson()"
+                class="flex-1 py-3 px-6 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition flex items-center gap-2 justify-center">
+                الدرس التالي
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Sidebar -->
+          <aside class="lg:col-span-1">
+            <!-- Course Info -->
+            <div class="bg-white rounded-2xl shadow-soft border border-gray-100 p-6 mb-6">
+              <h3 class="font-bold text-gray-900 mb-2">الكورس</h3>
+              <p class="text-gray-700 text-sm mb-4">{{ course?.title || 'بدون كورس محدد' }}</p>
+              <a *ngIf="course" [routerLink]="['/courses', course.id]" 
+                 class="block text-center py-2 px-4 bg-blue-100 text-blue-600 rounded-lg font-semibold hover:bg-blue-200 transition">
+                عرض الكورس
+              </a>
+            </div>
+
+            <!-- Lessons List -->
+            <div class="bg-white rounded-2xl shadow-soft border border-gray-100 overflow-hidden sticky top-24">
+              <div class="p-4 bg-blue-600 text-white font-bold">جميع الدروس ({{ allLessons.length }})</div>
+              <div class="max-h-96 overflow-y-auto">
+                <button 
+                  *ngFor="let l of allLessons; let i = index"
+                  (click)="goToLesson(i)"
+                  [class]="'w-full text-right p-4 border-b last:border-b-0 transition ' + 
+                           (i === currentLessonIndex ? 'bg-blue-50 border-l-4 border-l-blue-600 font-bold text-blue-600' : 'hover:bg-gray-50')">
+                  <div class="text-sm">{{ i + 1 }}. {{ l.title }}</div>
+                  <div class="text-xs text-gray-500 mt-1">{{ l.duration }} دقيقة</div>
+                </button>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Not Found -->
+    <ng-container *ngIf="!loading && !lesson">
+      <div class="app-container py-12 flex items-center justify-center min-h-[50vh]">
+        <div class="bg-white rounded-2xl shadow-soft border border-gray-100 p-8 w-full max-w-md text-center">
+          <h2 class="text-2xl font-bold text-gray-900 mb-3">الدرس غير موجود</h2>
+          <p class="text-gray-600 mb-6">لم نتمكن من العثور على هذا الدرس</p>
+          <a routerLink="/courses"
+             class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition">
+            العودة للكورسات
+          </a>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <app-footer></app-footer>
+</div>

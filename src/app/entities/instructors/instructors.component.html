@@ -1,0 +1,51 @@
+<div class="max-w-7xl mx-auto px-6 py-12" dir="rtl">
+  <h1 class="text-4xl font-bold mb-10">فريق المدربين</h1>
+
+  <div class="mb-8">
+    <input type="text" [(ngModel)]="query.search" (input)="onSearch()"
+           placeholder="ابحث عن مدرب..."
+           class="w-full px-6 py-4 rounded-xl border text-lg">
+  </div>
+
+  <div *ngIf="loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 py-8">
+    <div *ngFor="let _ of [1,2,3,4,5,6]" class="bg-gray-200 rounded-2xl h-80 animate-pulse"></div>
+  </div>
+
+  <div *ngIf="!loading && filteredInstructors.length > 0"
+       class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div *ngFor="let instructor of filteredInstructors"
+          class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition group overflow-hidden">
+      <div class="h-40 bg-gradient-to-r from-purple-500 to-pink-600 flex items-center justify-center">
+         <img *ngIf="instructor.avatar" [src]="instructor.avatar" 
+           class="w-32 h-32 rounded-full border-4 border-white object-cover"
+           [alt]="instructor.name">
+      </div>
+      <div class="p-5">
+        <h3 class="font-bold text-lg mb-2">{{ instructor.name }}</h3>
+        <p class="text-gray-600 text-sm mb-3 line-clamp-2">{{ instructor.bio }}</p>
+        
+        <div class="flex flex-wrap gap-2 mb-3">
+          <span *ngFor="let skill of instructor.expertise" 
+                class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+            {{ skill }}
+          </span>
+        </div>
+
+        <div class="space-y-2 text-sm text-gray-600 mb-4">
+          <p>📚 {{ instructor.coursesCount }} كورسات</p>
+          <p>👥 {{ instructor.studentsCount | number }} طالب</p>
+          <p>⭐ {{ instructor.rating }}/5.0</p>
+        </div>
+
+        <a [routerLink]="['/instructors', instructor.id]" (click)="navigateToInstructor(instructor.id, $event)"
+           class="w-full block text-center bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg transition">
+          اعرف المزيد
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && filteredInstructors.length === 0" class="text-center py-24 text-xl text-gray-500">
+    لا توجد مدربين
+  </div>
+</div>

@@ -1,35 +1,19 @@
 <div class="min-h-screen p-6 bg-gray-50">
   <div class="max-w-4xl mx-auto">
     <div class="flex justify-between items-center mb-6">
-      <div>
-        <h1 class="text-2xl font-bold">قائمة الأسئلة</h1>
-        <div class="text-sm text-gray-500">اختر كورس لعرض أسئلته</div>
-      </div>
+      <h1 class="text-2xl font-bold">قائمة الأسئلة</h1>
       <div class="flex gap-2">
-        <select [(ngModel)]="selectedCourseId" class="border rounded px-3 py-2">
-          <option value="">كل الكورسات</option>
-          <option *ngFor="let c of courses" [value]="c.id">{{ c.title }}</option>
-        </select>
-        <a [routerLink]="['/questions','new']" [queryParams]="{ courseId: selectedCourseId, forExam: forExam ? 1 : null }" class="px-4 py-2 bg-[#0E4D67] text-white rounded">إنشاء سؤال</a>
-        <button (click)="createExamWithSelected()" class="px-4 py-2 bg-indigo-600 text-white rounded">اختر لإنشاء اختبار</button>
-      </div>
-    </div>
-
-    <div *ngIf="!selectedCourseId" class="p-6 bg-white rounded shadow mb-6">
-      <h2 class="font-semibold mb-2">اختر كورس لعرض أسئلته</h2>
-      <div class="flex gap-2 items-center">
-        <select [(ngModel)]="selectedCourseId" class="border rounded px-3 py-2">
-          <option value="">-- اختر كورس --</option>
-          <option *ngFor="let c of courses" [value]="c.id">{{ c.title }}</option>
-        </select>
-        <button (click)="void(0)" class="px-3 py-2 border rounded">عرض</button>
+        <a [routerLink]="['/questions','new']" class="px-4 py-2 bg-[#0E4D67] text-white rounded">إنشاء سؤال</a>
+        <button (click)="createExamWithSelected()" class="px-4 py-2 bg-indigo-600 text-white rounded" [disabled]="selectedForExam.size === 0">
+          إنشاء اختبار <span *ngIf="selectedForExam.size > 0">({{selectedForExam.size}})</span>
+        </button>
       </div>
     </div>
 
     <div *ngIf="questions.length === 0" class="text-center py-20 text-gray-500">لا توجد أسئلة</div>
 
     <div class="space-y-3">
-      <div *ngFor="let q of filteredQuestions" class="bg-white p-4 rounded shadow flex items-start justify-between">
+      <div *ngFor="let q of questions" class="bg-white p-4 rounded shadow flex items-start justify-between">
         <div>
           <label class="flex items-center gap-2">
             <input type="checkbox" (change)="toggleSelect(q)" [checked]="selectedForExam.has(q.id)" />

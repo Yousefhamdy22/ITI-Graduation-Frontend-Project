@@ -1,4 +1,4 @@
- import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, afterNextRender, Injector} from '@angular/core';
 
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
@@ -149,7 +149,9 @@ export class AdminDashboard implements OnInit {
 
     private router: Router,
 
-    private auth: AuthService
+    private auth: AuthService,
+
+    private injector: Injector
 
   ) {
 
@@ -157,63 +159,67 @@ export class AdminDashboard implements OnInit {
 
     this.instructors$ = this.instructorService.getInstructors();
 
-   
-
-    // courses
-
-    this.courseService.getCourses().subscribe(list => {
-
-      this.totalCourses = (list || []).length;
-
-    });
-
-   
-
     this.stats$ = this.dashboardservice.stats$;
 
-   
+    
 
-    // keep a live list for simple client-side search/pagination
+    // Move HTTP calls to afterNextRender to avoid SSR issues
 
-    this.students$.subscribe(list => {
+    afterNextRender(() => {
 
-      this.filteredStudents = list || [];
+      // courses
 
-      // compute totals and enrollments
+      this.courseService.getCourses().subscribe(list => {
 
-      this.totalStudents = (list || []).length;
+        this.totalCourses = (list || []).length;
 
-      this.totalEnrollments = (list || []).reduce((acc: number, s: any) => acc + ((s.enrolledCourseIds || []).length || 0), 0);
+      });
 
-      // compute trend (last 6 months)
+     
 
-      this.computeEnrollmentTrend(list || []);
+      // keep a live list for simple client-side search/pagination
 
-    });
+      this.students$.subscribe(list => {
+
+        this.filteredStudents = list || [];
+
+        // compute totals and enrollments
+
+        this.totalStudents = (list || []).length;
+
+        this.totalEnrollments = (list || []).reduce((acc: number, s: any) => acc + ((s.enrolledCourseIds || []).length || 0), 0);
+
+        // compute trend (last 6 months)
+
+        this.computeEnrollmentTrend(list || []);
+
+      });
 
 
 
-    this.instructors$.subscribe(list => {
+      this.instructors$.subscribe(list => {
 
-      this.filteredInstructors = list || [];
+        this.filteredInstructors = list || [];
 
-      this.totalInstructors = (list || []).length;
+        this.totalInstructors = (list || []).length;
 
-    });
+      });
 
 
 
-    // تحميل الاختبارات
+      // تحميل الاختبارات
 
-    this.examService.getExams().subscribe(list => {
+      this.examService.getExams().subscribe(list => {
 
-      this.exams = list || [];
+        this.exams = list || [];
 
-      this.totalExams = this.exams.length;
+        this.totalExams = this.exams.length;
 
-      this.filterExams();
+        this.filterExams();
 
-    });
+      });
+
+    }, { injector: this.injector });
 
   }
 

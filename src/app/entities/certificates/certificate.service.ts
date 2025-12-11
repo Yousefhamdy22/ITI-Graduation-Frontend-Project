@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../../environment/environment';
 
 export interface Certificate {
   id: string;
@@ -14,7 +13,7 @@ export interface Certificate {
 
 @Injectable({ providedIn: 'root' })
 export class CertificateService {
-  private BASE_URL = `${environment.apiUrl}/api/Certificates`;
+  private BASE_URL = 'http://localhost:5180/api/Certificates';
 
   constructor(private http: HttpClient) { }
 

@@ -11,6 +11,7 @@ export interface Question {
   points: number;
   imageUrl?: string | null;
   answerOptions: AnswerOption[];
+  courseId?: string;
 }
 
 export interface CreateQuestionRequest {
@@ -19,6 +20,7 @@ export interface CreateQuestionRequest {
   image?: File;
   imageUrl?: string;
   answerOptions: AnswerOption[];
+  courseId?: string;
 }
 
 export interface UpdateQuestionRequest {
@@ -28,6 +30,7 @@ export interface UpdateQuestionRequest {
   image?: File;
   imageUrl?: string;
   answerOptions: AnswerOption[];
+  courseId?: string;
 }
 
 export interface ServerResponse<T> {

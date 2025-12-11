@@ -50,9 +50,9 @@ export class ExamFormComponent implements OnInit {
 
     // تحميل الأسئلة
     this.questionService.getQuestions().subscribe({
-      next: (res) => {
-        // res is ServerResponse<Question[]>
-        this.questions = res.value || [];
+      next: (response) => {
+        // response is ServerResponse<Question[]>
+        this.questions = response.value || [];
         // تحديث الخريطة والنقاط الافتراضية
         for (const q of this.questions) {
           if (q.id && !(q.id in this.questionPoints)) {

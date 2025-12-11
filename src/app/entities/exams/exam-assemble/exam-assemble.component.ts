@@ -45,8 +45,8 @@ export class ExamAssembleComponent implements OnInit {
 
     // تحميل الأسئلة المختارة
     this.questionService.getQuestions().subscribe({
-      next: (res) => {
-        const allQuestions = res.value || [];
+      next: (response) => {
+        const allQuestions = response.value || [];
         this.questions = allQuestions.filter((q: any) => q.id && this.selectedIds.includes(q.id));
         for (const q of this.questions) {
           if (q.id && !(q.id in this.points)) {

@@ -50,8 +50,8 @@ export class ExamFormModalComponent implements OnInit {
 
     // تحميل الأسئلة
     this.questionService.getQuestions().subscribe({
-      next: (res) => {
-        this.questions = res.value || [];
+      next: (response) => {
+        this.questions = response.value || [];
       },
       error: () => this.toast.show('خطأ في تحميل الأسئلة', 'error')
     });

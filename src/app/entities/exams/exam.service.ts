@@ -3,12 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
 import { Exam, Question, ExamResult, ExamResultDetail } from './exam.model';
-import { environment } from '../../../environment/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ExamService {
-  private useMock = false;
-  private BASE_URL = `${environment.apiUrl}/api/Exams`;
+  private useMock = true; // Temporary: Backend /api/Exams endpoint not available yet
+  private BASE_URL = 'http://localhost:5180/api/Exams';
 
   private mockData: Exam[] = [
     {
@@ -127,7 +126,7 @@ export class ExamService {
   getExamsByCourse(courseId: string): Observable<Exam[]> {
     return this.useMock
       ? of(this.mockData.filter(e => e.courseId === courseId)).pipe(delay(300))
-      : this.http.get<Exam[]>(`${environment.apiUrl}/api/courses/${courseId}/exams`);
+      : this.http.get<Exam[]>(`http://localhost:5180/api/courses/${courseId}/exams`);
   }
 
   submitExam(examId: string, answers: number[]): Observable<{ score: number; passed: boolean }> {

@@ -35,13 +35,11 @@ export interface RegisterResponse {
   refreshToken?: string;
 }
 
-import { environment } from '../../environment/environment';
-
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private userSubject = new BehaviorSubject<User | null>(null);
   user$ = this.userSubject.asObservable();
-  private BASE_URL = environment.apiUrl + '/api';
+  private BASE_URL = 'http://localhost:5180/api';
 
   constructor(private http: HttpClient) {
     // Attempt to restore session on init

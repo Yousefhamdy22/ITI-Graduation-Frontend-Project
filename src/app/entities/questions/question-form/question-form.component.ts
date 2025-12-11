@@ -51,9 +51,9 @@ export class QuestionFormComponent implements OnInit {
     if (this.id) {
       // Backend doesn't support getQuestionById - fetch all questions and filter
       this.qs.getQuestions().subscribe({
-        next: (response: ServerResponse<Question[]>) => {
-          const questions = response.value || [];
-          const q = questions.find(question => question.id === this.id);
+        next: (response) => {
+          const questionList = response.value || [];
+          const q = questionList.find(question => question.id === this.id);
           if (!q) {
             this.toast.show('لم يتم العثور على السؤال.', 'error');
             return;
@@ -124,8 +124,11 @@ export class QuestionFormComponent implements OnInit {
       text: this.text,
       points: this.points,
       imageUrl: undefined,
-      answerOptions: answerOptions
+      answerOptions: answerOptions,
+      courseId: this.courseId || undefined
     };
+
+    console.log('🔵 Question payload with courseId:', payload);
 
     if (this.id) {
       const updatePayload: Question = { id: this.id, ...payload } as Question;
@@ -143,16 +146,30 @@ export class QuestionFormComponent implements OnInit {
       });
     } else {
       // 💡 تحديث طريقة الاتصال بالإنشاء
+      console.log('🔵 Creating new question:', payload);
       this.qs.createQuestion(payload).subscribe({
-        next: (response: ServerResponse<Question>) => {
-          if (response.isSuccess) {
-            this.toast.show('تم إنشاء السؤال بنجاح', 'success');
+        next: (createdQuestion: Question) => {
+          console.log('✅ Question creation response:', createdQuestion);
+          console.log('✅ Question CourseId:', createdQuestion.courseId);
+          if (createdQuestion && createdQuestion.id) {
+            console.log('✅ Question created successfully with ID:', createdQuestion.id);
+            this.toast.show('تم إنشاء السؤال بنجاح في الكورس - ID: ' + createdQuestion.id, 'success');
+            // Navigate after successful creation
+            const qp = this.route.snapshot.queryParams;
+            this.router.navigate(['/questions'], { queryParams: qp });
           } else {
-            this.toast.show('فشل الإنشاء: ' + (response.errors[0] || 'خطأ غير معروف'), 'error');
+            console.warn('⚠️ Question created but no ID returned:', createdQuestion);
+            this.toast.show('تم الإنشاء لكن لم يتم استلام معرف السؤال', 'warning');
+            const qp = this.route.snapshot.queryParams;
+            this.router.navigate(['/questions'], { queryParams: qp });
           }
         },
-        error: () => this.toast.show('خطأ في الاتصال بالخادم أثناء الإنشاء.', 'error')
+        error: (err) => {
+          console.error('❌ Question creation error:', err);
+          this.toast.show('خطأ في الاتصال بالخادم أثناء الإنشاء.', 'error');
+        }
       });
+      return; // Exit early to prevent double navigation
     }
 
     // preserve any query params (courseId / forExam) when returning to list

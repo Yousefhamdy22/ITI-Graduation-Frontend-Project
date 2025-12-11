@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, afterNextRender, PLATFORM_ID, inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { QuestionService } from '../question.service';
@@ -20,22 +20,33 @@ export class QuestionListComponent implements OnInit {
   courses: any[] = [];
   selectedCourseId = '';
   forExam = false;
+  private platformId = inject(PLATFORM_ID);
 
-  constructor(private questionService: QuestionService, private router: Router, private courseService: CourseService, private route: ActivatedRoute, private toast: ToastService) { }
+  constructor(
+    private questionService: QuestionService, 
+    private router: Router, 
+    private courseService: CourseService, 
+    private route: ActivatedRoute, 
+    private toast: ToastService
+  ) {
+    // Load data after render to avoid SSR issues
+    afterNextRender(() => {
+      this.loadQuestions();
+      this.loadSessionStorage();
+    });
+  }
 
   ngOnInit() {
-    this.questionService.getQuestions().subscribe({
-      next: (res) => this.questions = res.value || [],
-      error: () => this.toast.show('فشل تحميل الأسئلة', 'error')
-    });
-    this.courseService.getCourses().subscribe(list => this.courses = list || []);
-
+    // Route params setup
     this.route.queryParams.subscribe(params => {
       if (params['courseId']) this.selectedCourseId = params['courseId'];
       this.forExam = params['forExam'] === '1' || params['forExam'] === 'true' || false;
     });
+  }
 
-    // load any persisted selected ids
+  private loadSessionStorage() {
+    if (!isPlatformBrowser(this.platformId)) return;
+    
     const raw = sessionStorage.getItem('selectedQuestionIds');
     if (raw) {
       try {
@@ -45,9 +56,21 @@ export class QuestionListComponent implements OnInit {
     }
   }
 
-  get filteredQuestions() {
-    if (!this.selectedCourseId) return this.questions;
-    return this.questions.filter(q => (q as any).courseId === this.selectedCourseId);
+  loadQuestions() {
+    this.questionService.getQuestions().subscribe({
+      next: (response) => {
+        this.questions = response.value || [];
+        console.log('✅ Questions loaded:', this.questions.length);
+      },
+      error: (err) => {
+        console.error('❌ Failed to load questions:', err);
+        this.toast.show('فشل تحميل الأسئلة', 'error');
+      }
+    });
+
+    if (this.courses.length === 0) {
+      this.courseService.getCourses().subscribe(list => this.courses = list || []);
+    }
   }
 
   edit(q: Question) {
@@ -65,7 +88,7 @@ export class QuestionListComponent implements OnInit {
           this.toast.show('تم حذف السؤال بنجاح', 'success');
 
           // remove from selection if present
-          if (this.selectedForExam.has(q.id!)) {
+          if (this.selectedForExam.has(q.id!) && isPlatformBrowser(this.platformId)) {
             this.selectedForExam.delete(q.id!);
             sessionStorage.setItem('selectedQuestionIds', JSON.stringify(Array.from(this.selectedForExam)));
           }
@@ -78,13 +101,14 @@ export class QuestionListComponent implements OnInit {
   }
 
   toggleSelect(q: Question) {
-    if (!q.id) return;
+    if (!q.id || !isPlatformBrowser(this.platformId)) return;
     if (this.selectedForExam.has(q.id)) this.selectedForExam.delete(q.id);
     else this.selectedForExam.add(q.id);
     sessionStorage.setItem('selectedQuestionIds', JSON.stringify(Array.from(this.selectedForExam)));
   }
 
   createExamWithSelected() {
+    if (!isPlatformBrowser(this.platformId)) return;
     // store selected ids in sessionStorage then navigate to exam creation
     const ids = Array.from(this.selectedForExam);
     sessionStorage.setItem('selectedQuestionIds', JSON.stringify(ids));

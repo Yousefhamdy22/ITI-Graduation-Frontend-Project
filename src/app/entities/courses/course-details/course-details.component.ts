@@ -59,8 +59,14 @@ export class CourseDetailsComponent implements OnInit {
         }
         // if current user is student, check enrollment
         if (user && user.role === 'student' && c) {
-          this.studentService.getStudentById(user.id).subscribe(s => {
-            this.enrolled = !!(s && (s.enrolledCourseIds || []).includes(c.id));
+          this.studentService.getStudentById(user.id).subscribe({
+            next: (s) => {
+              this.enrolled = !!(s && (s.enrolledCourseIds || []).includes(c.id));
+            },
+            error: (err) => {
+              console.warn('Could not fetch student enrollment status:', err);
+              this.enrolled = false;
+            }
           });
         }
         this.loading = false;

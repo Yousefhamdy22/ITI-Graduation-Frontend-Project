@@ -10,7 +10,7 @@ export interface Course {
 
   hours?: number;
   duration?: number;
-  lessonsCount?: number;
+  lecturesCount?: number;
 
   price?: number;
   oldPrice?: number;

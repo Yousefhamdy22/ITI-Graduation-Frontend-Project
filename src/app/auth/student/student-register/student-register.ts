@@ -52,18 +52,19 @@ export class StudentRegister {
       lastName: this.name.split(' ')[1] || '',
       gender: 'male',
       phoneNumber: this.phone || null,
-      createdAt: new Date()
+      createdAt: new Date().toISOString()
     }).subscribe({
       next: (res) => {
         if (res.isSuccess) {
           this.toast.show('تم التسجيل بنجاح', 'success');
           this.router.navigate(['/student']);
         } else {
-          this.toast.show(res.errors?.join(', ') || 'فشل التسجيل', 'error');
+          this.toast.show(res.message || 'فشل التسجيل', 'error');
         }
       },
       error: (err) => {
-        this.toast.show('خطأ في الاتصال', 'error');
+        const errorMsg = err.error?.message || err.error?.errors?.[0] || 'خطأ في الاتصال';
+        this.toast.show(errorMsg, 'error');
         console.error('Registration failed', err);
       }
     });

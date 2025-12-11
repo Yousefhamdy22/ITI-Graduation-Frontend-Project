@@ -27,26 +27,13 @@ import {AuthService} from '../../auth.service';
 import {CommonModule} from '@angular/common';
 
 import { Exam } from '../../../entities/exams/exam.model';
+import { Instructor } from '../../../entities/instructors/instructor.model';
 
 import {RoleHeaderComponent} from '../../../core/header/role-header.component';
 
 import {FooterComponent} from '../../../core/footer/footer.component';
 
 import {ExamFormModalComponent} from '../../../shared/exam-form-modal/exam-form-modal.component';
-
-// Define the structure expected for an Instructor item
-
-interface Instructor {
-
-  id: string; // Assuming instructors have an ID
-
-  name: string; // Needed for i.name
-
-  email: string; // Needed for i.email
-
-  // Add any other properties you access from the instructor object
-
-}
 
 @Component({
 
@@ -310,9 +297,11 @@ export class AdminDashboard implements OnInit {
 
           !term ||
 
-          s.name?.toLowerCase().includes(term.toLowerCase()) ||
+          s.firstName?.toLowerCase().includes(term.toLowerCase()) ||
 
-          s.phone?.includes(term)
+          s.lastName?.toLowerCase().includes(term.toLowerCase()) ||
+
+          s.phoneNumber?.includes(term)
 
         );
 
@@ -354,7 +343,9 @@ export class AdminDashboard implements OnInit {
 
     }
 
-    const s = this.studentService.addStudent({name: this.newStudentName, email: this.newStudentEmail});
+    const nameParts = this.newStudentName.trim().split(' ');
+
+    const s = this.studentService.addStudent({firstName: nameParts[0] || '', lastName: nameParts.slice(1).join(' ') || '', email: this.newStudentEmail});
 
     this.newStudentName = this.newStudentEmail = '';
 
@@ -420,7 +411,7 @@ export class AdminDashboard implements OnInit {
 
       this.filteredInstructors = (list || []).filter((i: Instructor) => {
 
-        return !q || (i.name || '').toLowerCase().includes(q) || (i.email || '').toLowerCase().includes(q);
+        return !q || (i.firstName || '').toLowerCase().includes(q) || (i.lastName || '').toLowerCase().includes(q) || (i.email || '').toLowerCase().includes(q);
 
       });
 
@@ -448,7 +439,13 @@ export class AdminDashboard implements OnInit {
 
     }
 
-    this.instructorService.createInstructor({name: this.newInstructorName, email: this.newInstructorEmail}).subscribe(() => {
+    const nameParts = this.newInstructorName.trim().split(' ');
+
+    const firstName = nameParts[0] || '';
+
+    const lastName = nameParts.slice(1).join(' ') || '';
+
+    this.instructorService.createInstructor({firstName, lastName, email: this.newInstructorEmail}).subscribe(() => {
 
       this.newInstructorName = this.newInstructorEmail = '';
 

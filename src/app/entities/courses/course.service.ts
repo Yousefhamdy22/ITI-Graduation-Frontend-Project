@@ -30,7 +30,8 @@ export class CourseService {
 
   // تعديل كورس
   updateCourse(id: string, course: any): Observable<any> {
-    return this.http.put<any>(`${environment.apiUrl}/api/Course/Update/${id}`, course);
+    // Backend expects POST to /api/Course/Update/{id} according to Swagger
+    return this.http.post<any>(`${environment.apiUrl}/api/Course/Update/${id}`, course);
   }
 
   // حذف كورس

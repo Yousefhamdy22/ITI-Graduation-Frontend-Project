@@ -26,10 +26,30 @@ export class CourseFormComponent {
         this.course.instructorId = user.id;
         this.course.instructorName = user.name;
       }
-      this.courseService.createCourse(this.course).subscribe(created => {
-        this.save.emit(created);
-        // navigate to courses list after creation
-        this.router.navigate(['/courses']);
+      
+      // Add required fields matching backend DTO
+      const courseData = {
+        title: this.course.title,
+        description: this.course.description || '',
+        typeStatus: 'Active', // Required by backend
+        startDate: new Date().toISOString(),
+        endDate: null,
+        price: this.course.price || 0,
+        instructorId: this.course.instructorId || null
+      };
+      
+      this.courseService.createCourse(courseData).subscribe({
+        next: (created) => {
+          this.save.emit(created);
+          // navigate to courses list after creation
+          this.router.navigate(['/courses']);
+        },
+        error: (err) => {
+          console.error('Course creation error:', err);
+          if (err.error && err.error.errors) {
+            console.error('Validation errors:', err.error.errors);
+          }
+        }
       });
     }
   }

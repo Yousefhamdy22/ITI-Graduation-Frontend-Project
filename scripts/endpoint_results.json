@@ -1,0 +1,135 @@
+﻿[
+    {
+        "name":  "Courses - GetAll",
+        "path":  "/api/Course/GetAllCourses",
+        "method":  "GET",
+        "status":  "error",
+        "details":  "Error; msg=Unable to connect to the remote server"
+    },
+    {
+        "name":  "Courses - GetById",
+        "path":  "/api/Course/GetCourseById/{id}",
+        "method":  "GET",
+        "status":  "error",
+        "details":  "Error; msg=Unable to connect to the remote server"
+    },
+    {
+        "name":  "Students - All",
+        "path":  "/api/Students",
+        "method":  "GET",
+        "status":  "error",
+        "details":  "Error; msg=Unable to connect to the remote server"
+    },
+    {
+        "name":  "Students - ById",
+        "path":  "/api/Students/{id}",
+        "method":  "GET",
+        "status":  "error",
+        "details":  "Error; msg=Unable to connect to the remote server"
+    },
+    {
+        "name":  "Students - ByUserId",
+        "path":  "/api/Students/user/{id}",
+        "method":  "GET",
+        "status":  "error",
+        "details":  "Error; msg=Unable to connect to the remote server"
+    },
+    {
+        "name":  "Students - CourseEnrollment",
+        "path":  "/api/Students/CourseEnrollment/{id}",
+        "method":  "GET",
+        "status":  "error",
+        "details":  "Error; msg=Unable to connect to the remote server"
+    },
+    {
+        "name":  "Students - GetAllWithEnrollments",
+        "path":  "/api/Students/GetAllWithEnrollments",
+        "method":  "GET",
+        "status":  "error",
+        "details":  "Error; msg=Unable to connect to the remote server"
+    },
+    {
+        "name":  "Questions - All",
+        "path":  "/api/Question/GetAllQuestions",
+        "method":  "GET",
+        "status":  "error",
+        "details":  "Error; msg=Unable to connect to the remote server"
+    },
+    {
+        "name":  "Questions - ById",
+        "path":  "/api/Question/GetQuestionById/{id}",
+        "method":  "GET",
+        "status":  "error",
+        "details":  "Error; msg=Unable to connect to the remote server"
+    },
+    {
+        "name":  "Lectures - ByModule",
+        "path":  "/api/Lectures/ByModule/{id}",
+        "method":  "GET",
+        "status":  "error",
+        "details":  "Error; msg=Unable to connect to the remote server"
+    },
+    {
+        "name":  "Lectures - ById",
+        "path":  "/api/Lectures/{id}",
+        "method":  "GET",
+        "status":  "error",
+        "details":  "Error; msg=Unable to connect to the remote server"
+    },
+    {
+        "name":  "Exams - All",
+        "path":  "/api/Exams",
+        "method":  "GET",
+        "status":  "error",
+        "details":  "Error; msg=Unable to connect to the remote server"
+    },
+    {
+        "name":  "Exams - ById",
+        "path":  "/api/Exams/{id}",
+        "method":  "GET",
+        "status":  "error",
+        "details":  "Error; msg=Unable to connect to the remote server"
+    },
+    {
+        "name":  "Exams - ByCourse",
+        "path":  "/api/courses/{id}/exams",
+        "method":  "GET",
+        "status":  "error",
+        "details":  "Error; msg=Unable to connect to the remote server"
+    },
+    {
+        "name":  "Instructors - All",
+        "path":  "/api/Instructor/GetInstructors",
+        "method":  "GET",
+        "status":  "error",
+        "details":  "Error; msg=Unable to connect to the remote server"
+    },
+    {
+        "name":  "Instructors - ById",
+        "path":  "/api/Instructor/GetInstructorById/{id}",
+        "method":  "GET",
+        "status":  "error",
+        "details":  "Error; msg=Unable to connect to the remote server"
+    },
+    {
+        "name":  "Enrollments - All",
+        "path":  "/api/Enrollments",
+        "method":  "GET",
+        "status":  "error",
+        "details":  "Error; msg=Unable to connect to the remote server"
+    },
+    {
+        "name":  "Enrollments - ById",
+        "path":  "/api/Enrollments/{id}",
+        "method":  "GET",
+        "status":  "error",
+        "details":  "Error; msg=Unable to connect to the remote server"
+    },
+    {
+        "name":  "Certificates - ViewMy",
+        "path":  "/api/Certificates/ViewCertificate",
+        "method":  "GET",
+        "status":  "error",
+        "details":  "Error; msg=Unable to connect to the remote server"
+    }
+]

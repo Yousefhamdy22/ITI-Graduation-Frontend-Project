@@ -126,24 +126,24 @@ export const routes: Routes = [
   },
 
   // ======================
-  // Lessons
+  // Lectures
   // ======================
   {
-    path: 'lessons',
+    path: 'lectures',
     children: [
-      {
-        path: '',
-        loadComponent: () =>
-          import('./entities/lessons/lessons.component')
-            .then(m => m.LessonsComponent),
-      },
       {
         path: ':id',
         loadComponent: () =>
-          import('./entities/lessons/lesson-player/lesson-player.component')
-            .then(m => m.LessonPlayerComponent),
+          import('./entities/lectures/lecture-player/lecture-player.component')
+            .then(m => m.LecturePlayerComponent),
       },
     ],
+  },
+  // Legacy route redirect
+  {
+    path: 'lessons',
+    redirectTo: 'lectures',
+    pathMatch: 'prefix'
   },
 
   // ======================

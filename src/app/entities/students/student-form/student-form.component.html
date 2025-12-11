@@ -1,6 +1,7 @@
 <form class="space-y-4 rtl:text-right" (ngSubmit)="onSubmit()" #studentForm="ngForm">
-  <input type="text" class="border p-2 w-full rounded" placeholder="اسم الطالب" [(ngModel)]="student.name" name="name" required />
+  <input type="text" class="border p-2 w-full rounded" placeholder="الاسم الأول" [(ngModel)]="student.firstName" name="firstName" required />
+  <input type="text" class="border p-2 w-full rounded" placeholder="الاسم الأخير" [(ngModel)]="student.lastName" name="lastName" required />
   <input type="email" class="border p-2 w-full rounded" placeholder="البريد الإلكتروني" [(ngModel)]="student.email" name="email" required />
-  <input type="text" class="border p-2 w-full rounded" placeholder="رقم الهاتف" [(ngModel)]="student.phone" name="phone" />
+  <input type="text" class="border p-2 w-full rounded" placeholder="رقم الهاتف" [(ngModel)]="student.phoneNumber" name="phoneNumber" />
   <button type="submit" class="bg-primary-600 text-white px-4 py-2 rounded">Save</button>
 </form>

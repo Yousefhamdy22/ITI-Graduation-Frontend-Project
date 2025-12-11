@@ -25,8 +25,14 @@ export interface AuthResponse {
     firstName: string;
     lastName: string;
   };
-  errors?: string[];
-  validationErrors?: any[];
+}
+
+export interface RegisterResponse {
+  success: boolean;
+  message: string;
+  userId?: string;
+  accessToken?: string;
+  refreshToken?: string;
 }
 
 import { environment } from '../../environment/environment';

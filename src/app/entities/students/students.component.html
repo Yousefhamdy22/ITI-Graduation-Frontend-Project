@@ -16,19 +16,19 @@
     <a *ngFor="let student of filteredStudents" [routerLink]="['/students', student.id]"
        class="block bg-white rounded-2xl shadow-lg hover:shadow-2xl transition group">
       <div class="h-48 bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
-        <img *ngIf="student.avatar" [src]="student.avatar" 
+        <img [src]="'https://i.pravatar.cc/150?u=' + student.email" 
              class="w-24 h-24 rounded-full border-4 border-white object-cover"
-             [alt]="student.name">
+             [alt]="student.firstName + ' ' + student.lastName">
       </div>
       <div class="p-5">
-        <h3 class="font-bold text-lg mb-2">{{ student.name }}</h3>
+        <h3 class="font-bold text-lg mb-2">{{ student.firstName }} {{ student.lastName }}</h3>
         <p class="text-gray-600 text-sm mb-3">{{ student.email }}</p>
         <div class="flex items-center gap-2 text-sm text-gray-500 mb-2">
-          <span>📞 {{ student.phone }}</span>
+          <span>📞 {{ student.phoneNumber || 'N/A' }}</span>
         </div>
         <div class="flex items-center gap-2 text-sm">
           <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-semibold">
-            {{ student.enrolledCourses }} كورسات
+            {{ student.enrolledCourseIds?.length || 0 }} كورسات
           </span>
         </div>
         <p class="text-xs text-gray-400 mt-3">انضم: {{ student.joinDate }}</p>

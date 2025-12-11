@@ -58,7 +58,7 @@ export class CertificateFormComponent implements OnInit {
   onStudentChange() {
     const student = this.students.find(s => s.id === this.selectedStudentId);
     if (student) {
-      this.studentName = student.name;
+      this.studentName = `${student.firstName} ${student.lastName}`;
     }
   }
 

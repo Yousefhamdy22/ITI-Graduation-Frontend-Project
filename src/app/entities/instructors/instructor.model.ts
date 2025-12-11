@@ -1,11 +1,15 @@
 export interface Instructor {
   id: string;
-  name: string;
+  userId?: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  bio: string;
-  avatar: string;
-  expertise: string[];
-  coursesCount: number;
-  studentsCount: number;
-  rating: number;
+  phoneNumber: string;
+  title: string;
+}
+
+export interface CreateInstructor {
+  firstName: string;
+  lastName: string;
+  email: string;
 }

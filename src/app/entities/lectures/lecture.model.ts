@@ -1,6 +1,5 @@
 // Lecture Model - represents a lecture/class session
-// Note: File is named lesson.model.ts for backward compatibility,
-// but represents Lecture data from the API
+// Note: Course contains Lectures directly (unified from previous lessons/modules)
 
 export interface ZoomMeeting {
   id: string;
@@ -22,7 +21,7 @@ export interface ZoomRecording {
 export interface Lecture {
   id: string;
   title: string;
-  isRecordedAvailable: boolean;
+  isRecordedAvailable?: boolean;
   scheduledAt: string; // DateTimeOffset
   isCompleted: boolean;
   duration: string; // TimeSpan format
@@ -31,5 +30,11 @@ export interface Lecture {
   zoomRecording?: ZoomRecording;
 }
 
-// Legacy alias for backward compatibility
+export interface CreateLecture {
+  id: string;
+  title: string;
+  scheduledAt: string;
+}
+
+// Alias for backward compatibility
 export type Lesson = Lecture;

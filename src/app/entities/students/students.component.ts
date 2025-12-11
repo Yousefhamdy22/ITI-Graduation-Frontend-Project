@@ -37,7 +37,7 @@ export class StudentsComponent implements OnInit {
         const myCourseIds = (courses || []).filter(c => (c as any).instructorId === user.id || c.instructorName === user.name).map(c => c.id);
         this.studentService.getStudents().subscribe({
           next: (students) => {
-            const filtered = (students || []).filter(s => (s.enrolledCourseIds || []).some(id => myCourseIds.includes(id)));
+            const filtered = (students || []).filter(s => (s.enrolledCourseIds || []).some((id: string) => myCourseIds.includes(id)));
             this.students = filtered;
             this.filteredStudents = filtered;
             this.loading = false;
@@ -68,7 +68,8 @@ export class StudentsComponent implements OnInit {
     if (this.query.search) {
       const term = this.query.search.toLowerCase();
       result = result.filter(s =>
-        s.name?.toLowerCase().includes(term) ||
+        s.firstName?.toLowerCase().includes(term) ||
+        s.lastName?.toLowerCase().includes(term) ||
         s.email?.toLowerCase().includes(term)
       );
     }

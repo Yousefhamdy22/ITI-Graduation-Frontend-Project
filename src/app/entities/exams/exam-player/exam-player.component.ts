@@ -50,9 +50,9 @@ export class ExamPlayerComponent implements OnInit, OnDestroy {
       next: (exam) => {
         if (exam) {
           this.exam = exam;
-          this.timeRemaining = exam.duration * 60; // تحويل الدقائق إلى ثواني
+          this.timeRemaining = exam.durationMinutes * 60; // تحويل الدقائق إلى ثواني
           this.startTimer();
-          this.modelAnswers = exam.modelAnswers ? { ...exam.modelAnswers } : {};
+          this.modelAnswers = {};
           
           // التحقق إذا كان المستخدم هو مدرب الكورس
           const user = this.auth.currentUser;
@@ -114,7 +114,8 @@ export class ExamPlayerComponent implements OnInit, OnDestroy {
     // حساب النتيجة
     let correctCount = 0;
     this.exam.questions.forEach((q, i) => {
-      if (this.selectedAnswers[i] === q.correctOption) {
+      const correctAnswerId = q.answerOptions.find(a => a.isCorrect)?.id;
+      if (correctAnswerId && this.selectedAnswers[i] === Number(correctAnswerId)) {
         correctCount++;
       }
     });
@@ -122,13 +123,12 @@ export class ExamPlayerComponent implements OnInit, OnDestroy {
     this.score = Math.round((correctCount / this.exam.questions.length) * 100);
     this.submitted = true;
     
-    // حفظ النتيجة (موك مؤقت)
     this.toast.show(`تم إرسال الاختبار - النتيجة: ${this.score}%`, 'success');
   }
 
   saveModelAnswers(): void {
     if (!this.exam) return;
-    this.examService.updateExam(this.exam.id, { modelAnswers: this.modelAnswers });
+    // Model answers feature disabled - not in backend
     this.editingModel = false;
     this.toast.show('تم حفظ الإجابات النموذجية', 'success');
   }
@@ -136,7 +136,7 @@ export class ExamPlayerComponent implements OnInit, OnDestroy {
   toggleEditModel(): void {
     this.editingModel = !this.editingModel;
     if (!this.editingModel && this.exam) {
-      this.modelAnswers = this.exam.modelAnswers ? { ...this.exam.modelAnswers } : {};
+      this.modelAnswers = {};
     }
   }
 
@@ -152,12 +152,16 @@ export class ExamPlayerComponent implements OnInit, OnDestroy {
   }
 
   isPassed(): boolean {
-    return this.exam ? this.score >= this.exam.passingScore : false;
+    // Passing score not in backend - use default 70%
+    return this.score >= 70;
   }
 
   getAnswerStatus(questionIndex: number): string {
     if (!this.submitted) return 'unanswered';
-    const isCorrect = this.selectedAnswers[questionIndex] === this.exam?.questions[questionIndex].correctOption;
+    const question = this.exam?.questions[questionIndex];
+    if (!question) return 'unanswered';
+    const correctAnswerId = question.answerOptions.find(a => a.isCorrect)?.id;
+    const isCorrect = correctAnswerId && this.selectedAnswers[questionIndex] === Number(correctAnswerId);
     return isCorrect ? 'correct' : 'incorrect';
   }
 

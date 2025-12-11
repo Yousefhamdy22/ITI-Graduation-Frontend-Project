@@ -49,9 +49,9 @@ export class HomeComponent implements OnInit {
     this.currentRole = user?.role || '';
 
     if (user?.role === 'student') {
-      // try to fetch the student record and show enrolledCourses count
+      // try to fetch the student record and show enrolledCourseIds count
       this.studentService.getStudentById(user.id).subscribe(s => {
-        if (s) this.enrolledCount = s.enrolledCourses || 0;
+        if (s) this.enrolledCount = s.enrolledCourseIds?.length || 0;
       });
       // show all courses but mark enrolledCount in UI (course list component can be enhanced later)
       this.courseService.getCourses().subscribe(list => (this.myCourses = list || []));

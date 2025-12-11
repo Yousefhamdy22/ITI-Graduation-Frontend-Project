@@ -117,33 +117,25 @@ export class ExamAssembleComponent implements OnInit {
     const mappedQuestions = this.selectedIds.map(id => {
       const q = this.questions.find((x: any) => x.id === id);
 
-      // Map AnswerOptions to string array and find correct index
-      const options = q?.answerOptions ? q.answerOptions.map((o: any) => o.text) : (q?.options || []);
-      let correctOption = 0;
-      if (q?.answerOptions) {
-        const idx = q.answerOptions.findIndex((o: any) => o.isCorrect);
-        if (idx !== -1) correctOption = idx;
-      } else if (q?.correctOption !== undefined) {
-        correctOption = q.correctOption;
-      }
+      // Use existing answerOptions or create from old format
+      const answerOptions = q?.answerOptions || [];
 
       return {
         id: q?.id || id,
         text: q?.text || '',
-        options: options,
-        correctOption: correctOption,
-        points: this.points[id] || q?.points || 1
+        points: this.points[id] || q?.points || 1,
+        answerOptions: answerOptions
       };
     });
 
     // إنشاء كائن الاختبار
-    // لا نضع id هنا، السيرفس ستقوم بذلك
     const newExam: Partial<Exam> = {
       courseId: this.courseId,
       title: this.title.trim(),
       description: '',
-      duration: this.duration,
-      passingScore: this.passingScore,
+      durationMinutes: this.duration,
+      startDate: new Date().toISOString(),
+      endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
       questions: mappedQuestions
     };
 

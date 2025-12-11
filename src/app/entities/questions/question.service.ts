@@ -21,10 +21,11 @@ export class QuestionService {
     };
   }
 
-  // GET question by ID - assuming endpoint follows naming convention
-  getQuestionById(id: string): Observable<ServerResponse<Question>> {
-    return this.http.get<ServerResponse<Question>>(`${BASE_URL}/GetQuestionById/${id}`, this.getHeaders());
-  }
+  // GET question by ID - DISABLED: Backend does not provide this endpoint
+  // If needed, fetch all questions and filter client-side
+  // getQuestionById(id: string): Observable<ServerResponse<Question>> {
+  //   return this.http.get<ServerResponse<Question>>(`${BASE_URL}/GetQuestionById/${id}`, this.getHeaders());
+  // }
 
   // GET all questions
   getQuestions(): Observable<ServerResponse<Question[]>> {
@@ -33,11 +34,17 @@ export class QuestionService {
 
   // POST create question – backend expects application/x-www-form-urlencoded
   createQuestion(question: Question | any): Observable<ServerResponse<Question>> {
-    const params = new URLSearchParams();
-    params.set('Text', question.text);
-    params.set('Points', (question.points || 1).toString());
-    params.set('Image', '');
-    params.set('ImageUrl', question.imageUrl || '');
+    // Backend expects multipart/form-data
+    const form = new FormData();
+    form.append('Text', question.text || '');
+    form.append('Points', (question.points || 1).toString());
+    // If question.imageFile exists (from file input), append it, otherwise append empty string for Image
+    if (question.imageFile) {
+      form.append('Image', question.imageFile, question.imageFile.name || 'image');
+    } else {
+      form.append('Image', '');
+    }
+    form.append('ImageUrl', question.imageUrl || '');
 
     const options = question.answerOptions || [];
     const optionsJson = JSON.stringify(
@@ -46,40 +53,39 @@ export class QuestionService {
         IsCorrect: o.isCorrect
       }))
     );
-    params.set('AnswerOptions', optionsJson);
+    form.append('AnswerOptions', optionsJson);
 
-    return this.http.post<ServerResponse<Question>>(`${BASE_URL}/CreateQuestion`, params.toString(), {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        Authorization: `Bearer ${localStorage.getItem('token') || ''}`
-      }
-    });
+    const token = localStorage.getItem('token') || '';
+    const headers = token ? { headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) } : {};
+
+    return this.http.post<ServerResponse<Question>>(`${BASE_URL}/CreateQuestion`, form, headers);
   }
 
-  // PUT update question
+  // PUT update question (multipart/form-data)
   updateQuestion(question: Question | any): Observable<ServerResponse<Question>> {
-    const params = new URLSearchParams();
-    params.set('Id', question.id || '');
-    params.set('Text', question.text);
-    params.set('Points', (question.points || 1).toString());
-    params.set('ImageUrl', question.imageUrl || '');
+    const form = new FormData();
+    form.append('Id', question.id || '');
+    form.append('Text', question.text || '');
+    form.append('Points', (question.points || 1).toString());
+    if (question.imageFile) {
+      form.append('Image', question.imageFile, question.imageFile.name || 'image');
+    }
+    form.append('ImageUrl', question.imageUrl || '');
 
     const options = question.answerOptions || [];
     const optionsJson = JSON.stringify(
       options.map((o: any) => ({
-        Id: o.id || '', // Include ID if it exists for updates
+        Id: o.id || '',
         Text: o.text,
         IsCorrect: o.isCorrect
       }))
     );
-    params.set('AnswerOptions', optionsJson);
+    form.append('AnswerOptions', optionsJson);
 
-    return this.http.put<ServerResponse<Question>>(`${BASE_URL}/UpdateQuestion`, params.toString(), {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        Authorization: `Bearer ${localStorage.getItem('token') || ''}`
-      }
-    });
+    const token = localStorage.getItem('token') || '';
+    const headers = token ? { headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) } : {};
+
+    return this.http.put<ServerResponse<Question>>(`${BASE_URL}/UpdateQuestion`, form, headers);
   }
 
   // DELETE question

@@ -29,11 +29,12 @@ export class StudentLogin {
           this.toast.show('تم تسجيل الدخول بنجاح', 'success');
           this.router.navigate(['/student']);
         } else {
-          this.toast.show(res.errors?.join(', ') || 'فشل تسجيل الدخول', 'error');
+          this.toast.show(res.message || 'فشل تسجيل الدخول', 'error');
         }
       },
       error: (err) => {
-        this.toast.show('خطأ في الاتصال', 'error');
+        const errorMsg = err.error?.message || 'خطأ في الاتصال';
+        this.toast.show(errorMsg, 'error');
         console.error(err);
       }
     });

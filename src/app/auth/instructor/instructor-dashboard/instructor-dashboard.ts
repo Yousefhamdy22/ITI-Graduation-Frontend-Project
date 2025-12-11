@@ -62,11 +62,21 @@ export class InstructorDashboard implements OnInit {
 
   saveProfile() {
     if (!this.user) return;
-    const updated = this.instructorService.updateInstructor({id: this.user.id, bio: this.editBio, avatar: this.editAvatar});
-    if (updated) {
-      this.user = updated;
-      this.editing = false;
-    }
+    // Bio and avatar not in backend - only update available fields
+    this.instructorService.updateInstructor({
+      id: this.user.id,
+      firstName: this.user.firstName || this.user.name?.split(' ')[0] || '',
+      lastName: this.user.lastName || this.user.name?.split(' ')[1] || '',
+      email: this.user.email,
+      phoneNumber: this.user.phoneNumber || '',
+      title: this.user.title || 'Instructor'
+    }).subscribe({
+      next: (updated) => {
+        this.user = { ...this.user, ...updated };
+        this.editing = false;
+      },
+      error: () => this.editing = false
+    });
   }
 
   cancelEdit() {

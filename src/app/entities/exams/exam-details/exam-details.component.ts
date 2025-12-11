@@ -14,8 +14,8 @@ export class ExamDetailsComponent {
   @Input() exam!: Exam;
 
   getEstimatedTime(): string {
-    const hours = Math.floor(this.exam.duration / 60);
-    const minutes = this.exam.duration % 60;
+    const hours = Math.floor(this.exam.durationMinutes / 60);
+    const minutes = this.exam.durationMinutes % 60;
     if (hours > 0) {
       return `${hours} ساعة و ${minutes} دقيقة`;
     }

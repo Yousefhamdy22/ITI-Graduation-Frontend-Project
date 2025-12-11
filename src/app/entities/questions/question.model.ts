@@ -13,10 +13,20 @@ export interface Question {
   answerOptions: AnswerOption[];
 }
 
-export interface CreateQuestionPayload {
+export interface CreateQuestionRequest {
   text: string;
   points: number;
-  imageUrl: string | null;
+  image?: File;
+  imageUrl?: string;
+  answerOptions: AnswerOption[];
+}
+
+export interface UpdateQuestionRequest {
+  id: string;
+  text: string;
+  points: number;
+  image?: File;
+  imageUrl?: string;
   answerOptions: AnswerOption[];
 }
 

@@ -3,15 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environment/environment';
 
-export interface Enrollment {
-    id: string;
-    studentId: string;
-    courseId: string;
-    enrollmentDate: string;
-    status?: string;
-    student?: any;
-    course?: any;
-}
+import { Enrollment, EnrollmentDetails } from './enrollment.model';
 
 @Injectable({ providedIn: 'root' })
 export class EnrollmentService {
@@ -20,13 +12,13 @@ export class EnrollmentService {
     constructor(private http: HttpClient) { }
 
     // Get all enrollments
-    getEnrollments(): Observable<Enrollment[]> {
-        return this.http.get<Enrollment[]>(this.BASE_URL);
+    getEnrollments(): Observable<EnrollmentDetails[]> {
+        return this.http.get<EnrollmentDetails[]>(this.BASE_URL);
     }
 
     // Get enrollment by ID
-    getEnrollmentById(id: string): Observable<Enrollment> {
-        return this.http.get<Enrollment>(`${this.BASE_URL}/${id}`);
+    getEnrollmentById(id: string): Observable<EnrollmentDetails> {
+        return this.http.get<EnrollmentDetails>(`${this.BASE_URL}/${id}`);
     }
 
     // Create enrollment

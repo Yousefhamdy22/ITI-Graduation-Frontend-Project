@@ -52,11 +52,12 @@ export class InstructorLogin {
           this.toast.show('تم تسجيل الدخول بنجاح', 'success');
           this.router.navigate(['/instructor']);
         } else {
-          this.toast.show(res.errors?.join(', ') || 'فشل تسجيل الدخول', 'error');
+          this.toast.show(res.message || 'فشل تسجيل الدخول', 'error');
         }
       },
       error: (err) => {
-        this.toast.show('خطأ في الاتصال', 'error');
+        const errorMsg = err.error?.message || 'خطأ في الاتصال';
+        this.toast.show(errorMsg, 'error');
         console.error(err);
       }
     });
@@ -76,7 +77,7 @@ export class InstructorLogin {
       confirmPassword: this.confirmPassword,
       gender: this.gender || 'male',
       phoneNumber: this.phoneNumber || null,
-      createdAt: new Date()
+      createdAt: new Date().toISOString()
     };
 
     this.auth.registerInstructor(payload).subscribe({
@@ -85,11 +86,12 @@ export class InstructorLogin {
           this.toast.show('تم التسجيل بنجاح', 'success');
           this.router.navigate(['/instructor']);
         } else {
-          this.toast.show(res.errors?.join(', ') || 'فشل التسجيل', 'error');
+          this.toast.show(res.message || 'فشل التسجيل', 'error');
         }
       },
       error: (err) => {
-        this.toast.show('خطأ في الاتصال', 'error');
+        const errorMsg = err.error?.message || err.error?.errors?.[0] || 'خطأ في الاتصال';
+        this.toast.show(errorMsg, 'error');
         console.error(err);
       }
     });

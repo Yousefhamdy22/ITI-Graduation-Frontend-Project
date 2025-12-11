@@ -23,7 +23,7 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <div class="bg-white rounded-2xl shadow-soft p-6">
         <p class="text-gray-600 text-sm mb-1">الكورسات المسجلة</p>
-        <p class="text-3xl font-bold text-[#0E4D67]">{{ student?.enrolledCourses }}</p>
+        <p class="text-3xl font-bold text-[#0E4D67]">{{ student?.enrolledCourseIds?.length || 0 }}</p>
       </div>
       <div class="bg-white rounded-2xl shadow-soft p-6">
         <p class="text-gray-600 text-sm mb-1">الكورسات المكتملة</p>

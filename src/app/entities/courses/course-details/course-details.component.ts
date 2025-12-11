@@ -3,11 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CourseService } from '../course.service';
-import { LessonService } from '../../lessons/lesson.service';
+import { LectureService } from '../../lectures/lecture.service';
 import { StudentService } from '../../students/student.service';
 import { AuthService } from '../../../auth/auth.service';
 import { Course } from '../course.model';
-import { Lesson } from '../../lessons/lesson.model';
+import { Lecture } from '../../lectures/lecture.model';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ToastService } from '../../../shared/toast.service';
 import { RoleHeaderComponent } from '../../../core/header/role-header.component';
@@ -22,7 +22,7 @@ import { FooterComponent } from '../../../core/footer/footer.component';
 })
 export class CourseDetailsComponent implements OnInit {
   course: Course | null = null;
-  lessons: Lesson[] = [];
+  lectures: Lecture[] = [];
   loading = true;
   safePromoUrl: SafeResourceUrl | null = null;
   isInstructor = false;
@@ -32,7 +32,7 @@ export class CourseDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private courseService: CourseService,
-    private lessonService: LessonService,
+    private lectureService: LectureService,
     private studentService: StudentService,
     public auth: AuthService,
     private sanitizer: DomSanitizer,
@@ -68,13 +68,13 @@ export class CourseDetailsComponent implements OnInit {
       error: () => this.loading = false
     });
 
-    // Load lessons for this course
-    this.lessonService.getLessonsByCourse(id).subscribe({
-      next: (lessons) => {
-        this.lessons = lessons;
+    // Load lectures for this course
+    this.lectureService.getLecturesByModule(id).subscribe({
+      next: (lectures) => {
+        this.lectures = lectures;
       },
       error: () => {
-        this.toast.show('خطأ في تحميل الدروس', 'error');
+        this.toast.show('خطأ في تحميل المحاضرات', 'error');
       }
     });
   }

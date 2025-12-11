@@ -1,29 +1,57 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { Lecture, CreateLecture } from './lecture.model';
 import { environment } from '../../../environment/environment';
 
-export interface Lecture {
-    id: string;
-    title: string;
-    scheduledAt: string;
-    duration: string;
-    moduleId: string;
-}
-
+/**
+ * LectureService - handles Lecture API operations
+ * Course contains Lectures
+ */
 @Injectable({ providedIn: 'root' })
 export class LectureService {
-    private BASE_URL = `${environment.apiUrl}/api/Lectures`;
+  private BASE_URL = `${environment.apiUrl}/api/Lectures`;
 
-    constructor(private http: HttpClient) { }
+  private lecturesSubject = new BehaviorSubject<Lecture[]>([]);
+  lectures$ = this.lecturesSubject.asObservable();
 
-    // Get lectures by module ID
-    getLecturesByModule(moduleId: string): Observable<Lecture[]> {
-        return this.http.get<Lecture[]>(`${this.BASE_URL}/ByModule/${moduleId}`);
-    }
+  constructor(private http: HttpClient) { }
 
-    // Delete lecture
-    deleteLecture(lectureId: string): Observable<{ message: string }> {
-        return this.http.delete<{ message: string }>(`${this.BASE_URL}/${lectureId}`);
-    }
+  /**
+   * Get lectures by module ID
+   */
+  getLecturesByModule(moduleId: string): Observable<Lecture[]> {
+    return this.http.get<Lecture[]>(`${this.BASE_URL}/ByModule/${moduleId}`);
+  }
+
+  /**
+   * Get lecture by ID
+   */
+  getLectureById(lectureId: string): Observable<Lecture> {
+    return this.http.get<Lecture>(`${this.BASE_URL}/${lectureId}`);
+  }
+
+  /**
+   * Create a new lecture
+   */
+  createLecture(data: CreateLecture): Observable<Lecture> {
+    return this.http.post<Lecture>(this.BASE_URL, data);
+  }
+
+  /**
+   * Update lecture
+   */
+  updateLecture(data: Lecture): Observable<Lecture> {
+    return this.http.put<Lecture>(`${this.BASE_URL}/${data.id}`, data);
+  }
+
+  /**
+   * Delete a lecture
+   */
+  deleteLecture(lectureId: string): Observable<void> {
+    return this.http.delete<void>(`${this.BASE_URL}/${lectureId}`);
+  }
 }
+
+// Alias for backward compatibility
+export { LectureService as LessonService };

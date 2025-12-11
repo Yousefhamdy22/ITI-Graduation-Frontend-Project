@@ -27,7 +27,9 @@ export class CertificateService {
   }
 
   // View my certificates
+  // Backend route is defined as "View Certificate" (contains a space).
+  // Use encoded path to match the backend until backend route is fixed.
   getMyCertificates(): Observable<Certificate[]> {
-    return this.http.get<Certificate[]>(`${this.BASE_URL}/ViewCertificate`);
+    return this.http.get<Certificate[]>(`${this.BASE_URL}/View%20Certificate`);
   }
 }

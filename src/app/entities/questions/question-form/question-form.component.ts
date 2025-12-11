@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { QuestionService } from '../question.service';
-import { Question, CreateQuestionPayload, AnswerOption, ServerResponse } from '../question.model';
+import { Question, CreateQuestionRequest, AnswerOption, ServerResponse } from '../question.model';
 import { AuthService } from '../../../auth/auth.service';
 import { CourseService } from '../../courses/course.service';
 import { ToastService } from '../../../shared/toast.service';
@@ -49,32 +49,33 @@ export class QuestionFormComponent implements OnInit {
     if (!this.id && qp['courseId']) this.courseId = qp['courseId'];
 
     if (this.id) {
-      // 💡 تعديل طريقة جلب السؤال للتعامل مع ServerResponse
-      this.qs.getQuestionById(this.id).subscribe({
-        next: (response: ServerResponse<Question>) => {
-          const q = response.value;
-          if (!q) return;
+      // Backend doesn't support getQuestionById - fetch all questions and filter
+      this.qs.getQuestions().subscribe({
+        next: (response: ServerResponse<Question[]>) => {
+          const questions = response.value || [];
+          const q = questions.find(question => question.id === this.id);
+          if (!q) {
+            this.toast.show('لم يتم العثور على السؤال.', 'error');
+            return;
+          }
 
           this.text = q.text;
           this.points = q.points;
-          // 💡 إعادة بناء مصفوفة الخيارات لتناسب نموذج الـ UI الجديد
-          // نستخدم الـ answerOptions القادمة من السيرفر كبديل لـ options القديمة
+          // Build options array from answerOptions
           if (q.answerOptions && q.answerOptions.length > 0) {
-            // يتم تعبئة options الجديدة من answerOptions القادمة من الـ API
             this.options = q.answerOptions.map(opt => ({
               text: opt.text,
               isCorrect: opt.isCorrect
             }));
           } else {
-            // إذا لم يكن هناك خيارات، نرجع للخيارات الافتراضية
+            // Default options if none exist
             this.options = [{ text: '', isCorrect: false }, { text: '', isCorrect: true }];
           }
 
-          // ⚠️ ملاحظة: courseId لم يعد جزءاً من نموذج السؤال القادم من API
-          // لذا، نحتاج إلى افتراض قيمته أو الحصول عليها من مكان آخر (سنتركه كما كان مؤقتاً).
+          // courseId not part of question model from API
           this.courseId = (qp['courseId'] as string) || '';
         },
-        error: (err) => {
+        error: (err: any) => {
           this.toast.show('فشل جلب تفاصيل السؤال.', 'error');
           console.error('Error fetching question:', err);
         }
@@ -119,13 +120,11 @@ export class QuestionFormComponent implements OnInit {
       return;
     }
 
-    const payload: CreateQuestionPayload = {
+    const payload: CreateQuestionRequest = {
       text: this.text,
       points: this.points,
-      imageUrl: null, // نفترض أنه لا يوجد حقل إدخال حالي للصور
-      answerOptions: answerOptions,
-      // ⚠️ ملاحظة: courseId و createdBy لم يعدا في الـ Payload، بل يجب إرسالهما للـ API كـ Query/Header إذا لزم الأمر
-      // لكن لتبسيط الكود، نلتزم بالنموذج الذي يتطلبه الـ Service
+      imageUrl: undefined,
+      answerOptions: answerOptions
     };
 
     if (this.id) {

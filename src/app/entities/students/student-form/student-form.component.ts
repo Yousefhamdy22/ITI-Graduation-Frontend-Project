@@ -14,7 +14,7 @@ export class StudentFormComponent {
   student: Partial<Student> = {};
 
   onSubmit() {
-    if (this.student.name && this.student.email) {
+    if (this.student.firstName && this.student.lastName && this.student.email) {
       this.save.emit({
         ...this.student,
         id: this.student.id ?? '',

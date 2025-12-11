@@ -47,10 +47,10 @@ export class InstructorsComponent implements OnInit {
 
     if (this.query.search) {
       const term = this.query.search.toLowerCase();
-      result = result.filter(i =>
-        i.name?.toLowerCase().includes(term) ||
-        i.expertise?.some(e => e.toLowerCase().includes(term))
-      );
+      result = result.filter(i => {
+        const fullName = `${i.firstName} ${i.lastName}`.toLowerCase();
+        return fullName.includes(term) || i.email?.toLowerCase().includes(term) || i.title?.toLowerCase().includes(term);
+      });
     }
 
     this.filteredInstructors = result;

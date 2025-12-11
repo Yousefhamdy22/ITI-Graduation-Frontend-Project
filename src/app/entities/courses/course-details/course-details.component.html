@@ -134,25 +134,25 @@
             </ng-container>
           </div>
 
-          <!-- Lessons Section -->
+          <!-- Lectures Section -->
           <div class="card p-8">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6">الدروس ({{ lessons.length }})</h2>
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">المحاضرات ({{ lectures.length }})</h2>
 
-            <div *ngIf="lessons.length === 0" class="text-center py-12 text-gray-500">
-              لم يتم إضافة دروس لهذا الكورس بعد
+            <div *ngIf="lectures.length === 0" class="text-center py-12 text-gray-500">
+              لم يتم إضافة محاضرات لهذا الكورس بعد
             </div>
 
-            <div *ngIf="lessons.length > 0" class="space-y-3">
-              <a *ngFor="let lesson of lessons; let i = index"
-                [routerLink]="['/lessons', lesson.id, { courseId: course.id }]"
+            <div *ngIf="lectures.length > 0" class="space-y-3">
+              <a *ngFor="let lecture of lectures; let i = index"
+                [routerLink]="['/lectures', lecture.id, { courseId: course.id }]"
                 class="block p-5 border-2 border-gray-200 rounded-xl hover:border-[#0E4D67] hover:bg-blue-50 transition-all duration-200">
                 <div class="flex items-start justify-between">
                   <div class="flex-1">
-                    <div class="font-semibold text-gray-900">{{ i + 1 }}. {{ lesson.title }}</div>
-                    <p class="text-sm text-gray-600 mt-1">{{ lesson.description }}</p>
+                    <div class="font-semibold text-gray-900">{{ i + 1 }}. {{ lecture.title }}</div>
+                    <p class="text-sm text-gray-600 mt-1">{{ lecture.description }}</p>
                   </div>
                   <div class="text-sm text-gray-500 mr-4">
-                    {{ lesson.duration }} دقيقة
+                    {{ lecture.duration }} دقيقة
                   </div>
                 </div>
               </a>

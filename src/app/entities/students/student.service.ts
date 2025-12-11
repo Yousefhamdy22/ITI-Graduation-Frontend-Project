@@ -68,27 +68,16 @@ export class StudentService {
   // Helper: Map API response to Student model
   private mapToStudent(apiStudent: any): Student {
     return {
-      id: apiStudent.id,
-      userId: apiStudent.userId,
-      name: `${apiStudent.firstName} ${apiStudent.lastName}`,
-      firstName: apiStudent.firstName,
-      lastName: apiStudent.lastName,
-      email: apiStudent.email,
-      phone: apiStudent.phoneNumber || '',
-      gender: apiStudent.gender,
-      userName: apiStudent.userName,
-      enrolledCourses: apiStudent.enrollments?.length || 0,
-      enrolledCourseIds: apiStudent.enrollments?.map((e: any) => e.id) || [],
-      avatar: `https://i.pravatar.cc/150?u=${apiStudent.email}`,
-      joinDate: new Date().toISOString().slice(0, 10)
-    } as Student;
+      ...apiStudent,
+      enrolledCourseIds: apiStudent.enrollments?.map((e: any) => e.id) || []
+    };
   }
 
   // Legacy methods for backward compatibility (can be removed later)
   addStudent(student: Partial<Student>): Observable<any> {
     return this.createStudent({
-      firstName: student.name?.split(' ')[0] || 'Student',
-      lastName: student.name?.split(' ')[1] || '',
+      firstName: student.firstName || 'Student',
+      lastName: student.lastName || '',
       email: student.email || ''
     });
   }

@@ -1,17 +1,48 @@
 export interface Student {
   id: string;
-  userId?: string;
-  name: string;
-  firstName?: string;
-  lastName?: string;
+  userId: string;
+  gender: string;
   email: string;
-  phone: string;
-  gender?: string;
-  userName?: string;
-  avatar?: string;
-  enrolledCourses: number;
+  firstName: string;
+  lastName: string;
+  userName: string;
+  phoneNumber?: string;
+  // Frontend convenience fields (mapped from enrollments)
   enrolledCourseIds?: string[];
-  completedCourses?: number;
-  totalProgress?: number;
-  joinDate: string | Date;
+}
+
+export interface CreateStudent {
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
+export interface StudentWithEnrollments extends Student {
+  enrollments: any[]; // Course objects
+}
+
+export interface StudentAnswer {
+  questionId: string;
+  selectedAnswerId: string;
+}
+
+export interface StudentEnrollmentTable {
+  studentId: string;
+  fullName?: string;
+  gender?: string;
+  phoneNumber?: string;
+  courseTitle?: string;
+  joinDate?: Date;
+}
+
+export interface StudentCourseLectures {
+  courseId: string;
+  courseTitle: string;
+  modules: ModuleLectures[];
+}
+
+export interface ModuleLectures {
+  moduleId: string;
+  moduleTitle: string;
+  lectures: any[]; // LectureDto objects
 }

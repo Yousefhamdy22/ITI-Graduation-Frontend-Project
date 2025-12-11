@@ -78,8 +78,16 @@ export class AuthService {
   }
 
   registerStudent(data: any): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.BASE_URL}/Auth/register-student`, data)
-      .pipe(tap(res => this.handleAuthResponse(res)));
+    const url = `${this.BASE_URL}/Auth/register-student`;
+    console.log('🔵 AuthService: Sending POST to', url);
+    console.log('🔵 AuthService: Request data:', data);
+    return this.http.post<AuthResponse>(url, data)
+      .pipe(
+        tap(res => {
+          console.log('✅ AuthService: Response received:', res);
+          this.handleAuthResponse(res);
+        })
+      );
   }
 
   // Generic login for student (deprecated - use loginStudent instead)

@@ -44,7 +44,7 @@ export class StudentRegister {
     }
 
     // Use the real API registration
-    this.auth.registerStudent({
+    const registrationData = {
       email: this.email,
       password: this.password,
       confirmPassword: this.confirmPassword,
@@ -53,19 +53,38 @@ export class StudentRegister {
       gender: 'male',
       phoneNumber: this.phone || null,
       createdAt: new Date().toISOString()
-    }).subscribe({
+    };
+    
+    console.log('🔵 Sending registration request to backend:', {
+      email: registrationData.email,
+      firstName: registrationData.firstName,
+      lastName: registrationData.lastName,
+      gender: registrationData.gender,
+      phoneNumber: registrationData.phoneNumber
+    });
+    
+    this.auth.registerStudent(registrationData).subscribe({
       next: (res) => {
+        console.log('✅ Registration response from backend:', res);
         if (res.isSuccess) {
-          this.toast.show('تم التسجيل بنجاح', 'success');
+          this.toast.show('تم التسجيل بنجاح - Student ID: ' + res.user.id, 'success');
+          console.log('✅ Student registered successfully with ID:', res.user.id);
           this.router.navigate(['/student']);
         } else {
           this.toast.show(res.message || 'فشل التسجيل', 'error');
+          console.warn('⚠️ Registration response indicates failure:', res);
         }
       },
       error: (err) => {
         const errorMsg = err.error?.message || err.error?.errors?.[0] || 'خطأ في الاتصال';
         this.toast.show(errorMsg, 'error');
-        console.error('Registration failed', err);
+        console.error('❌ Registration failed with error:', err);
+        console.error('❌ Error details:', {
+          status: err.status,
+          statusText: err.statusText,
+          message: err.error?.message,
+          errors: err.error?.errors
+        });
       }
     });
   }

@@ -38,9 +38,15 @@ export class CoursesComponent implements OnInit {
     this.loadCourses();
     const user = this.auth.currentUser;
     if (user && user.role === 'student') {
-      this.studentService.getStudentById(user.id).subscribe(s => {
-        if (s && s.enrolledCourseIds) {
-          this.enrolledIds = new Set(s.enrolledCourseIds);
+      this.studentService.getStudentById(user.id).subscribe({
+        next: (s) => {
+          if (s && s.enrolledCourseIds) {
+            this.enrolledIds = new Set(s.enrolledCourseIds);
+          }
+        },
+        error: (err) => {
+          console.warn('Could not fetch student enrollments:', err);
+          this.enrolledIds = new Set();
         }
       });
       // Subscribe to updates to keep enrolledIds in sync

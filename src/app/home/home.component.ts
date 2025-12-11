@@ -50,8 +50,14 @@ export class HomeComponent implements OnInit {
 
     if (user?.role === 'student') {
       // try to fetch the student record and show enrolledCourseIds count
-      this.studentService.getStudentById(user.id).subscribe(s => {
-        if (s) this.enrolledCount = s.enrolledCourseIds?.length || 0;
+      this.studentService.getStudentById(user.id).subscribe({
+        next: (s) => {
+          if (s) this.enrolledCount = s.enrolledCourseIds?.length || 0;
+        },
+        error: (err) => {
+          console.warn('Student record not found, using default values:', err);
+          this.enrolledCount = 0;
+        }
       });
       // show all courses but mark enrolledCount in UI (course list component can be enhanced later)
       this.courseService.getCourses().subscribe(list => (this.myCourses = list || []));

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -6,9 +6,8 @@ import { Enrollment, EnrollmentDetails } from './enrollment.model';
 
 @Injectable({ providedIn: 'root' })
 export class EnrollmentService {
+    private http: HttpClient = inject(HttpClient);
     private BASE_URL = 'http://localhost:5180/api/Enrollments';
-
-    constructor(private http: HttpClient) { }
 
     // Get all enrollments
     getEnrollments(): Observable<EnrollmentDetails[]> {

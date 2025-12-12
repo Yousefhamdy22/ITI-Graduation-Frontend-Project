@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Course } from './course.model';
@@ -10,7 +10,7 @@ const API_URL = 'http://localhost:5180';
   providedIn: 'root'
 })
 export class CourseService {
-  constructor(private http: HttpClient) { }
+  private http: HttpClient = inject(HttpClient);
 
   // جلب جميع الكورسات
   getCourses(): Observable<Course[]> {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { LectureService } from '../lecture.service';
@@ -31,15 +31,15 @@ export class LecturePlayerComponent implements OnInit {
 
   isInstructor = false;
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private lectureService: LectureService,
-    private courseService: CourseService,
-    public auth: AuthService,
-    private toast: ToastService,
-    private sanitizer: DomSanitizer
-  ) { }
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private lectureService = inject(LectureService);
+  private courseService = inject(CourseService);
+  public auth = inject(AuthService);
+  private toast = inject(ToastService);
+  private sanitizer = inject(DomSanitizer);
+
+  constructor() { }
 
   ngOnInit(): void {
     const lectureId = this.route.snapshot.paramMap.get('id');
@@ -54,7 +54,7 @@ export class LecturePlayerComponent implements OnInit {
     // Load course info
     if (courseId) {
       this.courseService.getCourseById(courseId).subscribe({
-        next: (c) => {
+        next: (c: any) => {
           if (c) {
             this.course = c;
             this.isInstructor = this.auth.currentUser?.role === 'instructor' &&
@@ -67,9 +67,9 @@ export class LecturePlayerComponent implements OnInit {
 
       // Load all lectures for this course
       this.lectureService.getLecturesByModule(courseId).subscribe({
-        next: (lectures) => {
+        next: (lectures: any) => {
           this.allLectures = lectures;
-          const idx = lectures.findIndex(l => l.id === lectureId);
+          const idx = lectures.findIndex((l: any) => l.id === lectureId);
           this.currentLectureIndex = idx >= 0 ? idx : 0;
           this.loadLecture(this.allLectures[this.currentLectureIndex]);
         },

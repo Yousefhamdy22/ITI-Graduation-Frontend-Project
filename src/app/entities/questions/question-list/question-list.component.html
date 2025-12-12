@@ -5,32 +5,70 @@
       <div class="flex gap-2">
         <a [routerLink]="['/questions','new']" class="px-4 py-2 bg-[#0E4D67] text-white rounded">إنشاء سؤال</a>
         <button (click)="createExamWithSelected()" class="px-4 py-2 bg-indigo-600 text-white rounded" [disabled]="selectedForExam.size === 0">
-          إنشاء اختبار <span *ngIf="selectedForExam.size > 0">({{selectedForExam.size}})</span>
+          إنشاء اختبار 
+          @if (selectedForExam.size > 0) {
+            <span>({{selectedForExam.size}})</span>
+          }
         </button>
       </div>
     </div>
 
-    <div *ngIf="questions.length === 0" class="text-center py-20 text-gray-500">لا توجد أسئلة</div>
-
-    <div class="space-y-3">
-      <div *ngFor="let q of questions" class="bg-white p-4 rounded shadow flex items-start justify-between">
-        <div>
-          <label class="flex items-center gap-2">
-            <input type="checkbox" (change)="toggleSelect(q)" [checked]="selectedForExam.has(q.id)" />
-            <span class="font-semibold">{{ q.type === 'mcq' ? 'اختياري' : (q.type === 'tf' ? 'صح/خطأ' : 'نصي') }}</span>
-            <span class="mx-2 text-gray-600">|</span>
-            <span>{{ q.text }}</span>
-          </label>
-          <div *ngIf="q.type === 'mcq'" class="mt-2 text-sm text-gray-600">
-            الخيارات: <span *ngFor="let o of q.options; let i = index">{{i+1}}) {{o}}&nbsp;</span>
-          </div>
-        </div>
-
-        <div class="flex gap-2">
-          <button (click)="edit(q)" class="px-3 py-1 bg-yellow-400 rounded">تعديل</button>
-          <button (click)="remove(q)" class="px-3 py-1 bg-red-500 text-white rounded">حذف</button>
-        </div>
+    <!-- Loading State -->
+    @if (isLoading) {
+      <div class="text-center py-20 text-gray-500">
+        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mb-2"></div>
+        <p>جاري تحميل الأسئلة...</p>
       </div>
-    </div>
+    }
+    
+    <!-- Empty State -->
+    @if (!isLoading && questions.length === 0) {
+      <div class="text-center py-20 text-gray-500">لا توجد أسئلة</div>
+    }
+
+    <!-- Questions List -->
+    @if (!isLoading && questions.length > 0) {
+      <div class="space-y-3">
+        @for (q of questions; track q.id || $index) {
+          <div class="bg-white p-4 rounded shadow flex items-start justify-between">
+            <div class="flex-1">
+              <label class="flex items-center gap-2">
+                <input type="checkbox" (change)="toggleSelect(q)" [checked]="selectedForExam.has(q.id)" />
+                <span class="font-semibold">سؤال ({{q.points}} نقطة)</span>
+                <span class="mx-2 text-gray-600">|</span>
+                <span>{{ q.text }}</span>
+              </label>
+              
+              @if (q.answerOptions && q.answerOptions.length > 0) {
+                <div class="mt-2 text-sm text-gray-600 mr-6">
+                  <div class="font-semibold mb-1">الخيارات:</div>
+                  @for (option of q.answerOptions; track $index) {
+                    <div class="flex items-center gap-2">
+                      <span [class.text-green-600]="option.isCorrect" [class.font-bold]="option.isCorrect">
+                        {{$index + 1}}) {{option.text}} 
+                        @if (option.isCorrect) {
+                          <span class="text-green-600">✓</span>
+                        }
+                      </span>
+                    </div>
+                  }
+                </div>
+              }
+              
+              @if (q.imageUrl) {
+                <div class="mt-2">
+                  <img [src]="q.imageUrl" alt="صورة السؤال" class="max-w-xs rounded border" />
+                </div>
+              }
+            </div>
+
+            <div class="flex gap-2">
+              <button (click)="edit(q)" class="px-3 py-1 bg-yellow-400 rounded">تعديل</button>
+              <button (click)="remove(q)" class="px-3 py-1 bg-red-500 text-white rounded">حذف</button>
+            </div>
+          </div>
+        }
+      </div>
+    }
   </div>
 </div>

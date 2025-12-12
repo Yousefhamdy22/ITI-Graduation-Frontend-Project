@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -13,9 +13,8 @@ export interface Certificate {
 
 @Injectable({ providedIn: 'root' })
 export class CertificateService {
+  private http: HttpClient = inject(HttpClient);
   private BASE_URL = 'http://localhost:5180/api/Certificates';
-
-  constructor(private http: HttpClient) { }
 
   // Issue certificate
   issueCertificate(userId: string, courseId: string): Observable<Certificate> {

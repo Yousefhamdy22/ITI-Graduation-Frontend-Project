@@ -1,22 +1,91 @@
-import { Injectable } from '@angular/core';
-import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Injectable, PLATFORM_ID, inject } from '@angular/core';
+import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse } from '@angular/common/http';
+import { Observable, BehaviorSubject, throwError } from 'rxjs';
+import { catchError, filter, switchMap, take } from 'rxjs/operators';
+import { isPlatformBrowser } from '@angular/common';
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
+  private platformId = inject(PLATFORM_ID);
+  private authService = inject(AuthService);
+
+  private isRefreshing = false;
+  private refreshTokenSubject = new BehaviorSubject<string | null>(null);
+
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // جلب التوكن من localStorage (أو أي مكان آخر)
-    const token = localStorage.getItem('token');
     let authReq = req;
 
-    if (token) {
-      authReq = req.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+    // Only access localStorage in browser environment
+    if (isPlatformBrowser(this.platformId)) {
+      const token = localStorage.getItem('token');
+      const secret = localStorage.getItem('x-secret-key') || 'osama123';
+
+      const headers: Record<string, string> = {};
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+      if (secret) headers['x-secret-key'] = secret;
+
+      if (Object.keys(headers).length > 0) {
+        authReq = req.clone({ setHeaders: headers });
+      }
     }
 
-    return next.handle(authReq);
+    return next.handle(authReq).pipe(
+      catchError((error: HttpErrorResponse) => {
+        // If unauthorized and we have a refresh token, try to refresh
+        if (
+          error.status === 401 &&
+          isPlatformBrowser(this.platformId) &&
+          localStorage.getItem('refreshToken')
+        ) {
+          return this.handle401Error(authReq, next);
+        }
+        return throwError(() => error);
+      })
+    );
+  }
+
+  private handle401Error(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    if (!isPlatformBrowser(this.platformId)) {
+      return next.handle(request);
+    }
+
+    if (!this.isRefreshing) {
+      this.isRefreshing = true;
+      this.refreshTokenSubject.next(null);
+
+      return this.authService.refreshToken().pipe(
+        switchMap((res) => {
+          this.isRefreshing = false;
+          const newToken = isPlatformBrowser(this.platformId) ? localStorage.getItem('token') : null;
+          this.refreshTokenSubject.next(newToken);
+          const reqWithNewToken = newToken
+            ? request.clone({ setHeaders: { Authorization: `Bearer ${newToken}` } })
+            : request;
+          return next.handle(reqWithNewToken);
+        }),
+        catchError(err => {
+          this.isRefreshing = false;
+          // If refresh fails, clear storage and propagate error
+          if (isPlatformBrowser(this.platformId)) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('refreshToken');
+            localStorage.removeItem('user');
+          }
+          return throwError(() => err);
+        })
+      );
+    } else {
+      return this.refreshTokenSubject.pipe(
+        filter(token => token !== null),
+        take(1),
+        switchMap((token) => {
+          const reqWithNewToken = token
+            ? request.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
+            : request;
+          return next.handle(reqWithNewToken);
+        })
+      );
+    }
   }
 }

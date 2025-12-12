@@ -40,11 +40,8 @@ import { RouterModule } from '@angular/router';
                 <a routerLink="/login" class="block px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-t-lg">
                   دخول كطالب
                 </a>
-                <a routerLink="/instructor-login" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">
+                <a routerLink="/instructor-login" class="block px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-b-lg">
                   دخول كمدرس
-                </a>
-                <a routerLink="/admin" class="block px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-b-lg">
-                  دخول كأدمن
                 </a>
               </div>
             </div>

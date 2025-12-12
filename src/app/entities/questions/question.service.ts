@@ -1,6 +1,5 @@
-import { Injectable, PLATFORM_ID, inject } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Question, ServerResponse } from './question.model';
 
@@ -9,40 +8,18 @@ const BASE_URL = 'http://localhost:5180/api/Question';
 
 @Injectable({ providedIn: 'root' })
 export class QuestionService {
-  private platformId = inject(PLATFORM_ID);
-
-  constructor(private http: HttpClient) { }
-
-  // Common auth header - SSR safe
-  private getHeaders() {
-    const headers: any = {
-      'Content-Type': 'application/json'
-    };
-    
-    if (isPlatformBrowser(this.platformId)) {
-      const token = localStorage.getItem('token');
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-      }
-    }
-    
-    return { headers: new HttpHeaders(headers) };
-  }
-
-  // GET question by ID - DISABLED: Backend does not provide this endpoint
-  // If needed, fetch all questions and filter client-side
-  // getQuestionById(id: string): Observable<ServerResponse<Question>> {
-  //   return this.http.get<ServerResponse<Question>>(`${BASE_URL}/GetQuestionById/${id}`, this.getHeaders());
-  // }
+  private http: HttpClient = inject(HttpClient);
 
   // GET all questions - Backend returns Result<List<QuestionDto>> via Ardalis.Result
+  // Auth token is added automatically by AuthInterceptor
   getQuestions(): Observable<ServerResponse<Question[]>> {
     const url = `${BASE_URL}/GetAllQuestions`;
     console.log('🔵 getQuestions URL:', url);
-    return this.http.get<ServerResponse<Question[]>>(url, this.getHeaders());
+    return this.http.get<ServerResponse<Question[]>>(url);
   }
 
   // POST create question – backend returns Question directly (not wrapped in ServerResponse)
+  // Auth token is added automatically by AuthInterceptor
   createQuestion(question: Question | any): Observable<Question> {
     // Backend expects multipart/form-data
     const form = new FormData();
@@ -71,13 +48,11 @@ export class QuestionService {
       console.log('🔵 Adding CourseId to question:', question.courseId);
     }
 
-    const token = localStorage.getItem('token') || '';
-    const headers = token ? { headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) } : {};
-
-    return this.http.post<Question>(`${BASE_URL}/CreateQuestion`, form, headers);
+    return this.http.post<Question>(`${BASE_URL}/CreateQuestion`, form);
   }
 
   // PUT update question (multipart/form-data)
+  // Auth token is added automatically by AuthInterceptor
   updateQuestion(question: Question | any): Observable<ServerResponse<Question>> {
     const form = new FormData();
     form.append('Id', question.id || '');
@@ -98,14 +73,12 @@ export class QuestionService {
     );
     form.append('AnswerOptions', optionsJson);
 
-    const token = localStorage.getItem('token') || '';
-    const headers = token ? { headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) } : {};
-
-    return this.http.put<ServerResponse<Question>>(`${BASE_URL}/UpdateQuestion`, form, headers);
+    return this.http.put<ServerResponse<Question>>(`${BASE_URL}/UpdateQuestion`, form);
   }
 
   // DELETE question
+  // Auth token is added automatically by AuthInterceptor
   deleteQuestion(id: string): Observable<ServerResponse<boolean>> {
-    return this.http.delete<ServerResponse<boolean>>(`${BASE_URL}/RemoveQuestion/${id}`, this.getHeaders());
+    return this.http.delete<ServerResponse<boolean>>(`${BASE_URL}/RemoveQuestion/${id}`);
   }
 }

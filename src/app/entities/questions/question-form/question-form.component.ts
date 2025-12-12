@@ -139,7 +139,10 @@ export class QuestionFormComponent implements OnInit {
           if (response.isSuccess) {
             this.toast.show('تم تحديث السؤال بنجاح', 'success');
           } else {
-            this.toast.show('فشل التحديث: ' + (response.errors[0] || 'خطأ غير معروف'), 'error');
+            const errorMsg = response.errors && response.errors.length > 0 
+              ? response.errors[0] 
+              : response.message || response.successMessage || 'خطأ غير معروف';
+            this.toast.show('فشل التحديث: ' + errorMsg, 'error');
           }
         },
         error: () => this.toast.show('خطأ في الاتصال بالخادم أثناء التحديث.', 'error')

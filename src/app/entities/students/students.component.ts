@@ -33,29 +33,29 @@ export class StudentsComponent implements OnInit {
     const user = this.auth.currentUser;
     if (user && user.role === 'instructor') {
       // only show students enrolled in this instructor's courses
-      this.courseService.getCourses().subscribe(courses => {
-        const myCourseIds = (courses || []).filter(c => (c as any).instructorId === user.id || c.instructorName === user.name).map(c => c.id);
+      this.courseService.getCourses().subscribe((courses: any) => {
+        const myCourseIds = (courses || []).filter((c: any) => (c as any).instructorId === user.id || c.instructorName === user.name).map((c: any) => c.id);
         this.studentService.getStudents().subscribe({
-          next: (students) => {
-            const filtered = (students || []).filter(s => (s.enrolledCourseIds || []).some((id: string) => myCourseIds.includes(id)));
+          next: (students: any) => {
+            const filtered = (students || []).filter((s: any) => (s.enrolledCourseIds || []).some((id: string) => myCourseIds.includes(id)));
             this.students = filtered;
             this.filteredStudents = filtered;
             this.loading = false;
           },
-          error: (err) => { console.error(err); this.loading = false; }
+          error: (err: any) => { console.error(err); this.loading = false; }
         });
       });
       return;
     }
 
     this.studentService.getStudents().subscribe({
-      next: (students) => {
+      next: (students: any) => {
         console.log('✅ الطلاب وصلوا:', students);
         this.students = students;
         this.filteredStudents = students;
         this.loading = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('❌ خطأ:', err);
         this.loading = false;
       }

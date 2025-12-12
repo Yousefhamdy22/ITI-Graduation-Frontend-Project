@@ -1,4 +1,4 @@
-import {Component, OnInit, afterNextRender, Injector} from '@angular/core';
+import {Component, OnInit, afterNextRender, Injector, inject} from '@angular/core';
 
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
@@ -134,25 +134,15 @@ export class AdminDashboard implements OnInit {
 
 
   constructor(
-
     private dashboardservice: DashboardService,
-
     private studentService: StudentService,
-
     private instructorService: InstructorService,
-
     private courseService: CourseService,
-
     private examService: ExamService,
-
     private toast: ToastService,
-
     private router: Router,
-
     private auth: AuthService,
-
     private injector: Injector
-
   ) {
 
     this.students$ = this.studentService.getStudents();
@@ -167,56 +157,91 @@ export class AdminDashboard implements OnInit {
 
     afterNextRender(() => {
 
+      // Check if user is authenticated
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('❌ No authentication token found! Redirecting to login...');
+        this.toast.show('يجب تسجيل الدخول أولاً', 'error');
+        this.router.navigate(['/admin/login']);
+        return;
+      }
+
       // courses
 
-      this.courseService.getCourses().subscribe(list => {
-
-        this.totalCourses = (list || []).length;
-
+      this.courseService.getCourses().subscribe({
+        next: (list: any) => {
+          this.totalCourses = (list || []).length;
+        },
+        error: (err: any) => {
+          console.error('❌ Failed to load courses:', err);
+          if (err.status === 401) {
+            this.toast.show('انتهت صلاحية الجلسة - الرجاء تسجيل الدخول مجدداً', 'error');
+            localStorage.removeItem('token');
+            this.router.navigate(['/admin/login']);
+          } else {
+            this.toast.show('فشل تحميل الكورسات', 'error');
+          }
+        }
       });
 
      
 
       // keep a live list for simple client-side search/pagination
 
-      this.students$.subscribe(list => {
-
-        this.filteredStudents = list || [];
-
-        // compute totals and enrollments
-
-        this.totalStudents = (list || []).length;
-
-        this.totalEnrollments = (list || []).reduce((acc: number, s: any) => acc + ((s.enrolledCourseIds || []).length || 0), 0);
-
-        // compute trend (last 6 months)
-
-        this.computeEnrollmentTrend(list || []);
-
+      this.students$.subscribe({
+        next: (list: any) => {
+          this.filteredStudents = list || [];
+          // compute totals and enrollments
+          this.totalStudents = (list || []).length;
+          this.totalEnrollments = (list || []).reduce((acc: number, s: any) => acc + ((s.enrolledCourseIds || []).length || 0), 0);
+          // compute trend (last 6 months)
+          this.computeEnrollmentTrend(list || []);
+        },
+        error: (err: any) => {
+          console.error('❌ Failed to load students:', err);
+          if (err.status === 401) {
+            this.toast.show('انتهت صلاحية الجلسة - الرجاء تسجيل الدخول مجدداً', 'error');
+            localStorage.removeItem('token');
+            this.router.navigate(['/admin/login']);
+          }
+        }
       });
 
 
 
-      this.instructors$.subscribe(list => {
-
-        this.filteredInstructors = list || [];
-
-        this.totalInstructors = (list || []).length;
-
+      this.instructors$.subscribe({
+        next: (list: any) => {
+          this.filteredInstructors = list || [];
+          this.totalInstructors = (list || []).length;
+        },
+        error: (err: any) => {
+          console.error('❌ Failed to load instructors:', err);
+          if (err.status === 401) {
+            this.toast.show('انتهت صلاحية الجلسة - الرجاء تسجيل الدخول مجدداً', 'error');
+            localStorage.removeItem('token');
+            this.router.navigate(['/admin/login']);
+          }
+        }
       });
 
 
 
       // تحميل الاختبارات
 
-      this.examService.getExams().subscribe(list => {
-
-        this.exams = list || [];
-
-        this.totalExams = this.exams.length;
-
-        this.filterExams();
-
+      this.examService.getExams().subscribe({
+        next: (list: any) => {
+          this.exams = list || [];
+          this.totalExams = this.exams.length;
+          this.filterExams();
+        },
+        error: (err: any) => {
+          console.error('❌ Failed to load exams:', err);
+          if (err.status === 401) {
+            this.toast.show('انتهت صلاحية الجلسة - الرجاء تسجيل الدخول مجدداً', 'error');
+            localStorage.removeItem('token');
+            this.router.navigate(['/admin/login']);
+          }
+        }
       });
 
     }, { injector: this.injector });
@@ -293,9 +318,9 @@ export class AdminDashboard implements OnInit {
 
     const q = (this.query || '').trim();
 
-    this.studentService.getStudents().subscribe(list => {
+    this.studentService.getStudents().subscribe((list: any) => {
 
-      this.filteredStudents = (list || []).filter(s => {
+      this.filteredStudents = (list || []).filter((s: any) => {
 
         const term = q || '';
 
@@ -413,7 +438,7 @@ export class AdminDashboard implements OnInit {
 
     const q = (this.instructorQuery || '').trim().toLowerCase();
 
-    this.instructorService.getInstructors().subscribe(list => {
+    this.instructorService.getInstructors().subscribe((list: any) => {
 
       this.filteredInstructors = (list || []).filter((i: Instructor) => {
 
@@ -527,7 +552,7 @@ export class AdminDashboard implements OnInit {
 
     // إعادة تحميل الاختبارات
 
-    this.examService.getExams().subscribe(list => {
+    this.examService.getExams().subscribe((list: any) => {
 
       this.exams = list || [];
 

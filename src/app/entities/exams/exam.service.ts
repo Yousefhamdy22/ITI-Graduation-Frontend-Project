@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
@@ -6,6 +6,7 @@ import { Exam, Question, ExamResult, ExamResultDetail } from './exam.model';
 
 @Injectable({ providedIn: 'root' })
 export class ExamService {
+  private http: HttpClient = inject(HttpClient);
   private useMock = true; // Temporary: Backend /api/Exams endpoint not available yet
   private BASE_URL = 'http://localhost:5180/api/Exams';
 
@@ -84,7 +85,7 @@ export class ExamService {
   private examsSubject = new BehaviorSubject<Exam[]>(this.mockData);
   exams$ = this.examsSubject.asObservable();
 
-  constructor(private http: HttpClient) {
+  constructor() {
     if (this.useMock) {
       this.examsSubject.next(this.mockData);
     }
@@ -136,7 +137,7 @@ export class ExamService {
   }
 
   getTotalExams$(): Observable<number> {
-    return this.exams$.pipe(map(exams => exams.length));
+    return this.exams$.pipe(map((exams: any) => exams.length));
   }
 
   loadExams(exams: Exam[]) {

@@ -18,13 +18,45 @@ export const routes: Routes = [
     loadComponent: () => import('./auth/student/student-register/student-register').then(m => m.StudentRegister),
   },
 
-  // Dashboard
+  // Admin Routes
+  {
+    path: 'admin',
+    children: [
+      // Admin Dashboard
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./auth/Admin/admin-dashboard/admin-dashboard').then(m => m.AdminDashboard),
+        data: {role: 'admin'},
+        canActivate: [
+          () => import('./auth/auth.guard').then(m => m.AuthGuard as any),
+          () => import('./auth/role.guard').then(m => m.RoleGuard as any)
+        ],
+      },
+      // Admin Management (Add/Edit/Delete Admins)
+      {
+        path: 'manage',
+        loadComponent: () =>
+          import('./auth/Admin/admin-manage.component').then(m => m.AdminManageComponent),
+        data: {role: 'admin'},
+        canActivate: [
+          () => import('./auth/auth.guard').then(m => m.AuthGuard as any),
+          () => import('./auth/role.guard').then(m => m.RoleGuard as any)
+        ],
+      },
+      // Admin Login
+      {
+        path: 'login',
+        loadComponent: () => import('./auth/Admin/admin-login/admin-login').then(m => m.AdminLogin),
+      },
+    ]
+  },
+
+  // Keep old dashboard path for backwards compatibility
   {
     path: 'dashboard',
-    loadComponent: () =>
-      import('./auth/Admin/admin-dashboard/admin-dashboard').then(m => m.AdminDashboard),
-    data: {role: 'admin'},
-    canActivate: [() => import('./auth/role.guard').then(m => m.RoleGuard as any)],
+    redirectTo: 'admin/dashboard',
+    pathMatch: 'full'
   },
 
   // Student landing
@@ -67,11 +99,14 @@ export const routes: Routes = [
   },
 
 
-  // Students
+  // Students (Protected: Auth + Admin Role)
   {
     path: 'students',
     data: {role: 'admin'},
-    canActivate: [() => import('./auth/role.guard').then(m => m.RoleGuard as any)],
+    canActivate: [
+      () => import('./auth/auth.guard').then(m => m.AuthGuard as any),
+      () => import('./auth/role.guard').then(m => m.RoleGuard as any)
+    ],
     children: [
       {
         path: '',
@@ -219,7 +254,6 @@ export const routes: Routes = [
     ],
   },
 
-  // Fallback
   {
     path: 'search',
     loadComponent: () => import('./search/search.component').then(m => m.SearchComponent),
@@ -229,8 +263,9 @@ export const routes: Routes = [
     loadComponent: () => import('./auth/student/student-login/student-login').then(m => m.StudentLogin),
   },
   {
-    path: 'admin',
-    loadComponent: () => import('./auth/Admin/admin-login/admin-login').then(m => m.AdminLogin),
+    path: 'student-login',
+    redirectTo: 'login',
+    pathMatch: 'full'
   },
   {
     path: 'instructor-login',

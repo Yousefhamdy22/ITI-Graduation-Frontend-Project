@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import { BehaviorSubject, Observable, tap, catchError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { throwError } from 'rxjs';
 
 export type Role = 'admin' | 'student' | 'instructor' | null;
 
@@ -37,11 +38,12 @@ export interface RegisterResponse {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private http: HttpClient = inject(HttpClient);
   private userSubject = new BehaviorSubject<User | null>(null);
   user$ = this.userSubject.asObservable();
   private BASE_URL = 'http://localhost:5180/api';
 
-  constructor(private http: HttpClient) {
+  constructor() {
     // Attempt to restore session on init
     this.autoLogin();
   }
@@ -49,13 +51,29 @@ export class AuthService {
   // --- Admin ---
 
   loginAdmin(data: any): Observable<AuthResponse> {
+    console.log('🔵 AuthService.loginAdmin() called with:', data.email);
     return this.http.post<AuthResponse>(`${this.BASE_URL}/admin/login`, data)
-      .pipe(tap(res => this.handleAuthResponse(res)));
+      .pipe(
+        tap(res => {
+          console.log('✅ AuthService: Login response:', res);
+          this.handleAuthResponse(res);
+        }),
+        catchError(err => {
+          console.error('❌ AuthService: Login error:', err);
+          return throwError(() => err);
+        })
+      );
   }
 
   registerAdmin(data: any): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.BASE_URL}/admin/register`, data)
-      .pipe(tap(res => this.handleAuthResponse(res)));
+      .pipe(
+        tap(res => this.handleAuthResponse(res)),
+        catchError(err => {
+          console.error('❌ AuthService: Register error:', err);
+          return throwError(() => err);
+        })
+      );
   }
 
   // --- Instructor ---
@@ -117,6 +135,7 @@ export class AuthService {
   logout() {
     if (this.isBrowser()) {
       localStorage.removeItem('token');
+      localStorage.removeItem('refreshToken');
       localStorage.removeItem('user');
     }
     this.userSubject.next(null);
@@ -171,5 +190,30 @@ export class AuthService {
 
   private isBrowser(): boolean {
     return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
+  }
+
+  // --- Refresh Token ---
+  refreshToken(): Observable<{ accessToken: string; refreshToken?: string }> {
+    const refreshToken = this.isBrowser() ? localStorage.getItem('refreshToken') : null;
+    if (!refreshToken) {
+      // Return an observable that errors if no refresh token
+      return new Observable(observer => {
+        observer.error(new Error('No refresh token'));
+      });
+    }
+
+    return this.http.post<{ accessToken: string; refreshToken?: string }>(
+      `${this.BASE_URL}/Auth/RefreshToken`,
+      { refreshToken }
+    ).pipe(
+      tap(res => {
+        if (res?.accessToken && this.isBrowser()) {
+          localStorage.setItem('token', res.accessToken);
+          if (res.refreshToken) {
+            localStorage.setItem('refreshToken', res.refreshToken);
+          }
+        }
+      })
+    );
   }
 }

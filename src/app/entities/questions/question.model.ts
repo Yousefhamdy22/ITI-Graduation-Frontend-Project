@@ -37,7 +37,8 @@ export interface ServerResponse<T> {
   value: T;
   isSuccess: boolean;
   status: number;
-  successMessage: string | null;
-  errors: string[];
-  validationErrors: any[];
+  message?: string; // Added for error/success messages
+  successMessage?: string | null;
+  errors?: string[];
+  validationErrors?: any[];
 }

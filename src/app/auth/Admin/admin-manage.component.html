@@ -1,0 +1,120 @@
+<div class="admin-manage-container">
+  <div class="admin-manage-header">
+    <div class="header-content">
+      <h1>إدارة الـ Admins</h1>
+      <button class="back-btn" (click)="goBack()">
+        <span>← العودة</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="admin-manage-content">
+    <!-- Add Admin Button -->
+    <div class="action-bar">
+      <button 
+        class="add-btn" 
+        (click)="toggleForm()"
+        [disabled]="isLoading">
+        {{ showForm ? '✕ إلغاء' : '+ إضافة Admin جديد' }}
+      </button>
+    </div>
+
+    <!-- Add Admin Form -->
+    <div class="form-section" *ngIf="showForm">
+      <h2>إضافة Admin جديد</h2>
+      <form [formGroup]="form" (ngSubmit)="submitForm()" class="admin-form">
+        
+        <div class="form-group">
+          <label for="email">البريد الإلكتروني</label>
+          <input 
+            id="email"
+            type="email" 
+            formControlName="email" 
+            placeholder="admin@example.com"
+            [class.error]="form.get('email')?.invalid && form.get('email')?.touched">
+          <span class="error-message" *ngIf="emailError">{{ emailError }}</span>
+        </div>
+
+        <div class="form-group">
+          <label for="password">كلمة المرور</label>
+          <input 
+            id="password"
+            type="password" 
+            formControlName="password" 
+            placeholder="كلمة المرور"
+            [class.error]="form.get('password')?.invalid && form.get('password')?.touched">
+          <span class="error-message" *ngIf="passwordError">{{ passwordError }}</span>
+        </div>
+
+        <div class="form-group">
+          <label for="firstName">الاسم الأول</label>
+          <input 
+            id="firstName"
+            type="text" 
+            formControlName="firstName" 
+            placeholder="الاسم الأول"
+            [class.error]="form.get('firstName')?.invalid && form.get('firstName')?.touched">
+          <span class="error-message" *ngIf="firstNameError">{{ firstNameError }}</span>
+        </div>
+
+        <div class="form-group">
+          <label for="lastName">الاسم الأخير</label>
+          <input 
+            id="lastName"
+            type="text" 
+            formControlName="lastName" 
+            placeholder="الاسم الأخير"
+            [class.error]="form.get('lastName')?.invalid && form.get('lastName')?.touched">
+          <span class="error-message" *ngIf="lastNameError">{{ lastNameError }}</span>
+        </div>
+
+        <button 
+          type="submit" 
+          class="submit-btn"
+          [disabled]="form.invalid || isLoading">
+          {{ isLoading ? 'جاري الحفظ...' : 'إضافة Admin' }}
+        </button>
+      </form>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading" *ngIf="isLoading && !showForm">
+      <p>جاري التحميل...</p>
+    </div>
+
+    <!-- Admins List -->
+    <div class="admins-list" *ngIf="!isLoading && !showForm">
+      <h2>قائمة الـ Admins ({{ admins.length }})</h2>
+      
+      <div *ngIf="admins.length === 0" class="no-data">
+        <p>لا توجد أي admins</p>
+      </div>
+
+      <div class="admin-cards" *ngIf="admins.length > 0">
+        <div class="admin-card" *ngFor="let admin of admins">
+          <div class="admin-info">
+            <div class="admin-name">
+              <h3>{{ admin.firstName }} {{ admin.lastName }}</h3>
+              <span class="role-badge">{{ admin.role }}</span>
+            </div>
+            <div class="admin-email">
+              <p><strong>البريد:</strong> {{ admin.email }}</p>
+            </div>
+            <div class="admin-id" *ngIf="admin.id">
+              <p><strong>ID:</strong> {{ admin.id }}</p>
+            </div>
+          </div>
+          <div class="admin-actions">
+            <button 
+              class="delete-btn"
+              (click)="deleteAdmin(admin.id, admin.email)"
+              [disabled]="admins.length === 1 || isLoading"
+              title="حذف هذا الـ Admin">
+              🗑️ حذف
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

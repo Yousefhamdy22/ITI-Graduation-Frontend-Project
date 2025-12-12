@@ -10,8 +10,39 @@
         <p class="text-white/90 text-lg mb-8 leading-relaxed">
           تعلم التكنولوجيا بعمق واشتغل على مشاريع حقيقية مع أفضل المدربين في المجال.
         </p>
+        
+        <!-- Login Options Section -->
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold mb-4">ابدأ الآن:</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Student Login -->
+            <a routerLink="/login" 
+               class="bg-white/10 backdrop-blur-sm border-2 border-white/30 hover:bg-white/20 hover:border-white text-white rounded-xl p-4 text-center transition-all duration-300 hover:scale-105 hover:shadow-xl">
+              <div class="text-3xl mb-2">🎓</div>
+              <div class="font-bold text-lg">تسجيل دخول طالب</div>
+              <div class="text-sm text-white/80 mt-1">ابدأ رحلتك التعليمية</div>
+            </a>
+            
+            <!-- Instructor Login -->
+            <a routerLink="/instructor-login" 
+               class="bg-white/10 backdrop-blur-sm border-2 border-white/30 hover:bg-white/20 hover:border-white text-white rounded-xl p-4 text-center transition-all duration-300 hover:scale-105 hover:shadow-xl">
+              <div class="text-3xl mb-2">👨‍🏫</div>
+              <div class="font-bold text-lg">تسجيل دخول مدرب</div>
+              <div class="text-sm text-white/80 mt-1">إدارة كورساتك</div>
+            </a>
+            
+            <!-- Guest Browse -->
+            <a routerLink="/courses" 
+               class="bg-white/10 backdrop-blur-sm border-2 border-white/30 hover:bg-white/20 hover:border-white text-white rounded-xl p-4 text-center transition-all duration-300 hover:scale-105 hover:shadow-xl">
+              <div class="text-3xl mb-2">👀</div>
+              <div class="font-bold text-lg">تصفح كزائر</div>
+              <div class="text-sm text-white/80 mt-1">استكشف الكورسات</div>
+            </a>
+          </div>
+        </div>
+        
         <div class="flex gap-4">
-          <a routerLink="/courses" class="btn-primary bg-white text-[#0E4D67] hover:bg-gray-100">تصفح الكورسات</a>
+          <a routerLink="/register" class="btn-primary bg-white text-[#0E4D67] hover:bg-gray-100">سجل كطالب جديد</a>
           <button class="btn-outline border-white text-white hover:bg-white/10">اعرف المزيد</button>
         </div>
       </div>

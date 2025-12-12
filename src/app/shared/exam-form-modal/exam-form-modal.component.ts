@@ -39,7 +39,7 @@ export class ExamFormModalComponent implements OnInit {
   ngOnInit(): void {
     // تحميل الكورسات
     this.courseService.getCourses().subscribe({
-      next: (list) => {
+      next: (list: any) => {
         this.courses = list || [];
         if (this.courses.length && !this.courseId) {
           this.courseId = this.courses[0].id;
@@ -50,7 +50,7 @@ export class ExamFormModalComponent implements OnInit {
 
     // تحميل الأسئلة
     this.questionService.getQuestions().subscribe({
-      next: (response) => {
+      next: (response: any) => {
         this.questions = response.value || [];
       },
       error: () => this.toast.show('خطأ في تحميل الأسئلة', 'error')

@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastService } from '../../../shared/toast.service';
 import { CommonModule } from '@angular/common';
+import { RoleHeaderComponent } from '../../../core/header/role-header.component';
+import { FooterComponent } from '../../../core/footer/footer.component';
 
 @Component({
   selector: 'app-instructor-login',
@@ -11,7 +13,9 @@ import { CommonModule } from '@angular/common';
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    CommonModule
+    CommonModule,
+    RoleHeaderComponent,
+    FooterComponent
   ],
   templateUrl: './instructor-login.html',
   styleUrl: './instructor-login.scss',

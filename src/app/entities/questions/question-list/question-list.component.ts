@@ -1,9 +1,8 @@
 import { Component, OnInit, afterNextRender, PLATFORM_ID, inject, ChangeDetectorRef, NgZone, ApplicationRef } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Router, RouterModule, ActivatedRoute } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { QuestionService } from '../question.service';
-import { CourseService } from '../../courses/course.service';
 import { Question } from '../question.model';
 import { ToastService } from '../../../shared/toast.service';
 
@@ -19,10 +18,6 @@ import { ToastService } from '../../../shared/toast.service';
 // }
 export class QuestionListComponent implements OnInit {
   questions: Question[] = [];
-  selectedForExam = new Set<string>();
-  courses: any[] = [];
-  selectedCourseId = '';
-  forExam = false;
   isLoading = true;
   private platformId = inject(PLATFORM_ID);
   private ngZone = inject(NgZone);
@@ -31,25 +26,15 @@ export class QuestionListComponent implements OnInit {
   constructor(
     private questionService: QuestionService, 
     private router: Router, 
-    private courseService: CourseService, 
-    private route: ActivatedRoute, 
     private toast: ToastService,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    // Route params setup
-    this.route.queryParams.subscribe(params => {
-      if (params['courseId']) this.selectedCourseId = params['courseId'];
-      this.forExam = params['forExam'] === '1' || params['forExam'] === 'true' || false;
-    });
-
     // Load data in browser only
     if (isPlatformBrowser(this.platformId)) {
       console.log('🚀 Component initialized, loading questions...');
       this.loadQuestions();
-      this.loadSessionStorage();
-      this.loadCourses();
       
       // Timeout fallback - if loading takes more than 5 seconds
       setTimeout(() => {
@@ -62,18 +47,6 @@ export class QuestionListComponent implements OnInit {
     } else {
       console.log('🔴 SSR detected - skipping data load');
       this.isLoading = false;
-    }
-  }
-
-  private loadSessionStorage() {
-    if (!isPlatformBrowser(this.platformId)) return;
-    
-    const raw = sessionStorage.getItem('selectedQuestionIds');
-    if (raw) {
-      try {
-        const ids: string[] = JSON.parse(raw);
-        for (const id of ids) this.selectedForExam.add(id);
-      } catch { }
     }
   }
 
@@ -116,18 +89,12 @@ export class QuestionListComponent implements OnInit {
     console.log('📡 HTTP request sent, subscription created:', subscription);
   }
 
-  loadCourses() {
-    if (this.courses.length === 0) {
-      this.courseService.getCourses().subscribe(list => this.courses = list || []);
-    }
-  }
-
   trackByQuestionId(index: number, question: Question): string {
     return question.id || index.toString();
   }
 
   edit(q: Question) {
-    this.router.navigate(['/questions', q.id, 'edit'], { queryParams: { courseId: this.selectedCourseId, forExam: this.forExam ? 1 : null } });
+    this.router.navigate(['/questions', q.id, 'edit']);
   }
 
   remove(q: Question) {
@@ -166,20 +133,4 @@ export class QuestionListComponent implements OnInit {
     });
   }
 
-  toggleSelect(q: Question) {
-    if (!q.id || !isPlatformBrowser(this.platformId)) return;
-    if (this.selectedForExam.has(q.id)) this.selectedForExam.delete(q.id);
-    else this.selectedForExam.add(q.id);
-    sessionStorage.setItem('selectedQuestionIds', JSON.stringify(Array.from(this.selectedForExam)));
-  }
-
-  createExamWithSelected() {
-    if (!isPlatformBrowser(this.platformId)) return;
-    // store selected ids in sessionStorage then navigate to exam creation
-    const ids = Array.from(this.selectedForExam);
-    sessionStorage.setItem('selectedQuestionIds', JSON.stringify(ids));
-    if (!this.selectedCourseId) { this.toast.show('اختر كورس قبل المتابعة', 'warning'); return; }
-    // include courseId so assemble page can prefill
-    this.router.navigate(['/exams/assemble'], { queryParams: { courseId: this.selectedCourseId } });
-  }
 }

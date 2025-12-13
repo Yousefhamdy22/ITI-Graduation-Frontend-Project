@@ -2,26 +2,149 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Global helpers matching the design */
 @layer components {
+  /* Global container */
   .app-container {
     @apply max-w-7xl mx-auto px-4 md:px-6;
   }
 
-  .shadow-soft {
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  /* Page wrapper with blue-white theme */
+  .page-wrapper {
+    @apply min-h-screen bg-gradient-to-br from-primary-50 via-white to-blue-50;
   }
 
-  .shadow-card {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  /* Section backgrounds */
+  .section-bg-light {
+    @apply bg-primary-50/30;
+  }
+
+  .section-bg-white {
+    @apply bg-white;
+  }
+
+  /* Buttons - Unified Blue-White Design System */
+  .btn {
+    @apply px-4 py-2.5 rounded-lg font-semibold transition-all duration-300 
+           shadow-sm hover:shadow-md active:shadow-sm
+           disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none
+           focus:outline-none focus:ring-2 focus:ring-offset-2;
   }
 
   .btn-primary {
-    @apply bg-[#0E4D67] text-white rounded-xl px-5 py-3 font-semibold hover:opacity-90 transition-all duration-200;
+    @apply btn bg-primary-600 text-white hover:bg-primary-700 
+           focus:ring-primary-500;
+  }
+
+  .btn-success {
+    @apply btn bg-accent-success text-white hover:bg-green-700 
+           focus:ring-green-500;
+  }
+
+  .btn-danger {
+    @apply btn bg-accent-danger text-white hover:bg-red-700 
+           focus:ring-red-500;
+  }
+
+  .btn-warning {
+    @apply btn bg-accent-warning text-white hover:bg-yellow-600 
+           focus:ring-yellow-500;
+  }
+
+  .btn-info {
+    @apply btn bg-accent-info text-white hover:bg-indigo-700 
+           focus:ring-indigo-500;
+  }
+
+  .btn-secondary {
+    @apply btn bg-gray-600 text-white hover:bg-gray-700 
+           focus:ring-gray-500;
   }
 
   .btn-outline {
-    @apply border-2 border-gray-300 rounded-xl px-5 py-3 font-semibold text-gray-800 hover:bg-gray-50 transition-all duration-200;
+    @apply btn border-2 border-primary-600 text-primary-700 bg-white 
+           hover:bg-primary-50 shadow-none focus:ring-primary-500;
+  }
+
+  .btn-outline-danger {
+    @apply btn border-2 border-red-600 text-red-700 bg-white 
+           hover:bg-red-50 shadow-none focus:ring-red-500;
+  }
+
+  .btn-light {
+    @apply btn bg-white text-primary-700 border border-primary-200
+           hover:bg-primary-50 focus:ring-primary-500;
+  }
+
+  /* Button Sizes */
+  .btn-sm {
+    @apply px-3 py-1.5 text-sm;
+  }
+
+  .btn-lg {
+    @apply px-6 py-3 text-lg;
+  }
+
+  /* Cards - Blue-White Theme */
+  .card {
+    @apply bg-white rounded-2xl shadow-soft border border-primary-100/50 overflow-hidden;
+  }
+
+  .card-hover {
+    @apply card hover:shadow-card hover:border-primary-200 
+           transition-all duration-300 hover:-translate-y-0.5;
+  }
+
+  .card-header {
+    @apply bg-gradient-primary text-white px-6 py-4 font-bold text-lg;
+  }
+
+  .card-body {
+    @apply p-6;
+  }
+
+  /* Badges */
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold;
+  }
+
+  .badge-primary {
+    @apply badge bg-primary-100 text-primary-700;
+  }
+
+  .badge-success {
+    @apply badge bg-green-100 text-green-700;
+  }
+
+  .badge-danger {
+    @apply badge bg-red-100 text-red-700;
+  }
+
+  .badge-warning {
+    @apply badge bg-yellow-100 text-yellow-700;
+  }
+
+  /* Inputs & Forms */
+  .input {
+    @apply w-full border-2 border-gray-300 rounded-lg px-4 py-2.5 
+           focus:ring-2 focus:ring-primary-500 focus:border-primary-500 
+           transition-colors duration-200;
+  }
+
+  .input-error {
+    @apply input border-red-500 focus:ring-red-500 focus:border-red-500;
+  }
+
+  .label {
+    @apply block text-sm font-semibold text-gray-700 mb-2;
+  }
+
+  /* Titles */
+  .page-title {
+    @apply text-3xl md:text-4xl font-bold text-gray-900 mb-2;
+  }
+
+  .page-subtitle {
+    @apply text-gray-600 text-base md:text-lg;
   }
 
   .section-title {
@@ -29,15 +152,62 @@
   }
 
   .section-subtitle {
-    @apply text-gray-600 text-base md:text-lg;
+    @apply text-gray-600 text-base;
   }
 
-  .card {
-    @apply bg-white rounded-2xl shadow-soft border border-gray-100 overflow-hidden;
+  /* Stats Cards */
+  .stat-card {
+    @apply bg-white rounded-2xl shadow-soft border border-primary-100/50 
+           p-6 hover:shadow-card transition-all duration-300;
   }
 
-  .card-hover {
-    @apply bg-white rounded-2xl shadow-soft border border-gray-100 overflow-hidden hover:shadow-card transition-all duration-300;
+  .stat-value {
+    @apply text-3xl md:text-4xl font-bold text-gray-900;
+  }
+
+  .stat-label {
+    @apply text-sm text-gray-600 mb-2;
+  }
+
+  .stat-icon {
+    @apply w-12 h-12 rounded-full flex items-center justify-center text-2xl;
+  }
+
+  /* Tables */
+  .table-container {
+    @apply overflow-x-auto rounded-lg border border-primary-100/50 shadow-soft;
+  }
+
+  .table {
+    @apply w-full text-sm;
+  }
+
+  .table-header {
+    @apply bg-gradient-primary text-white uppercase text-xs font-semibold;
+  }
+
+  .table-row {
+    @apply border-b border-gray-100 hover:bg-primary-50/50 transition-colors;
+  }
+
+  /* Alerts */
+  .alert {
+    @apply p-4 rounded-lg border-l-4;
+  }
+
+  .alert-info {
+    @apply alert bg-primary-50 border-primary-600 text-primary-800;
+  }
+
+  .alert-success {
+    @apply alert bg-green-50 border-green-600 text-green-800;
+  }
+
+  .alert-warning {
+    @apply alert bg-yellow-50 border-yellow-600 text-yellow-800;
+  }
+
+  .alert-danger {
+    @apply alert bg-red-50 border-red-600 text-red-800;
   }
 }
-

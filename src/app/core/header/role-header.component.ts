@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
@@ -18,24 +18,28 @@ import { PublicHeaderComponent } from './public-header.component';
   templateUrl: './role-header.component.html',
   styleUrls: ['./role-header.component.css']
 })
-export class RoleHeaderComponent {
+export class RoleHeaderComponent implements OnInit {
   user$!: Observable<any>;
   snapshotUser: any = null;
-  // No localStorage usage: auth state is in-memory only
 
-  constructor(private auth: AuthService, private router: Router) { }
+  constructor(private auth: AuthService, private router: Router) {
+    // Initialize snapshot immediately in constructor
+    this.snapshotUser = this.auth.currentUser;
+  }
 
   ngOnInit() {
     this.user$ = this.auth.user$;
 
-    // subscribe to user changes and keep a snapshot (in-memory) for quick access
+    // Subscribe to user changes and keep a snapshot
     this.auth.user$.subscribe(u => {
       this.snapshotUser = u || null;
+      console.log('Header - User updated:', this.snapshotUser);
     });
 
-    // On navigation end, log currentUser for debugging
+    // On navigation end, update snapshot
     this.router.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe(() => {
-      const cur = this.auth.currentUser;
+      this.snapshotUser = this.auth.currentUser;
+      console.log('Header - Navigation updated:', this.snapshotUser);
     });
   }
 }

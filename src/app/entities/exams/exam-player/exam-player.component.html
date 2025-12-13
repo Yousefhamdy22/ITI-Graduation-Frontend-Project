@@ -1,14 +1,14 @@
-<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100" dir="rtl">
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 px-3 sm:px-4" dir="rtl">
   <!-- Header with Timer -->
-  <div class="sticky top-0 z-10 bg-white border-b-4 border-blue-600 p-4 shadow-md">
-    <div class="max-w-5xl mx-auto flex justify-between items-center">
+  <div class="sticky top-0 z-10 bg-white border-b-4 border-blue-600 p-3 sm:p-4 shadow-md">
+    <div class="max-w-5xl mx-auto flex flex-col sm:flex-row gap-3 justify-between items-center">
       <button 
         routerLink="/exams" 
         class="text-blue-600 hover:text-blue-800 font-semibold text-lg">
         ← العودة
       </button>
-      <h1 class="text-3xl font-bold text-gray-800 flex-1 text-center">{{ exam?.title }}</h1>
-      <div class="text-3xl font-bold px-4 py-2 rounded-lg" 
+      <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 flex-1 text-center">{{ exam?.title }}</h1>
+      <div class="text-2xl sm:text-3xl font-bold px-4 py-2 rounded-lg" 
            [ngClass]="timeRemaining <= 300 ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600'">
         ⏱ {{ formatTime(timeRemaining) }}
       </div>
@@ -24,8 +24,8 @@
   </div>
 
   <!-- Active Exam -->
-  <div *ngIf="!loading && exam && !submitted" class="max-w-5xl mx-auto p-6">
-    <div class="bg-white rounded-2xl shadow-xl p-8">
+  <div *ngIf="!loading && exam && !submitted" class="max-w-5xl mx-auto p-4 sm:p-6">
+    <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-8">
       <!-- Question Progress -->
       <div class="mb-8">
         <div class="flex justify-between items-center mb-4">
@@ -62,14 +62,14 @@
       </div>
 
       <!-- Question Content -->
-      <div class="bg-gradient-to-b from-blue-50 to-white rounded-xl p-8 mb-8">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6 leading-relaxed">
+      <div class="bg-gradient-to-b from-blue-50 to-white rounded-xl p-5 sm:p-8 mb-8">
+        <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-6 leading-relaxed">
           {{ exam.questions[currentQuestionIndex].text }}
         </h2>
 
         <!-- Options -->
         <div class="space-y-3">
-          <button *ngFor="let option of exam.questions[currentQuestionIndex].options; let i = index"
+          <button *ngFor="let option of exam.questions[currentQuestionIndex].answerOptions; let i = index"
                   (click)="selectAnswer(currentQuestionIndex, i)"
                   [class.ring-2]="selectedAnswers[currentQuestionIndex] === i"
                   [class.ring-blue-600]="selectedAnswers[currentQuestionIndex] === i"
@@ -84,14 +84,14 @@
                 <span *ngIf="selectedAnswers[currentQuestionIndex] === i" class="font-bold">✓</span>
                 <span *ngIf="selectedAnswers[currentQuestionIndex] !== i" class="text-sm">{{ getLetterForIndex(i) }}</span>
               </div>
-              <span class="text-lg text-gray-800 font-medium">{{ option }}</span>
+              <span class="text-base sm:text-lg text-gray-800 font-medium">{{ option.text }}</span>
             </div>
           </button>
         </div>
       </div>
 
       <!-- Navigation Buttons -->
-      <div class="flex gap-4 justify-between">
+      <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-between">
         <button 
           (click)="prevQuestion()"
           [disabled]="currentQuestionIndex === 0"
@@ -124,17 +124,17 @@
   </div>
 
   <!-- Results Screen -->
-  <div *ngIf="!loading && exam && submitted" class="max-w-3xl mx-auto p-6 min-h-[calc(100vh-150px)] flex items-center justify-center">
-    <div class="bg-white rounded-2xl shadow-2xl p-10 w-full text-center">
+  <div *ngIf="!loading && exam && submitted" class="max-w-3xl mx-auto p-4 sm:p-6 min-h-[calc(100vh-150px)] flex items-center justify-center">
+    <div class="bg-white rounded-2xl shadow-2xl p-6 sm:p-10 w-full text-center space-y-6">
       <!-- Result Icon -->
-      <div class="inline-flex items-center justify-center w-32 h-32 rounded-full mb-8"
+      <div class="inline-flex items-center justify-center w-24 h-24 sm:w-32 sm:h-32 rounded-full"
            [class.bg-green-100]="isPassed()"
            [class.bg-red-100]="!isPassed()">
         <span class="text-7xl" [ngClass]="isPassed() ? '🎉' : '😔'"></span>
       </div>
 
       <!-- Result Message -->
-      <h2 class="text-4xl font-bold mb-4" [ngClass]="isPassed() ? 'text-green-600' : 'text-red-600'">
+      <h2 class="text-3xl sm:text-4xl font-bold" [ngClass]="isPassed() ? 'text-green-600' : 'text-red-600'">
         {{ isPassed() ? 'مبروك! لقد نجحت' : 'للأسف، لم تنجح' }}
       </h2>
 
@@ -143,34 +143,142 @@
       </p>
 
       <!-- Score Display -->
-      <div class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl p-8 mb-8">
+      <div class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl p-6 sm:p-8">
         <p class="text-lg mb-2">النتيجة النهائية</p>
         <div class="text-6xl font-bold mb-3">{{ score }}%</div>
-        <div class="flex justify-center gap-4 text-sm">
-          <span>الأسئلة الصحيحة: <strong>{{ (score / 100 * exam.questions.length | number:'1.0-0') }}</strong></span>
-          <span>إجمالي الأسئلة: <strong>{{ exam.questions.length }}</strong></span>
+        <div class="flex justify-center gap-6 text-sm">
+          <span>✓ إجابات صحيحة: <strong>{{ getCorrectAnswersCount() }}</strong></span>
+          <span>✗ إجابات خاطئة: <strong>{{ exam.questions.length - getCorrectAnswersCount() }}</strong></span>
+          <span>📝 إجمالي الأسئلة: <strong>{{ exam.questions.length }}</strong></span>
         </div>
       </div>
 
       <!-- Info Card -->
-      <div class="bg-gray-100 rounded-lg p-6 mb-8 space-y-2">
-        <p class="text-gray-700"><strong>درجة النجاح:</strong> {{ exam.passingScore }}%</p>
-        <p class="text-gray-700"><strong>مدة الاختبار:</strong> {{ exam.duration }} دقيقة</p>
+      <div class="bg-gray-100 rounded-lg p-5 sm:p-6 space-y-2">
+        <p class="text-gray-700"><strong>درجة النجاح:</strong> 70%</p>
+        <p class="text-gray-700"><strong>مدة الاختبار:</strong> {{ exam.durationMinutes }} دقيقة</p>
         <p class="text-gray-700"><strong>حالتك:</strong> <span [ngClass]="isPassed() ? 'text-green-600 font-bold' : 'text-red-600 font-bold'">{{ isPassed() ? 'ناجح ✓' : 'راسب ✗' }}</span></p>
       </div>
 
       <!-- Action Buttons -->
       <div class="space-y-3">
         <button 
-          routerLink="/exams"
-          class="w-full px-6 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold text-lg transition transform hover:scale-105">
-          ← العودة للاختبارات
+          (click)="viewAnswerKey()"
+          class="w-full px-6 py-4 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-bold text-lg transition transform hover:scale-105">
+          {{ showAnswerKey ? '✗ إخفاء نموذج الإجابة' : '📋 عرض نموذج الإجابة' }}
         </button>
-        <button 
-          routerLink="/"
-          class="w-full px-6 py-4 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-lg font-bold text-lg transition transform hover:scale-105">
-          الصفحة الرئيسية
-        </button>
+        <div class="flex flex-col sm:flex-row gap-3">
+          <button 
+            routerLink="/exams"
+            class="w-full sm:flex-1 px-6 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold text-lg transition transform hover:scale-105">
+            ← العودة للاختبارات
+          </button>
+          <button 
+            routerLink="/"
+            class="w-full sm:flex-1 px-6 py-4 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-lg font-bold text-lg transition transform hover:scale-105">
+            الصفحة الرئيسية
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Answer Key Section -->
+  <div *ngIf="!loading && exam && submitted && showAnswerKey" class="max-w-5xl mx-auto p-4 sm:p-6 mb-8">
+    <div class="bg-white rounded-2xl shadow-xl p-5 sm:p-8">
+      <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">📋 نموذج الإجابة</h2>
+
+      <!-- Questions Review -->
+      <div class="space-y-6">
+           <div *ngFor="let question of exam.questions; let i = index" 
+             class="border-2 rounded-xl p-5 sm:p-6 transition-all"
+             [ngClass]="getAnswerStatus(i) === 'correct' ? 'border-green-400 bg-green-50' : 'border-red-400 bg-red-50'">
+          
+          <!-- Question Header -->
+          <div class="flex flex-col sm:flex-row justify-between items-start gap-3 mb-4">
+            <div class="flex-1">
+              <div class="flex items-center gap-3 mb-2">
+                <span class="text-lg sm:text-xl font-bold text-gray-700">السؤال {{ i + 1 }}</span>
+                <span class="px-3 py-1 rounded-full text-sm font-bold"
+                      [ngClass]="getAnswerStatus(i) === 'correct' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'">
+                  {{ getAnswerStatus(i) === 'correct' ? '✓ صحيح' : '✗ خطأ' }}
+                </span>
+              </div>
+              <p class="text-base sm:text-lg text-gray-800 font-medium">{{ question.text }}</p>
+            </div>
+            <span class="text-sm text-gray-600 bg-gray-200 px-3 py-1 rounded-full">{{ question.points }} نقطة</span>
+          </div>
+
+          <!-- Answer Options -->
+          <div class="space-y-3">
+            <div *ngFor="let option of question.answerOptions; let optIndex = index"
+                 class="p-4 rounded-lg border-2 transition-all"
+                 [ngClass]="{
+                   'border-green-500 bg-green-100': option.isCorrect,
+                   'border-red-500 bg-red-100': selectedAnswers[i] === optIndex && !option.isCorrect,
+                   'border-gray-300 bg-gray-50': selectedAnswers[i] !== optIndex && !option.isCorrect
+                 }">
+              <div class="flex items-center gap-3">
+                <!-- Icon -->
+                <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 font-bold text-lg"
+                     [ngClass]="{
+                       'bg-green-500 text-white': option.isCorrect,
+                       'bg-red-500 text-white': selectedAnswers[i] === optIndex && !option.isCorrect,
+                       'bg-gray-300 text-gray-600': selectedAnswers[i] !== optIndex && !option.isCorrect
+                     }">
+                  <span *ngIf="option.isCorrect">✓</span>
+                  <span *ngIf="selectedAnswers[i] === optIndex && !option.isCorrect">✗</span>
+                  <span *ngIf="selectedAnswers[i] !== optIndex && !option.isCorrect">{{ getLetterForIndex(optIndex) }}</span>
+                </div>
+
+                <!-- Option Text -->
+                <span class="text-base sm:text-lg font-medium"
+                      [ngClass]="{
+                        'text-green-800': option.isCorrect,
+                        'text-red-800': selectedAnswers[i] === optIndex && !option.isCorrect,
+                        'text-gray-700': selectedAnswers[i] !== optIndex && !option.isCorrect
+                      }">
+                  {{ option.text }}
+                </span>
+
+                <!-- Labels -->
+                <div class="mr-auto flex gap-2">
+                  <span *ngIf="option.isCorrect" class="text-xs bg-green-600 text-white px-2 py-1 rounded-full font-bold">
+                    الإجابة الصحيحة
+                  </span>
+                  <span *ngIf="selectedAnswers[i] === optIndex" class="text-xs bg-blue-600 text-white px-2 py-1 rounded-full font-bold">
+                    اختيارك
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Explanation (if you have it in your model) -->
+          <div *ngIf="getAnswerStatus(i) === 'incorrect'" class="mt-4 p-4 bg-yellow-50 border-r-4 border-yellow-400 rounded">
+            <p class="text-yellow-800 text-sm">
+              💡 <strong>تلميح:</strong> راجع هذا الموضوع مرة أخرى لتحسين فهمك
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary Footer -->
+      <div class="mt-8 p-6 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-xl">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+          <div class="bg-white/70 rounded-lg p-4">
+            <p class="text-3xl font-bold text-green-600">{{ getCorrectAnswersCount() }}</p>
+            <p class="text-sm text-gray-600">إجابات صحيحة</p>
+          </div>
+          <div class="bg-white/70 rounded-lg p-4">
+            <p class="text-3xl font-bold text-red-600">{{ exam.questions.length - getCorrectAnswersCount() }}</p>
+            <p class="text-sm text-gray-600">إجابات خاطئة</p>
+          </div>
+          <div class="bg-white/70 rounded-lg p-4">
+            <p class="text-3xl font-bold text-blue-600">{{ score }}%</p>
+            <p class="text-sm text-gray-600">النتيجة النهائية</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>

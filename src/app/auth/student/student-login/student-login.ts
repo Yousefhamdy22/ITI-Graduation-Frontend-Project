@@ -4,10 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService, Role } from '../../auth.service';
 import { ToastService } from '../../../shared/toast.service';
+import { RoleHeaderComponent } from '../../../core/header/role-header.component';
+import { FooterComponent } from '../../../core/footer/footer.component';
 
 @Component({
   selector: 'app-student-login',
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, RoleHeaderComponent, FooterComponent],
   templateUrl: './student-login.html',
   styleUrl: './student-login.scss',
 })

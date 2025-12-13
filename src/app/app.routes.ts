@@ -1,17 +1,17 @@
 import {Routes} from '@angular/router';
 
 export const routes: Routes = [
-  // Default -> login
+  // Default -> home page (accessible to everyone including guests)
   {
     path: '',
     pathMatch: 'full',
-    loadComponent: () => import('./auth/student/student-login/student-login').then(m => m.StudentLogin),
+    loadComponent: () => import('./home/home-wrapper.component').then(m => m.HomeWrapperComponent),
   },
 
-  // Home (after login for non-admin)
+  // Login page
   {
-    path: 'home',
-    loadComponent: () => import('./home/home.component').then(m => m.HomeComponent),
+    path: 'login',
+    loadComponent: () => import('./auth/student/student-login/student-login').then(m => m.StudentLogin),
   },
   {
     path: 'register',
@@ -279,6 +279,10 @@ export const routes: Routes = [
   },
 
   // Page not found / errors
+  {
+    path: 'not-found',
+    loadComponent: () => import('./notfound/notfound').then(m => m.Notfound),
+  },
   {
     path: '**',
     loadComponent: () => import('./notfound/notfound').then(m => m.Notfound),

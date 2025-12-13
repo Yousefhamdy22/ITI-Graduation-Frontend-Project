@@ -68,7 +68,8 @@ export class StudentService {
   private mapToStudent(apiStudent: any): Student {
     return {
       ...apiStudent,
-      enrolledCourseIds: apiStudent.enrollments?.map((e: any) => e.id) || []
+      // Prefer courseId from enrollment; fallback to nested course id or enrollment id
+      enrolledCourseIds: apiStudent.enrollments?.map((e: any) => e.courseId || e.course?.id || e.id) || []
     };
   }
 

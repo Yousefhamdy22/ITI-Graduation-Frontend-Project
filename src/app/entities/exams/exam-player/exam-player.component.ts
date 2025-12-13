@@ -24,6 +24,7 @@ export class ExamPlayerComponent implements OnInit, OnDestroy {
   timeRemaining: number = 0;
   timerInterval: any;
   examId = '';
+  showAnswerKey = false;
 
   isInstructorOfCourse = false;
   editingModel = false;
@@ -114,9 +115,12 @@ export class ExamPlayerComponent implements OnInit, OnDestroy {
     // حساب النتيجة
     let correctCount = 0;
     this.exam.questions.forEach((q, i) => {
-      const correctAnswerId = q.answerOptions.find(a => a.isCorrect)?.id;
-      if (correctAnswerId && this.selectedAnswers[i] === Number(correctAnswerId)) {
-        correctCount++;
+      const selectedOptionIndex = this.selectedAnswers[i];
+      if (selectedOptionIndex !== undefined) {
+        const selectedOption = q.answerOptions[selectedOptionIndex];
+        if (selectedOption && selectedOption.isCorrect) {
+          correctCount++;
+        }
       }
     });
     
@@ -160,9 +164,30 @@ export class ExamPlayerComponent implements OnInit, OnDestroy {
     if (!this.submitted) return 'unanswered';
     const question = this.exam?.questions[questionIndex];
     if (!question) return 'unanswered';
-    const correctAnswerId = question.answerOptions.find(a => a.isCorrect)?.id;
-    const isCorrect = correctAnswerId && this.selectedAnswers[questionIndex] === Number(correctAnswerId);
-    return isCorrect ? 'correct' : 'incorrect';
+    
+    const selectedOptionIndex = this.selectedAnswers[questionIndex];
+    if (selectedOptionIndex === undefined) return 'unanswered';
+    
+    const selectedOption = question.answerOptions[selectedOptionIndex];
+    return selectedOption && selectedOption.isCorrect ? 'correct' : 'incorrect';
+  }
+
+  getCorrectAnswersCount(): number {
+    if (!this.exam) return 0;
+    let count = 0;
+    this.exam.questions.forEach((q, i) => {
+      if (this.getAnswerStatus(i) === 'correct') {
+        count++;
+      }
+    });
+    return count;
+  }
+
+  viewAnswerKey(): void {
+    this.showAnswerKey = !this.showAnswerKey;
+    if (this.showAnswerKey) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
 
   getLetterForIndex(index: number): string {

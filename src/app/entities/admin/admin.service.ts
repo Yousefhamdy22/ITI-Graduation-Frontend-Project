@@ -5,7 +5,7 @@ import { Admin, CreateAdminRequest, UpdateAdminRequest, AdminResponse, AdminsLis
 
 @Injectable({ providedIn: 'root' })
 export class AdminService {
-  private readonly BASE_URL = 'http://localhost:5180/api/Admin';
+  private readonly BASE_URL = 'http://localhost:5180/api/admin';
 
   constructor(private http: HttpClient) {}
 
@@ -13,7 +13,8 @@ export class AdminService {
    * Get all admins
    */
   getAllAdmins(): Observable<AdminsListResponse> {
-    return this.http.get<AdminsListResponse>(`${this.BASE_URL}/GetAdmins`);
+    // Try /admins endpoint instead of /GetAdmins
+    return this.http.get<AdminsListResponse>(`${this.BASE_URL}/admins`);
   }
 
   /**
@@ -21,7 +22,7 @@ export class AdminService {
    */
   createAdmin(data: CreateAdminRequest): Observable<AdminResponse> {
     console.log('📝 AdminService: Creating admin', data.email);
-    return this.http.post<AdminResponse>(`${this.BASE_URL}/CreateAdmin`, data);
+    return this.http.post<AdminResponse>(`${this.BASE_URL}/register`, data);
   }
 
   /**
@@ -37,6 +38,6 @@ export class AdminService {
    */
   deleteAdmin(adminId: string): Observable<AdminResponse> {
     console.log('🗑️ AdminService: Deleting admin', adminId);
-    return this.http.delete<AdminResponse>(`${this.BASE_URL}/DeleteAdmin/${adminId}`);
+    return this.http.delete<AdminResponse>(`${this.BASE_URL}/${adminId}`);
   }
 }

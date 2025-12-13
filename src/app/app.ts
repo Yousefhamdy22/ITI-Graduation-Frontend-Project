@@ -14,17 +14,14 @@
 
 import {Component} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
-import {RoleHeaderComponent} from './core/header/role-header.component';
-import {FooterComponent} from './core/footer/footer.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './auth/interceptor';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RoleHeaderComponent, FooterComponent],
-  templateUrl: './app.html'
-  ,
+  imports: [RouterOutlet],
+  templateUrl: './app.html',
   providers: [
     {
       provide: HTTP_INTERCEPTORS,

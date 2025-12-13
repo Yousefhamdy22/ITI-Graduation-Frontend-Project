@@ -1,37 +1,30 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AdminService } from '../../entities/admin/admin.service';
-import { Admin, CreateAdminRequest, AdminResponse } from '../../entities/admin/admin.model';
+import { Admin, AdminResponse } from '../../entities/admin/admin.model';
 import { ToastService } from '../../shared/toast.service';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-manage',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule],
   templateUrl: './admin-manage.component.html',
   styleUrls: ['./admin-manage.component.css']
 })
 export class AdminManageComponent implements OnInit, OnDestroy {
   admins: Admin[] = [];
   isLoading = false;
-  showForm = false;
-  editingAdminId: string | null = null;
-  form!: FormGroup;
 
   private destroy$ = new Subject<void>();
 
   constructor(
     private adminService: AdminService = inject(AdminService),
     private toast: ToastService = inject(ToastService),
-    private router: Router = inject(Router),
-    private fb: FormBuilder = inject(FormBuilder)
-  ) {
-    this.createForm();
-  }
+    private router: Router = inject(Router)
+  ) {}
 
   ngOnInit(): void {
     this.loadAdmins();
@@ -40,15 +33,6 @@ export class AdminManageComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-  }
-
-  createForm(): void {
-    this.form = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      firstName: ['', [Validators.required]],
-      lastName: ['', [Validators.required]]
-    });
   }
 
   loadAdmins(): void {
@@ -63,44 +47,14 @@ export class AdminManageComponent implements OnInit, OnDestroy {
         },
         error: (error: any) => {
           console.error('❌ Error loading admins:', error);
-          this.toast.show('خطأ في تحميل الـ admins', 'error');
-          this.isLoading = false;
-        }
-      });
-  }
-
-  toggleForm(): void {
-    this.showForm = !this.showForm;
-    this.editingAdminId = null;
-    this.form.reset();
-  }
-
-  submitForm(): void {
-    if (this.form.invalid) {
-      this.toast.show('يرجى ملء جميع الحقول بشكل صحيح', 'error');
-      return;
-    }
-
-    const data: CreateAdminRequest = this.form.value;
-    this.isLoading = true;
-
-    this.adminService.createAdmin(data)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response: AdminResponse) => {
-          if (response.isSuccess) {
-            this.toast.show('تم إضافة الـ Admin بنجاح', 'success');
-            this.form.reset();
-            this.showForm = false;
-            this.loadAdmins();
+          
+          if (error.status === 401) {
+            this.toast.show('انتهت صلاحية الجلسة. يرجى تسجيل الدخول مرة أخرى', 'error');
+            setTimeout(() => this.router.navigate(['/admin/login']), 2000);
           } else {
-            this.toast.show(response.message || 'حدث خطأ', 'error');
+            this.toast.show('خطأ في تحميل الـ admins', 'error');
           }
-          this.isLoading = false;
-        },
-        error: (error: any) => {
-          console.error('❌ Error creating admin:', error);
-          this.toast.show(error?.error?.message || 'خطأ في إنشاء الـ Admin', 'error');
+          
           this.isLoading = false;
         }
       });
@@ -136,31 +90,5 @@ export class AdminManageComponent implements OnInit, OnDestroy {
 
   goBack(): void {
     this.router.navigate(['/admin/dashboard']);
-  }
-
-  get emailError(): string {
-    const control = this.form.get('email');
-    if (control?.hasError('required')) return 'البريد الإلكتروني مطلوب';
-    if (control?.hasError('email')) return 'البريد الإلكتروني غير صحيح';
-    return '';
-  }
-
-  get passwordError(): string {
-    const control = this.form.get('password');
-    if (control?.hasError('required')) return 'كلمة المرور مطلوبة';
-    if (control?.hasError('minlength')) return 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
-    return '';
-  }
-
-  get firstNameError(): string {
-    const control = this.form.get('firstName');
-    if (control?.hasError('required')) return 'الاسم الأول مطلوب';
-    return '';
-  }
-
-  get lastNameError(): string {
-    const control = this.form.get('lastName');
-    if (control?.hasError('required')) return 'الاسم الأخير مطلوب';
-    return '';
   }
 }

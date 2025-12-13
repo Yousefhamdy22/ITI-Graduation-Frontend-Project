@@ -1,14 +1,15 @@
-<div class="fixed top-0 left-0 right-0 z-50">
-  <ng-container *ngIf="user$ | async as user; else guestHeader">
-    <app-admin-header *ngIf="user.role === 'admin'" [user]="user"></app-admin-header>
-    <app-instructor-header *ngIf="user.role === 'instructor'" [user]="user"></app-instructor-header>
-    <app-student-header *ngIf="user.role === 'student'" [user]="user"></app-student-header>
-  </ng-container>
-
-  <!-- Guest Header (when not logged in) -->
-  <ng-template #guestHeader>
-    <app-public-header></app-public-header>
-  </ng-template>
-
-  <app-toast-container></app-toast-container>
+<div class="fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
+  <!-- Admin Header -->
+  <app-admin-header *ngIf="snapshotUser?.role === 'admin'" [user]="snapshotUser"></app-admin-header>
+  
+  <!-- Instructor Header -->
+  <app-instructor-header *ngIf="snapshotUser?.role === 'instructor'" [user]="snapshotUser"></app-instructor-header>
+  
+  <!-- Student Header -->
+  <app-student-header *ngIf="snapshotUser?.role === 'student'" [user]="snapshotUser"></app-student-header>
+  
+  <!-- Guest/Public Header (when not logged in) -->
+  <app-public-header *ngIf="!snapshotUser"></app-public-header>
 </div>
+
+<app-toast-container></app-toast-container>

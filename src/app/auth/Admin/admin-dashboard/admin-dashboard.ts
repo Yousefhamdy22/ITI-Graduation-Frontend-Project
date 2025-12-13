@@ -30,9 +30,7 @@ import { Exam } from '../../../entities/exams/exam.model';
 import { Instructor } from '../../../entities/instructors/instructor.model';
 
 import {RoleHeaderComponent} from '../../../core/header/role-header.component';
-
 import {FooterComponent} from '../../../core/footer/footer.component';
-
 import {ExamFormModalComponent} from '../../../shared/exam-form-modal/exam-form-modal.component';
 
 @Component({

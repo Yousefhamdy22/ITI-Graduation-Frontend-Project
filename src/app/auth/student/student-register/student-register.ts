@@ -4,13 +4,15 @@ import { AuthService, Role } from '../../auth.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ToastService } from '../../../shared/toast.service';
+import { RoleHeaderComponent } from '../../../core/header/role-header.component';
 
 @Component({
   selector: 'app-student-register',
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    CommonModule
+    CommonModule,
+    RoleHeaderComponent
   ],
   templateUrl: './student-register.html',
   styleUrl: './student-register.scss',
@@ -76,14 +78,42 @@ export class StudentRegister {
         }
       },
       error: (err) => {
-        const errorMsg = err.error?.message || err.error?.errors?.[0] || 'خطأ في الاتصال';
-        this.toast.show(errorMsg, 'error');
         console.error('❌ Registration failed with error:', err);
+        
+        let errorMsg = 'خطأ في الاتصال';
+        
+        // Handle different error formats from backend
+        if (err.error) {
+          if (Array.isArray(err.error)) {
+            // Array of errors: ['An account with this email already exists.']
+            errorMsg = err.error[0] || 'حدث خطأ في التسجيل';
+          } else if (err.error.message) {
+            // Object with message property
+            errorMsg = err.error.message;
+          } else if (err.error.errors && Array.isArray(err.error.errors)) {
+            // Object with errors array
+            errorMsg = err.error.errors[0] || 'حدث خطأ في التسجيل';
+          } else if (typeof err.error === 'string') {
+            // Direct string error
+            errorMsg = err.error;
+          }
+        }
+        
+        // Translate common errors to Arabic
+        if (errorMsg.toLowerCase().includes('email already exists')) {
+          errorMsg = 'هذا البريد الإلكتروني مسجل مسبقاً. يرجى استخدام بريد آخر أو تسجيل الدخول.';
+        } else if (errorMsg.toLowerCase().includes('invalid email')) {
+          errorMsg = 'البريد الإلكتروني غير صحيح';
+        } else if (errorMsg.toLowerCase().includes('password')) {
+          errorMsg = 'كلمة المرور ضعيفة أو غير مطابقة';
+        }
+        
+        this.toast.show(errorMsg, 'error');
+        
         console.error('❌ Error details:', {
           status: err.status,
           statusText: err.statusText,
-          message: err.error?.message,
-          errors: err.error?.errors
+          errorBody: err.error
         });
       }
     });

@@ -51,7 +51,7 @@ export class ExamFormModalComponent implements OnInit {
     // تحميل الأسئلة
     this.questionService.getQuestions().subscribe({
       next: (response: any) => {
-        this.questions = response.value || [];
+        this.questions = response?.value || response || [];
       },
       error: () => this.toast.show('خطأ في تحميل الأسئلة', 'error')
     });
@@ -86,16 +86,19 @@ export class ExamFormModalComponent implements OnInit {
       title: this.title,
       description: this.description,
       courseId: this.courseId,
-      duration: this.duration,
-      passingScore: this.passingScore,
+      durationMinutes: this.duration,
+      startDate: new Date().toISOString(),
+      endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
       questions: this.selectedQuestionIds.map(id => {
         const q = this.questions.find(q => q.id === id);
         return {
-          ...q,
-          points: this.questionPoints[id] || 1
+          id: q?.id,
+          text: q?.text,
+          points: this.questionPoints[id] || q?.points || 1,
+          answerOptions: q?.answerOptions || []
         };
       })
-    };
+    } as Partial<Exam>;
 
     this.examService.createExam(exam).subscribe({
       next: (result: Exam) => {

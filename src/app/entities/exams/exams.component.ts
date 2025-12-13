@@ -115,7 +115,8 @@ export class ExamsComponent implements OnInit {
   }
 
   createNewExam(): void {
-    this.router.navigate(['/exams/form']);
+    // Navigate to question selection page
+    this.router.navigate(['/questions']);
   }
 }
 

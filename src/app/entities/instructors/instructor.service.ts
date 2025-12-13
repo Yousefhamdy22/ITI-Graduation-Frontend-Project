@@ -3,11 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Instructor, CreateInstructor } from './instructor.model';
 
+import { environment } from '../../../environment/environment';
+
 @Injectable({ providedIn: 'root' })
 export class InstructorService {
-  private BASE_URL = 'http://localhost:5180/api/Instructor';
+  private BASE_URL = `${environment.apiUrl}/api/Instructor`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   /**
    * Create a new instructor

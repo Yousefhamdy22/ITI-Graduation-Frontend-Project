@@ -36,12 +36,12 @@ export class ExamPlayerComponent implements OnInit, OnDestroy {
     private auth: AuthService,
     private courseService: CourseService,
     private toast: ToastService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.examId = this.route.snapshot.paramMap.get('id') || '';
     if (!this.examId) {
-      this.toast.show('لم يتم العثور على الاختبار', 'error');
+      this.toast.show('Exam not found', 'error');
       this.router.navigate(['/exams']);
       return;
     }
@@ -50,24 +50,24 @@ export class ExamPlayerComponent implements OnInit, OnDestroy {
       next: (exam) => {
         if (exam) {
           this.exam = exam;
-          this.timeRemaining = exam.durationMinutes * 60; // تحويل الدقائق إلى ثواني
+          this.timeRemaining = exam.durationMinutes * 60; // Convert minutes to seconds
           this.startTimer();
           this.modelAnswers = {};
-          
+
           // التحقق إذا كان المستخدم هو مدرب الكورس
           const user = this.auth.currentUser;
           if (user && user.role === 'instructor') {
             this.isInstructorOfCourse = true; // موك مؤقت
           }
         } else {
-          this.toast.show('لم يتم العثور على الاختبار', 'error');
+          this.toast.show('Exam not found', 'error');
           this.router.navigate(['/exams']);
         }
         this.loading = false;
       },
       error: (err) => {
         console.error('خطأ:', err);
-        this.toast.show('خطأ في تحميل الاختبار', 'error');
+        this.toast.show('Error loading exam', 'error');
         this.loading = false;
       }
     });
@@ -108,9 +108,9 @@ export class ExamPlayerComponent implements OnInit, OnDestroy {
 
   submitExam(): void {
     if (!this.exam) return;
-    
+
     clearInterval(this.timerInterval);
-    
+
     // حساب النتيجة
     let correctCount = 0;
     this.exam.questions.forEach((q, i) => {
@@ -119,18 +119,18 @@ export class ExamPlayerComponent implements OnInit, OnDestroy {
         correctCount++;
       }
     });
-    
+
     this.score = Math.round((correctCount / this.exam.questions.length) * 100);
     this.submitted = true;
-    
-    this.toast.show(`تم إرسال الاختبار - النتيجة: ${this.score}%`, 'success');
+
+    this.toast.show(`Exam Submitted - Score: ${this.score}%`, 'success');
   }
 
   saveModelAnswers(): void {
     if (!this.exam) return;
     // Model answers feature disabled - not in backend
     this.editingModel = false;
-    this.toast.show('تم حفظ الإجابات النموذجية', 'success');
+    this.toast.show('Model answers saved', 'success');
   }
 
   toggleEditModel(): void {
@@ -144,7 +144,7 @@ export class ExamPlayerComponent implements OnInit, OnDestroy {
     const hours = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
-    
+
     if (hours > 0) {
       return `${hours}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     }

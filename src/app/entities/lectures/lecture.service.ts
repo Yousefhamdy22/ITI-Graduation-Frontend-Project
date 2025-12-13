@@ -3,13 +3,15 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Lecture, CreateLecture } from './lecture.model';
 
+import { environment } from '../../../environment/environment';
+
 /**
  * LectureService - handles Lecture API operations
  * Course contains Lectures
  */
 @Injectable({ providedIn: 'root' })
 export class LectureService {
-  private BASE_URL = 'http://localhost:5180/api/Lectures';
+  private BASE_URL = `${environment.apiUrl}/api/Lectures`;
 
   private lecturesSubject = new BehaviorSubject<Lecture[]>([]);
   lectures$ = this.lecturesSubject.asObservable();

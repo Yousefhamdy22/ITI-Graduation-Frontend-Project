@@ -45,8 +45,8 @@ export class ExamsComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        console.error('خطأ في تحميل الاختبارات:', err);
-        this.toast.show('خطأ في تحميل الاختبارات', 'error');
+        console.error('Error loading exams:', err);
+        this.toast.show('Error loading exams', 'error');
         this.loading = false;
       }
     });
@@ -58,7 +58,7 @@ export class ExamsComponent implements OnInit {
         this.courses = courses || [];
       },
       error: (err) => {
-        console.error('خطأ في تحميل الكورسات:', err);
+        console.error('Error loading courses:', err);
       }
     });
   }
@@ -95,10 +95,10 @@ export class ExamsComponent implements OnInit {
   }
 
   onDeleteExam(examId: string): void {
-    if (confirm('هل أنت متأكد من حذف هذا الاختبار؟')) {
+    if (confirm('Are you sure you want to delete this exam?')) {
       this.examService.deleteExam(examId).subscribe({
         next: () => {
-          this.toast.show('تم حذف الاختبار بنجاح', 'success');
+          this.toast.show('Exam deleted successfully', 'success');
           // No need to manually filter if we subscribe to exams$ in the template or re-load,
           // but since we are using local arrays 'exams' and 'filteredExams', let's just reload or filter.
           // The service emits new values to exams$, but we need to verify if we are subscribed to it.
@@ -107,8 +107,8 @@ export class ExamsComponent implements OnInit {
           this.loadExams();
         },
         error: (err) => {
-          console.error('خطأ في الحذف:', err);
-          this.toast.show('فشل حذف الاختبار', 'error');
+          console.error('Delete error:', err);
+          this.toast.show('Failed to delete exam', 'error');
         }
       });
     }

@@ -20,7 +20,7 @@ export class ExamListComponent {
   }
 
   onDelete(examId: string) {
-    if (confirm('هل أنت متأكد من حذف الاختبار؟')) {
+    if (confirm('Are you sure you want to delete this exam?')) {
       this.deleteExam.emit(examId);
     }
   }

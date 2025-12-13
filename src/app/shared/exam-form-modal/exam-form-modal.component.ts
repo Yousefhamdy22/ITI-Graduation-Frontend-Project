@@ -37,7 +37,7 @@ export class ExamFormModalComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // تحميل الكورسات
+    // Load courses
     this.courseService.getCourses().subscribe({
       next: (list: any) => {
         this.courses = list || [];
@@ -45,15 +45,15 @@ export class ExamFormModalComponent implements OnInit {
           this.courseId = this.courses[0].id;
         }
       },
-      error: () => this.toast.show('خطأ في تحميل الكورسات', 'error')
+      error: () => this.toast.show('Error loading courses', 'error')
     });
 
-    // تحميل الأسئلة
+    // Load questions
     this.questionService.getQuestions().subscribe({
       next: (response: any) => {
         this.questions = response.value || [];
       },
-      error: () => this.toast.show('خطأ في تحميل الأسئلة', 'error')
+      error: () => this.toast.show('Error loading questions', 'error')
     });
   }
 
@@ -78,7 +78,7 @@ export class ExamFormModalComponent implements OnInit {
 
   submit(): void {
     if (!this.title || !this.courseId || this.selectedQuestionIds.length === 0) {
-      this.toast.show('الرجاء ملء البيانات المطلوبة واختيار أسئلة', 'warning');
+      this.toast.show('Please fill in required fields and select questions', 'warning');
       return;
     }
 
@@ -86,7 +86,7 @@ export class ExamFormModalComponent implements OnInit {
       title: this.title,
       description: this.description,
       courseId: this.courseId,
-      duration: this.duration,
+      durationMinutes: this.duration,
       passingScore: this.passingScore,
       questions: this.selectedQuestionIds.map(id => {
         const q = this.questions.find(q => q.id === id);
@@ -99,11 +99,11 @@ export class ExamFormModalComponent implements OnInit {
 
     this.examService.createExam(exam).subscribe({
       next: (result: Exam) => {
-        this.toast.show('تم إنشاء الاختبار بنجاح', 'success');
+        this.toast.show('Exam created successfully', 'success');
         this.success.emit(result);
         this.closeModal();
       },
-      error: () => this.toast.show('خطأ في إنشاء الاختبار', 'error')
+      error: () => this.toast.show('Error creating exam', 'error')
     });
   }
 

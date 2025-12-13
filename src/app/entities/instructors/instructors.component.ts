@@ -20,7 +20,7 @@ export class InstructorsComponent implements OnInit {
 
   query = { search: '' };
 
-  constructor(private instructorService: InstructorService, private router: Router) {}
+  constructor(private instructorService: InstructorService, private router: Router) { }
 
   ngOnInit(): void {
     this.loadInstructors();
@@ -30,13 +30,13 @@ export class InstructorsComponent implements OnInit {
     this.loading = true;
     this.instructorService.getInstructors().subscribe({
       next: (instructors) => {
-        console.log('✅ المدربين وصلوا:', instructors);
+        console.log('✅ Instructors loaded:', instructors);
         this.instructors = instructors;
         this.filteredInstructors = instructors;
         this.loading = false;
       },
       error: (err) => {
-        console.error('❌ خطأ:', err);
+        console.error('❌ Error:', err);
         this.loading = false;
       }
     });

@@ -1,4 +1,4 @@
-import {Routes} from '@angular/router';
+import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   // Default -> login
@@ -27,7 +27,7 @@ export const routes: Routes = [
         path: 'dashboard',
         loadComponent: () =>
           import('./auth/Admin/admin-dashboard/admin-dashboard').then(m => m.AdminDashboard),
-        data: {role: 'admin'},
+        data: { role: 'admin' },
         canActivate: [
           () => import('./auth/auth.guard').then(m => m.AuthGuard as any),
           () => import('./auth/role.guard').then(m => m.RoleGuard as any)
@@ -38,7 +38,7 @@ export const routes: Routes = [
         path: 'manage',
         loadComponent: () =>
           import('./auth/Admin/admin-manage.component').then(m => m.AdminManageComponent),
-        data: {role: 'admin'},
+        data: { role: 'admin' },
         canActivate: [
           () => import('./auth/auth.guard').then(m => m.AuthGuard as any),
           () => import('./auth/role.guard').then(m => m.RoleGuard as any)
@@ -102,7 +102,7 @@ export const routes: Routes = [
   // Students (Protected: Auth + Admin Role)
   {
     path: 'students',
-    data: {role: 'admin'},
+    data: { role: 'admin' },
     canActivate: [
       () => import('./auth/auth.guard').then(m => m.AuthGuard as any),
       () => import('./auth/role.guard').then(m => m.RoleGuard as any)
@@ -261,6 +261,10 @@ export const routes: Routes = [
   {
     path: 'login',
     loadComponent: () => import('./auth/student/student-login/student-login').then(m => m.StudentLogin),
+  },
+  {
+    path: 'contact',
+    loadComponent: () => import('./pages/contact-us/contact-us').then(m => m.ContactUs),
   },
   {
     path: 'student-login',

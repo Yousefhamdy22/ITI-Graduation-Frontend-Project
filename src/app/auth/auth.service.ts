@@ -36,12 +36,14 @@ export interface RegisterResponse {
   refreshToken?: string;
 }
 
+import { environment } from '../../environment/environment';
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http: HttpClient = inject(HttpClient);
   private userSubject = new BehaviorSubject<User | null>(null);
   user$ = this.userSubject.asObservable();
-  private BASE_URL = 'http://localhost:5180/api';
+  private BASE_URL = `${environment.apiUrl}/api`;
 
   constructor() {
     // Attempt to restore session on init
@@ -112,25 +114,24 @@ export class AuthService {
       .pipe(tap(res => this.handleAuthResponse(res)));
   }
 
-  // Helper for components not yet fully integrated or for dev/testing
-  loginAs(role: Role, name: string, id: string = 'mock-id'): User {
+  // Helper for Guest login
+  loginAs(role: Role, name: string, id: string = 'guest-id'): User {
     const user: User = {
       id: id,
-      email: `${name.replace(/\s/g, '').toLowerCase()}@example.com`,
+      email: 'guest@example.com',
       name: name,
-      firstName: name.split(' ')[0] || name,
-      lastName: name.split(' ')[1] || '',
+      firstName: name,
+      lastName: '',
       role: role
     };
-    // For mock login, we don't have a token, but we set user state
     this.userSubject.next(user);
     if (this.isBrowser()) {
       localStorage.setItem('user', JSON.stringify(user));
-      // Optional: set a mock token if needed by guards
-      localStorage.setItem('token', 'mock-token-for-' + role);
+      localStorage.setItem('token', 'guest-token');
     }
     return user;
   }
+  // helper removed
 
   logout() {
     if (this.isBrowser()) {

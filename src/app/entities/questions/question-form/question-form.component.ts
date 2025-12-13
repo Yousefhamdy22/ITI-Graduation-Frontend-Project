@@ -55,7 +55,7 @@ export class QuestionFormComponent implements OnInit {
           const questionList = response.value || [];
           const q = questionList.find(question => question.id === this.id);
           if (!q) {
-            this.toast.show('لم يتم العثور على السؤال.', 'error');
+            this.toast.show('Question not found.', 'error');
             return;
           }
 
@@ -76,18 +76,18 @@ export class QuestionFormComponent implements OnInit {
           this.courseId = (qp['courseId'] as string) || '';
         },
         error: (err: any) => {
-          this.toast.show('فشل جلب تفاصيل السؤال.', 'error');
+          this.toast.show('Failed to fetch question details.', 'error');
           console.error('Error fetching question:', err);
         }
       });
     }
   }
 
-  // 👇 تحديث دالة إضافة الخيار لتناسب النموذج الجديد
+  // 👇 Update add option function
   addOption() { this.options.push({ text: '', isCorrect: false }); }
   removeOption(i: number) { this.options.splice(i, 1); }
 
-  // 👇 دالة لتحديد الخيار الصحيح الوحيد (نحتاج إلى تعديل الـ HTML ليتوافق)
+  // 👇 Function to select single correct option
   selectCorrectOption(i: number) {
     this.options.forEach((opt, index) => {
       opt.isCorrect = (index === i);
@@ -95,28 +95,28 @@ export class QuestionFormComponent implements OnInit {
   }
 
   save() {
-    if (!this.text.trim()) { this.toast.show('أدخل نص السؤال', 'warning'); return; }
-    if (!this.courseId) { this.toast.show('اختر الكورس التابع له السؤال', 'warning'); return; }
+    if (!this.text.trim()) { this.toast.show('Enter question text', 'warning'); return; }
+    if (!this.courseId) { this.toast.show('Select a course for the question', 'warning'); return; }
     const instructor = this.auth.currentUser;
-    if (!instructor) { this.toast.show('غير مسموح', 'error'); return; }
+    if (!instructor) { this.toast.show('Not allowed', 'error'); return; }
 
-    // 💡 إنشاء AnswerOptions
+    // 💡 Create AnswerOptions
     const answerOptions: AnswerOption[] = this.options
-      // 1. فلترة الخيارات الفارغة
+      // 1. Filter empty options
       .filter(opt => opt.text.trim())
-      // 2. تحويلها للنموذج المطلوب من الـ API
+      // 2. Map to API model
       .map(opt => ({
         text: opt.text,
         isCorrect: opt.isCorrect
       }));
 
     if (answerOptions.length === 0) {
-      this.toast.show('يجب إضافة خيار واحد صحيح على الأقل.', 'warning');
+      this.toast.show('Must add at least one correct option.', 'warning');
       return;
     }
 
     if (!answerOptions.some(opt => opt.isCorrect)) {
-      this.toast.show('يجب تحديد الإجابة الصحيحة.', 'warning');
+      this.toast.show('Must select a correct answer.', 'warning');
       return;
     }
 
@@ -133,22 +133,22 @@ export class QuestionFormComponent implements OnInit {
     if (this.id) {
       const updatePayload: Question = { id: this.id, ...payload } as Question;
 
-      // 💡 تحديث طريقة الاتصال بالتحديث
+      // 💡 Update logic
       this.qs.updateQuestion(updatePayload).subscribe({
         next: (response: ServerResponse<Question>) => {
           if (response.isSuccess) {
-            this.toast.show('تم تحديث السؤال بنجاح', 'success');
+            this.toast.show('Question updated successfully', 'success');
           } else {
-            const errorMsg = response.errors && response.errors.length > 0 
-              ? response.errors[0] 
-              : response.message || response.successMessage || 'خطأ غير معروف';
-            this.toast.show('فشل التحديث: ' + errorMsg, 'error');
+            const errorMsg = response.errors && response.errors.length > 0
+              ? response.errors[0]
+              : response.message || response.successMessage || 'Unknown error';
+            this.toast.show('Update failed: ' + errorMsg, 'error');
           }
         },
-        error: () => this.toast.show('خطأ في الاتصال بالخادم أثناء التحديث.', 'error')
+        error: () => this.toast.show('Server connection error during update.', 'error')
       });
     } else {
-      // 💡 تحديث طريقة الاتصال بالإنشاء
+      // 💡 Create logic
       console.log('🔵 Creating new question:', payload);
       this.qs.createQuestion(payload).subscribe({
         next: (createdQuestion: Question) => {
@@ -156,20 +156,20 @@ export class QuestionFormComponent implements OnInit {
           console.log('✅ Question CourseId:', createdQuestion.courseId);
           if (createdQuestion && createdQuestion.id) {
             console.log('✅ Question created successfully with ID:', createdQuestion.id);
-            this.toast.show('تم إنشاء السؤال بنجاح في الكورس - ID: ' + createdQuestion.id, 'success');
+            this.toast.show('Question created successfully within course - ID: ' + createdQuestion.id, 'success');
             // Navigate after successful creation
             const qp = this.route.snapshot.queryParams;
             this.router.navigate(['/questions'], { queryParams: qp });
           } else {
             console.warn('⚠️ Question created but no ID returned:', createdQuestion);
-            this.toast.show('تم الإنشاء لكن لم يتم استلام معرف السؤال', 'warning');
+            this.toast.show('Created but question ID not received', 'warning');
             const qp = this.route.snapshot.queryParams;
             this.router.navigate(['/questions'], { queryParams: qp });
           }
         },
         error: (err) => {
           console.error('❌ Question creation error:', err);
-          this.toast.show('خطأ في الاتصال بالخادم أثناء الإنشاء.', 'error');
+          this.toast.show('Server connection error during creation.', 'error');
         }
       });
       return; // Exit early to prevent double navigation

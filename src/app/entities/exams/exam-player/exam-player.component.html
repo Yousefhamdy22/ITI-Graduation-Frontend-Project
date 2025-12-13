@@ -1,15 +1,13 @@
-<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100" dir="rtl">
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100" dir="ltr">
   <!-- Header with Timer -->
   <div class="sticky top-0 z-10 bg-white border-b-4 border-blue-600 p-4 shadow-md">
     <div class="max-w-5xl mx-auto flex justify-between items-center">
-      <button 
-        routerLink="/exams" 
-        class="text-blue-600 hover:text-blue-800 font-semibold text-lg">
-        ← العودة
+      <button routerLink="/exams" class="text-blue-600 hover:text-blue-800 font-semibold text-lg">
+        ← Back
       </button>
       <h1 class="text-3xl font-bold text-gray-800 flex-1 text-center">{{ exam?.title }}</h1>
-      <div class="text-3xl font-bold px-4 py-2 rounded-lg" 
-           [ngClass]="timeRemaining <= 300 ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600'">
+      <div class="text-3xl font-bold px-4 py-2 rounded-lg"
+        [ngClass]="timeRemaining <= 300 ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600'">
         ⏱ {{ formatTime(timeRemaining) }}
       </div>
     </div>
@@ -19,7 +17,7 @@
   <div *ngIf="loading" class="flex items-center justify-center min-h-[calc(100vh-100px)]">
     <div class="text-center bg-white p-8 rounded-xl shadow-lg">
       <div class="animate-spin w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full mx-auto mb-4"></div>
-      <p class="text-gray-600 text-lg">جاري تحميل الاختبار...</p>
+      <p class="text-gray-600 text-lg">Loading Exam...</p>
     </div>
   </div>
 
@@ -30,29 +28,27 @@
       <div class="mb-8">
         <div class="flex justify-between items-center mb-4">
           <span class="text-lg font-semibold text-gray-700">
-            السؤال <span class="text-blue-600">{{ currentQuestionIndex + 1 }}</span> من <span class="text-blue-600">{{ exam.questions.length }}</span>
+            Question <span class="text-blue-600">{{ currentQuestionIndex + 1 }}</span> of <span class="text-blue-600">{{
+              exam.questions.length }}</span>
           </span>
           <div class="text-gray-600 font-medium">
-            المحاولات: <span class="text-blue-600">{{ Object.keys(selectedAnswers).length }}</span>
+            Attempts: <span class="text-blue-600">{{ Object.keys(selectedAnswers).length }}</span>
           </div>
         </div>
-        
+
         <!-- Progress Bar -->
         <div class="w-full bg-gray-300 rounded-full h-3">
-          <div class="bg-gradient-to-r from-blue-500 to-indigo-600 h-3 rounded-full transition-all duration-300" 
-               [style.width.%]="((currentQuestionIndex + 1) / exam.questions.length) * 100"></div>
+          <div class="bg-gradient-to-r from-blue-500 to-indigo-600 h-3 rounded-full transition-all duration-300"
+            [style.width.%]="((currentQuestionIndex + 1) / exam.questions.length) * 100"></div>
         </div>
       </div>
 
       <!-- Question Number Navigator -->
       <div class="mb-8 p-4 bg-gray-50 rounded-lg">
-        <p class="text-sm text-gray-600 mb-2 font-semibold">الأسئلة:</p>
+        <p class="text-sm text-gray-600 mb-2 font-semibold">Questions:</p>
         <div class="flex flex-wrap gap-2">
-          <button 
-            *ngFor="let i of getQuestionArray()"
-            (click)="currentQuestionIndex = i"
-            [class.bg-blue-600]="i === currentQuestionIndex"
-            [class.text-white]="i === currentQuestionIndex"
+          <button *ngFor="let i of getQuestionArray()" (click)="currentQuestionIndex = i"
+            [class.bg-blue-600]="i === currentQuestionIndex" [class.text-white]="i === currentQuestionIndex"
             [class.bg-green-400]="selectedAnswers[i] !== undefined && i !== currentQuestionIndex"
             [class.bg-gray-300]="selectedAnswers[i] === undefined && i !== currentQuestionIndex"
             class="w-10 h-10 rounded-lg font-bold transition hover:scale-110 cursor-pointer">
@@ -70,19 +66,19 @@
         <!-- Options -->
         <div class="space-y-3">
           <button *ngFor="let option of exam.questions[currentQuestionIndex].options; let i = index"
-                  (click)="selectAnswer(currentQuestionIndex, i)"
-                  [class.ring-2]="selectedAnswers[currentQuestionIndex] === i"
-                  [class.ring-blue-600]="selectedAnswers[currentQuestionIndex] === i"
-                  [class.bg-blue-50]="selectedAnswers[currentQuestionIndex] === i"
-                  [class.border-blue-500]="selectedAnswers[currentQuestionIndex] === i"
-                  class="w-full p-4 text-right border-2 border-gray-300 rounded-lg cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all transform hover:scale-102">
+            (click)="selectAnswer(currentQuestionIndex, i)" [class.ring-2]="selectedAnswers[currentQuestionIndex] === i"
+            [class.ring-blue-600]="selectedAnswers[currentQuestionIndex] === i"
+            [class.bg-blue-50]="selectedAnswers[currentQuestionIndex] === i"
+            [class.border-blue-500]="selectedAnswers[currentQuestionIndex] === i"
+            class="w-full p-4 text-right border-2 border-gray-300 rounded-lg cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all transform hover:scale-102">
             <div class="flex items-center gap-4">
               <div class="w-8 h-8 rounded-full border-2 border-gray-400 flex items-center justify-center flex-shrink-0"
-                   [class.border-blue-600]="selectedAnswers[currentQuestionIndex] === i"
-                   [class.bg-blue-600]="selectedAnswers[currentQuestionIndex] === i"
-                   [class.text-white]="selectedAnswers[currentQuestionIndex] === i">
+                [class.border-blue-600]="selectedAnswers[currentQuestionIndex] === i"
+                [class.bg-blue-600]="selectedAnswers[currentQuestionIndex] === i"
+                [class.text-white]="selectedAnswers[currentQuestionIndex] === i">
                 <span *ngIf="selectedAnswers[currentQuestionIndex] === i" class="font-bold">✓</span>
-                <span *ngIf="selectedAnswers[currentQuestionIndex] !== i" class="text-sm">{{ getLetterForIndex(i) }}</span>
+                <span *ngIf="selectedAnswers[currentQuestionIndex] !== i" class="text-sm">{{ getLetterForIndex(i)
+                  }}</span>
               </div>
               <span class="text-lg text-gray-800 font-medium">{{ option }}</span>
             </div>
@@ -92,84 +88,78 @@
 
       <!-- Navigation Buttons -->
       <div class="flex gap-4 justify-between">
-        <button 
-          (click)="prevQuestion()"
-          [disabled]="currentQuestionIndex === 0"
+        <button (click)="prevQuestion()" [disabled]="currentQuestionIndex === 0"
           class="flex-1 px-6 py-3 bg-gray-300 hover:bg-gray-400 disabled:bg-gray-200 disabled:opacity-50 text-gray-800 rounded-lg font-bold transition disabled:cursor-not-allowed">
-          ← السابق
+          ← Previous
         </button>
 
-        <button 
-          *ngIf="currentQuestionIndex < exam.questions.length - 1"
-          (click)="nextQuestion()"
+        <button *ngIf="currentQuestionIndex < exam.questions.length - 1" (click)="nextQuestion()"
           class="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold transition transform hover:scale-105">
-          التالي →
+          Next →
         </button>
 
-        <button 
-          *ngIf="currentQuestionIndex === exam.questions.length - 1"
-          (click)="submitExam()"
+        <button *ngIf="currentQuestionIndex === exam.questions.length - 1" (click)="submitExam()"
           class="flex-1 px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-bold transition transform hover:scale-105 text-lg">
-          ✓ إنهاء الاختبار
+          ✓ Finish Exam
         </button>
       </div>
 
       <!-- Warning -->
       <div class="mt-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded">
         <p class="text-yellow-800">
-          <strong>تنبيه:</strong> تأكد من اختيارك قبل الضغط على التالي أو الإنهاء
+          <strong>Warning:</strong> Make sure of your choice before clicking Next or Finish
         </p>
       </div>
     </div>
   </div>
 
   <!-- Results Screen -->
-  <div *ngIf="!loading && exam && submitted" class="max-w-3xl mx-auto p-6 min-h-[calc(100vh-150px)] flex items-center justify-center">
+  <div *ngIf="!loading && exam && submitted"
+    class="max-w-3xl mx-auto p-6 min-h-[calc(100vh-150px)] flex items-center justify-center">
     <div class="bg-white rounded-2xl shadow-2xl p-10 w-full text-center">
       <!-- Result Icon -->
-      <div class="inline-flex items-center justify-center w-32 h-32 rounded-full mb-8"
-           [class.bg-green-100]="isPassed()"
-           [class.bg-red-100]="!isPassed()">
+      <div class="inline-flex items-center justify-center w-32 h-32 rounded-full mb-8" [class.bg-green-100]="isPassed()"
+        [class.bg-red-100]="!isPassed()">
         <span class="text-7xl" [ngClass]="isPassed() ? '🎉' : '😔'"></span>
       </div>
 
       <!-- Result Message -->
       <h2 class="text-4xl font-bold mb-4" [ngClass]="isPassed() ? 'text-green-600' : 'text-red-600'">
-        {{ isPassed() ? 'مبروك! لقد نجحت' : 'للأسف، لم تنجح' }}
+        {{ isPassed() ? 'Congratulations! You Passed' : 'Sorry, You Failed' }}
       </h2>
 
       <p class="text-gray-600 text-lg mb-8">
-        {{ isPassed() ? 'أداء رائع! استمر في الاجتهاد' : 'حاول مرة أخرى وستتمكن من النجاح' }}
+        {{ isPassed() ? 'Great job! Keep it up' : 'Try again and you will succeed' }}
       </p>
 
       <!-- Score Display -->
       <div class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl p-8 mb-8">
-        <p class="text-lg mb-2">النتيجة النهائية</p>
+        <p class="text-lg mb-2">Final Result</p>
         <div class="text-6xl font-bold mb-3">{{ score }}%</div>
         <div class="flex justify-center gap-4 text-sm">
-          <span>الأسئلة الصحيحة: <strong>{{ (score / 100 * exam.questions.length | number:'1.0-0') }}</strong></span>
-          <span>إجمالي الأسئلة: <strong>{{ exam.questions.length }}</strong></span>
+          <span>Correct/Total: <strong>{{ (score / 100 * exam.questions.length | number:'1.0-0') }} / {{
+              exam.questions.length }}</strong></span>
         </div>
       </div>
 
       <!-- Info Card -->
       <div class="bg-gray-100 rounded-lg p-6 mb-8 space-y-2">
-        <p class="text-gray-700"><strong>درجة النجاح:</strong> {{ exam.passingScore }}%</p>
-        <p class="text-gray-700"><strong>مدة الاختبار:</strong> {{ exam.duration }} دقيقة</p>
-        <p class="text-gray-700"><strong>حالتك:</strong> <span [ngClass]="isPassed() ? 'text-green-600 font-bold' : 'text-red-600 font-bold'">{{ isPassed() ? 'ناجح ✓' : 'راسب ✗' }}</span></p>
+        <p class="text-gray-700"><strong>Passing Score:</strong> {{ exam.passingScore }}%</p>
+        <p class="text-gray-700"><strong>Duration:</strong> {{ exam.duration }} min</p>
+        <p class="text-gray-700"><strong>Status:</strong> <span
+            [ngClass]="isPassed() ? 'text-green-600 font-bold' : 'text-red-600 font-bold'">{{ isPassed() ? 'Passed ✓' :
+            'Failed ✗' }}</span></p>
       </div>
 
       <!-- Action Buttons -->
       <div class="space-y-3">
-        <button 
-          routerLink="/exams"
+        <button routerLink="/exams"
           class="w-full px-6 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold text-lg transition transform hover:scale-105">
-          ← العودة للاختبارات
+          ← Back to Exams
         </button>
-        <button 
-          routerLink="/"
+        <button routerLink="/"
           class="w-full px-6 py-4 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-lg font-bold text-lg transition transform hover:scale-105">
-          الصفحة الرئيسية
+          Home Page
         </button>
       </div>
     </div>

@@ -4,10 +4,12 @@ import { Observable } from 'rxjs';
 
 import { Enrollment, EnrollmentDetails } from './enrollment.model';
 
+import { environment } from '../../../environment/environment';
+
 @Injectable({ providedIn: 'root' })
 export class EnrollmentService {
     private http: HttpClient = inject(HttpClient);
-    private BASE_URL = 'http://localhost:5180/api/Enrollments';
+    private BASE_URL = `${environment.apiUrl}/api/Enrollments`;
 
     // Get all enrollments
     getEnrollments(): Observable<EnrollmentDetails[]> {

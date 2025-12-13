@@ -1,39 +1,32 @@
-<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6" dir="rtl">
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6" dir="ltr">
   <div class="max-w-7xl mx-auto">
     <!-- Header Section -->
     <div class="mb-10">
       <div class="flex items-center justify-between mb-6">
-        <h1 class="text-4xl font-bold text-gray-800">الاختبارات المتاحة</h1>
-        <button 
-          (click)="createNewExam()"
+        <h1 class="text-4xl font-bold text-gray-800">Available Exams</h1>
+        <button (click)="createNewExam()"
           class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-bold transition transform hover:scale-105">
-          ✚ إنشاء اختبار جديد
+          ✚ Create New Exam
         </button>
       </div>
-      <p class="text-gray-600 text-lg">اختبر معلوماتك وطور مهاراتك</p>
+      <p class="text-gray-600 text-lg">Test your knowledge and improve your skills</p>
     </div>
 
     <!-- Search & Filter Section -->
     <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label class="block text-gray-700 font-semibold mb-2">🔍 البحث عن اختبار</label>
-          <input 
-            type="text" 
-            [(ngModel)]="query.search" 
-            (input)="onSearch()"
-            placeholder="ابحث بالعنوان أو الوصف..."
-            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none transition"
-          />
+          <label class="block text-gray-700 font-semibold mb-2">🔍 Search Exams</label>
+          <input type="text" [(ngModel)]="query.search" (input)="onSearch()"
+            placeholder="Search by title or description..."
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none transition" />
         </div>
 
         <div>
-          <label class="block text-gray-700 font-semibold mb-2">📚 تصفية حسب الكورس</label>
-          <select 
-            [(ngModel)]="query.courseId" 
-            (change)="onCourseFilter(query.courseId)"
+          <label class="block text-gray-700 font-semibold mb-2">📚 Filter by Course</label>
+          <select [(ngModel)]="query.courseId" (change)="onCourseFilter(query.courseId)"
             class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none transition bg-white">
-            <option value="">-- جميع الكورسات --</option>
+            <option value="">-- All Courses --</option>
             <option *ngFor="let course of courses" [value]="course.id">{{ course.title }}</option>
           </select>
         </div>
@@ -42,7 +35,7 @@
 
     <!-- Results Info -->
     <div class="mb-6 text-gray-700 font-semibold">
-      <span *ngIf="!loading">عدد الاختبارات: <span class="text-blue-600">{{ filteredExams.length }}</span></span>
+      <span *ngIf="!loading">Exams Count: <span class="text-blue-600">{{ filteredExams.length }}</span></span>
     </div>
 
     <!-- Loading State -->
@@ -52,10 +45,7 @@
 
     <!-- Exams List -->
     <div *ngIf="!loading && filteredExams.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <app-exam-list 
-        [exams]="filteredExams"
-        (editExam)="onEditExam($event)"
-        (deleteExam)="onDeleteExam($event)">
+      <app-exam-list [exams]="filteredExams" (editExam)="onEditExam($event)" (deleteExam)="onDeleteExam($event)">
       </app-exam-list>
     </div>
 
@@ -64,12 +54,11 @@
       <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gray-100 mb-6">
         <span class="text-5xl">📝</span>
       </div>
-      <p class="text-2xl font-bold text-gray-800 mb-2">لا توجد اختبارات</p>
-      <p class="text-gray-600 mb-6">لم نجد اختبارات مطابقة لـ بحثك</p>
-      <button 
-        (click)="query = { search: '', courseId: '' }; onSearch()"
+      <p class="text-2xl font-bold text-gray-800 mb-2">No exams found</p>
+      <p class="text-gray-600 mb-6">We couldn't find any exams matching your search</p>
+      <button (click)="query = { search: '', courseId: '' }; onSearch()"
         class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition">
-        مسح التصفية
+        Clear Filter
       </button>
     </div>
   </div>

@@ -27,7 +27,7 @@ export class StudentLogin {
       next: (res) => {
         if (res.isSuccess) {
           this.toast.show('تم تسجيل الدخول بنجاح', 'success');
-          this.router.navigate(['/student']);
+          this.router.navigate(['/home']);
         } else {
           this.toast.show(res.message || 'فشل تسجيل الدخول', 'error');
         }
@@ -41,9 +41,8 @@ export class StudentLogin {
   }
 
   guest() {
-    // Direct mock login without API call - works offline
-    this.auth.loginAs('student', 'زائر', 'guest-001');
-    this.toast.show('مرحباً بك كزائر!', 'success');
-    this.router.navigate(['/student']);
+    this.auth.loginAs('student', 'Guest', 'guest-001');
+    this.toast.show('Welcome as Guest!', 'success');
+    this.router.navigate(['/home']);
   }
 }

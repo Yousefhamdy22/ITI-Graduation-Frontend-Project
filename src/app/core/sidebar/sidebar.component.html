@@ -1,33 +1,60 @@
-<aside class="w-64 bg-white border-l border-gray-100 shadow-xl min-h-screen p-5">
+<aside class="w-64 bg-white border-r border-gray-100 shadow-xl min-h-screen p-5">
   <div class="mb-8">
-    <h2 class="text-2xl font-extrabold text-indigo-700">منصة رسالة</h2>
+    <h2 class="text-2xl font-extrabold text-indigo-700">Future Tech</h2>
   </div>
 
   <nav class="space-y-1 text-gray-700">
-    <a routerLink="/home" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 transition-colors duration-200">
-      <span class="text-xl">🏡</span> الصفحة الرئيسية
-    </a>
-    <a routerLink="/dashboard" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-indigo-50 text-indigo-700 font-semibold transition-colors duration-200">
-      <span class="text-xl">📊</span> لوحة التحكم
-    </a>
-    <a routerLink="/students" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 transition-colors duration-200">
-      <span class="text-xl">🎓</span> قائمة الطلاب
-    </a>
-    <a routerLink="/instructors" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 transition-colors duration-200">
-      <span class="text-xl">👨‍🏫</span> إدارة المعلمين
-    </a>
-    <a routerLink="/courses" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 transition-colors duration-200">
-      <span class="text-xl">📚</span> إدارة الدورات
-    </a>
-    <a routerLink="/exams" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 transition-colors duration-200">
-      <span class="text-xl">📝</span> إدارة الاختبارات
-    </a>
-    <a routerLink="/questions" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 transition-colors duration-200">
-      <span class="text-xl">❓</span> قائمة الأسئلة
-    </a>
+    <!-- Admin Links -->
+    <ng-container *ngIf="isAdmin">
+      <a routerLink="/admin/dashboard"
+        class="flex items-center gap-3 px-4 py-3 rounded-xl bg-indigo-50 text-indigo-700 font-semibold transition-colors duration-200">
+        <span class="text-xl">📊</span> Dashboard
+      </a>
+      <a routerLink="/students"
+        class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 transition-colors duration-200">
+        <span class="text-xl">🎓</span> Students List
+      </a>
+      <a routerLink="/instructors"
+        class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 transition-colors duration-200">
+        <span class="text-xl">👨‍🏫</span> Instructors
+      </a>
+      <a routerLink="/courses"
+        class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 transition-colors duration-200">
+        <span class="text-xl">📚</span> Courses
+      </a>
+      <a routerLink="/exams"
+        class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 transition-colors duration-200">
+        <span class="text-xl">📝</span> Exams
+      </a>
+      <a routerLink="/questions"
+        class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 transition-colors duration-200">
+        <span class="text-xl">❓</span> Questions
+      </a>
+    </ng-container>
 
-    <button (click)="logout()" class="w-full text-right flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-50 text-red-600 transition-colors duration-200 cursor-pointer mt-4 bg-white border border-transparent hover:border-red-100">
-      <span class="text-xl">👋</span> تسجيل الخروج
+    <!-- Student Links -->
+    <ng-container *ngIf="isStudent">
+      <a routerLink="/student"
+        class="flex items-center gap-3 px-4 py-3 rounded-xl bg-indigo-50 text-indigo-700 font-semibold transition-colors duration-200">
+        <span class="text-xl">📊</span> My Dashboard
+      </a>
+      <a routerLink="/home"
+        class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 transition-colors duration-200">
+        <span class="text-xl">🏡</span> Home
+      </a>
+      <a routerLink="/courses"
+        class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 transition-colors duration-200">
+        <span class="text-xl">📚</span> All Courses
+      </a>
+      <a routerLink="/certificates"
+        class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 transition-colors duration-200">
+        <span class="text-xl">🏆</span> My Certificates
+      </a>
+    </ng-container>
+
+    <button (click)="logout()"
+      class="w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-50 text-red-600 transition-colors duration-200 cursor-pointer mt-4 bg-white border border-transparent hover:border-red-100">
+      <span class="text-xl">👋</span> Logout
     </button>
   </nav>
 </aside>

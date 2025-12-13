@@ -1,66 +1,109 @@
-<div dir="rtl" class="min-h-screen bg-gray-50 text-right font-sans flex flex-col">
+<div class="min-h-screen bg-gray-50 font-sans">
+  <!-- Header -->
   <app-role-header></app-role-header>
 
-  <div class="flex-1 pt-20">
-    <div class="app-container py-6">
-      <div class="grid md:grid-cols-3 gap-6">
-        <div class="md:col-span-2">
-          <app-home></app-home>
+  <div class="flex">
+    <div class="flex-1 p-4 sm:p-8">
+
+      <div
+        class="mb-8 pb-4 border-b border-gray-200 flex flex-col sm:flex-row items-start sm:items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-extrabold text-gray-900 flex items-center gap-2">
+            Instructor Dashboard ✨
+          </h1>
+          <p class="text-base text-gray-500 mt-1">Manage your courses and students</p>
         </div>
-
-        <aside class="bg-white p-4 rounded shadow">
-          <div class="flex items-center gap-3 mb-4">
-            <img *ngIf="user?.avatar" [src]="user.avatar" alt="avatar" class="w-16 h-16 rounded-full"/>
-            <div>
-              <div class="font-semibold text-lg">{{ user?.name }}</div>
-              <div class="text-sm text-gray-500">بصفتي مدرب</div>
-            </div>
-          </div>
-
-          <div *ngIf="!editing">
-            <div class="text-sm mb-2">البريد: <strong>{{ user?.email }}</strong></div>
-            <div class="text-sm mb-2">عدد الكورسات: {{ myCourses.length }}</div>
-            <div class="text-sm mb-4">طلاب إجمالي: {{ totalStudentsCount() }}</div>
-            <div class="flex gap-2 mb-3">
-              <button class="btn-primary" (click)="startEdit()">تعديل الملف</button>
-              <button class="px-3 py-1 bg-blue-600 text-white rounded text-sm" (click)="createNewExam()">إنشاء اختبار جديد</button>
-            </div>
-            <hr class="my-3"/>
-            <h4 class="font-semibold mb-2">كورساتي</h4>
-            <ul class="space-y-2 mb-3">
-              <li *ngFor="let c of myCourses" class="flex justify-between items-center">
-                <div class="text-sm">{{ c.title }}</div>
-                <a [routerLink]="['/courses', c.id]" class="px-2 py-1 border rounded">ادارة</a>
-              </li>
-            </ul>
-            <h4 class="font-semibold mb-2">الطلاب المسجلون مؤخراً</h4>
-            <div *ngFor="let c of myCourses" class="mb-3">
-              <div class="text-sm font-semibold">{{ c.title }}</div>
-              <div class="text-xs text-gray-500">{{ recentStudentsNames(c.id) }}</div>
-            </div>
-          </div>
-
-          <div *ngIf="editing">
-            <label class="block text-sm">نبذة</label>
-            <textarea [(ngModel)]="editBio" class="w-full border rounded px-2 py-1 mb-2"></textarea>
-            <label class="block text-sm">رابط الصورة</label>
-            <input [(ngModel)]="editAvatar" class="w-full border rounded px-2 py-1 mb-3"/>
-            <div class="flex gap-2">
-              <button class="px-3 py-1 bg-green-600 text-white rounded" (click)="saveProfile()">حفظ</button>
-              <button class="px-3 py-1 border rounded" (click)="cancelEdit()">إلغاء</button>
-            </div>
-          </div>
-        </aside>
       </div>
+
+      <div class="flex flex-col items-center mb-12">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-7xl">
+
+          <div
+            class="bg-white rounded-3xl shadow-xl p-6 flex items-center justify-between border-t-4 border-purple-600 transform hover:shadow-2xl transition-all duration-300">
+            <div>
+              <p class="text-sm text-gray-500 mb-2">My Courses</p>
+              <p class="text-4xl font-extrabold text-gray-900">{{ myCourses.length || 0 }}</p>
+              <p class="text-xs text-green-600 mt-2 font-medium bg-green-50 p-1 rounded-md inline-block">
+                Active Courses</p>
+            </div>
+            <div
+              class="w-16 h-16 rounded-full bg-purple-100 text-purple-600 grid place-items-center text-3xl shadow-inner">
+              <i class="fas fa-book-open"></i>
+            </div>
+          </div>
+
+          <div
+            class="bg-white rounded-3xl shadow-xl p-6 flex items-center justify-between border-t-4 border-[#0E4D67] transform hover:shadow-2xl transition-all duration-300">
+            <div>
+              <p class="text-sm text-gray-500 mb-2">Total Students</p>
+              <p class="text-4xl font-extrabold text-gray-900">{{ totalStudentsCount() || 0 }}</p>
+              <p class="text-xs text-[#0E4D67] mt-2 font-medium bg-[#0E4D67]/10 p-1 rounded-md inline-block">
+                Enrolled Students</p>
+            </div>
+            <div
+              class="w-16 h-16 rounded-full bg-[#0E4D67]/10 text-[#0E4D67] grid place-items-center text-3xl shadow-inner">
+              <i class="fas fa-user-graduate"></i>
+            </div>
+          </div>
+
+          <div
+            class="bg-white rounded-3xl shadow-xl p-6 flex items-center justify-between border-t-4 border-yellow-600 transform hover:shadow-2xl transition-all duration-300">
+            <div>
+              <p class="text-sm text-gray-500 mb-2">Total Exams</p>
+              <p class="text-4xl font-extrabold text-gray-900">0</p>
+              <p class="text-xs text-yellow-600 mt-2 font-medium bg-yellow-50 p-1 rounded-md inline-block">
+                Created Exams</p>
+            </div>
+            <div
+              class="w-16 h-16 rounded-full bg-yellow-100 text-yellow-600 grid place-items-center text-3xl shadow-inner">
+              <i class="fas fa-file-alt"></i>
+            </div>
+          </div>
+
+          <div
+            class="bg-white rounded-3xl shadow-xl p-6 flex items-center justify-between border-t-4 border-green-600 transform hover:shadow-2xl transition-all duration-300">
+            <div>
+              <p class="text-sm text-gray-500 mb-2">Avg. Completion</p>
+              <p class="text-4xl font-extrabold text-gray-900">85%</p>
+              <p class="text-xs text-green-600 mt-2 font-medium bg-green-50 p-1 rounded-md inline-block">
+                Course Progress</p>
+            </div>
+            <div
+              class="w-16 h-16 rounded-full bg-green-100 text-green-600 grid place-items-center text-3xl shadow-inner">
+              <i class="fas fa-chart-line"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Management Tools -->
+      <div class="flex justify-start gap-4 mb-12 max-w-7xl mx-auto flex-wrap">
+        <button routerLink="/courses"
+          class="px-6 py-3 bg-[#0E4D67] text-white font-medium rounded-xl hover:bg-[#0c3d52] transition-colors duration-200 shadow-lg shadow-[#0E4D67]/50 flex items-center gap-2">
+          <i class="pi pi-book"></i> My Courses
+        </button>
+
+        <button routerLink="/students"
+          class="px-6 py-3 bg-green-600 text-white font-medium rounded-xl hover:bg-green-700 transition-colors duration-200 shadow-lg shadow-green-500/50 flex items-center gap-2">
+          <i class="pi pi-users"></i> My Students
+        </button>
+
+        <button (click)="createNewExam()"
+          class="px-6 py-3 bg-purple-600 text-white font-medium rounded-xl hover:bg-purple-700 transition-colors duration-200 shadow-lg shadow-purple-500/50 flex items-center gap-2">
+          <i class="pi pi-file-edit"></i> Create Exam
+        </button>
+
+        <button routerLink="/profile"
+          class="px-6 py-3 bg-amber-600 text-white font-medium rounded-xl hover:bg-amber-700 transition-colors duration-200 shadow-lg shadow-amber-500/50 flex items-center gap-2">
+          <i class="pi pi-user"></i> My Profile
+        </button>
+      </div>
+
     </div>
   </div>
 
-  <app-footer></app-footer>
-
-  <app-exam-form-modal 
-    *ngIf="showExamModal"
-    (close)="closeExamModal()"
-    (success)="onExamFormSuccess()">
+  <!-- Exam Form Modal -->
+  <app-exam-form-modal *ngIf="showExamModal" (close)="closeExamModal()" (success)="onExamFormSuccess()">
   </app-exam-form-modal>
 </div>
-

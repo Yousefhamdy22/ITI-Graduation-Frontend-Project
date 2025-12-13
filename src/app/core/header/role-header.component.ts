@@ -10,11 +10,12 @@ import { AdminHeaderComponent } from './admin/admin-header.component';
 import { InstructorHeaderComponent } from './instructor/instructor-header.component';
 import { StudentHeaderComponent } from './student/student-header.component';
 import { PublicHeaderComponent } from './public-header.component';
+import { VisitorHeaderComponent } from './visitor/visitor-header.component';
 
 @Component({
   selector: 'app-role-header',
   standalone: true,
-  imports: [CommonModule, RouterModule, AdminHeaderComponent, InstructorHeaderComponent, StudentHeaderComponent, PublicHeaderComponent, ToastContainerComponent],
+  imports: [CommonModule, RouterModule, AdminHeaderComponent, InstructorHeaderComponent, StudentHeaderComponent, PublicHeaderComponent, VisitorHeaderComponent, ToastContainerComponent],
   templateUrl: './role-header.component.html',
   styleUrls: ['./role-header.component.css']
 })

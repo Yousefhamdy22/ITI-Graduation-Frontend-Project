@@ -25,14 +25,14 @@ export class CoursesComponent implements OnInit {
   enrolledIds = new Set<string>();
 
   categories = [
-    { key: '', label: 'كل الكورسات' },
-    { key: 'web', label: 'تطوير الويب' },
-    { key: 'ai', label: 'الذكاء الاصطناعي' },
+    { key: '', label: 'All Courses' },
+    { key: 'web', label: 'Web Development' },
+    { key: 'ai', label: 'Artificial Intelligence' },
     { key: 'devops', label: 'DevOps' },
-    { key: 'security', label: 'الأمن السيبراني' }
+    { key: 'security', label: 'Cyber Security' }
   ];
 
-  constructor(private courseService: CourseService, public auth: AuthService, private studentService: StudentService, private toast: ToastService) {}
+  constructor(private courseService: CourseService, public auth: AuthService, private studentService: StudentService, private toast: ToastService) { }
 
   ngOnInit() {
     this.loadCourses();
@@ -115,7 +115,7 @@ export class CoursesComponent implements OnInit {
   onSearch() {
     this.filterCourses();
   }
-  
+
   onCategory(cat: string) {
     this.query.category = cat;
     this.filterCourses();
@@ -127,16 +127,16 @@ export class CoursesComponent implements OnInit {
 
   toggleEnroll(courseId: string) {
     const user = this.auth.currentUser;
-    if (!user || user.role !== 'student') { this.toast.show('سجل دخول كطالب أولاً', 'warning'); return; }
+    if (!user || user.role !== 'student') { this.toast.show('Login as student first', 'warning'); return; }
     const enrolled = this.enrolledIds.has(courseId);
     if (enrolled) {
       this.studentService.unenrollStudentFromCourse(user.id, courseId);
       this.enrolledIds.delete(courseId);
-      this.toast.show('تم إلغاء التسجيل', 'info');
+      this.toast.show('Unenrolled successfully', 'info');
     } else {
       this.studentService.enrollStudentInCourse(user.id, courseId);
       this.enrolledIds.add(courseId);
-      this.toast.show('تم التسجيل في الكورس', 'success');
+      this.toast.show('Enrolled successfully', 'success');
     }
   }
 }

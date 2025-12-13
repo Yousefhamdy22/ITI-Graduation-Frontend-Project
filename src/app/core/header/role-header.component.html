@@ -1,11 +1,21 @@
 <div class="fixed top-0 left-0 right-0 z-50">
   <ng-container *ngIf="user$ | async as user; else guestHeader">
+    <!-- Admin Header -->
     <app-admin-header *ngIf="user.role === 'admin'" [user]="user"></app-admin-header>
+
+    <!-- Instructor Header -->
     <app-instructor-header *ngIf="user.role === 'instructor'" [user]="user"></app-instructor-header>
-    <app-student-header *ngIf="user.role === 'student'" [user]="user"></app-student-header>
+
+    <!-- Student Header (only for registered students) -->
+    <app-student-header *ngIf="user.role === 'student' && user.name !== 'زائر' && user.name !== 'Visitor'"
+      [user]="user"></app-student-header>
+
+    <!-- Visitor Header (for guest/visitor mode) -->
+    <app-visitor-header *ngIf="user.role === 'student' && (user.name === 'زائر' || user.name === 'Visitor')"
+      [user]="user"></app-visitor-header>
   </ng-container>
 
-  <!-- Guest Header (when not logged in) -->
+  <!-- Guest Header (when not logged in at all) -->
   <ng-template #guestHeader>
     <app-public-header></app-public-header>
   </ng-template>

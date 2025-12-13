@@ -18,6 +18,7 @@ export interface Exam {
   description?: string;
   courseId: string;
   durationMinutes: number;
+  passingScore: number;
   startDate: string;
   endDate: string;
   questions: Question[];

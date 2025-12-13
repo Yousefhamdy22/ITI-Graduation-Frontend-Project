@@ -9,12 +9,12 @@ import { Course } from '../../courses/course.model';
 import { ToastService } from '../../../shared/toast.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { RoleHeaderComponent } from '../../../core/header/role-header.component';
-import { FooterComponent } from '../../../core/footer/footer.component';
+
 
 @Component({
   selector: 'app-lecture-player',
   standalone: true,
-  imports: [CommonModule, RouterModule, RoleHeaderComponent, FooterComponent],
+  imports: [CommonModule, RouterModule, RoleHeaderComponent],
   templateUrl: './lecture-player.component.html',
   styleUrls: ['./lecture-player.component.css']
 })
@@ -46,7 +46,7 @@ export class LecturePlayerComponent implements OnInit {
     const courseId = this.route.snapshot.paramMap.get('courseId');
 
     if (!lectureId) {
-      this.toast.show('لم يتم العثور على المحاضرة', 'error');
+      this.toast.show('Lecture not found', 'error');
       this.router.navigate(['/courses']);
       return;
     }
@@ -62,7 +62,7 @@ export class LecturePlayerComponent implements OnInit {
                 c.instructorName === this.auth.currentUser?.name);
           }
         },
-        error: () => this.toast.show('خطأ في تحميل الكورس', 'error')
+        error: () => this.toast.show('Error loading course', 'error')
       });
 
       // Load all lectures for this course
@@ -75,7 +75,7 @@ export class LecturePlayerComponent implements OnInit {
         },
         error: () => {
           this.loading = false;
-          this.toast.show('خطأ في تحميل المحاضرات', 'error');
+          this.toast.show('Error loading lectures', 'error');
         }
       });
     }
@@ -144,18 +144,18 @@ export class LecturePlayerComponent implements OnInit {
 
   markAsCompleted(): void {
     this.completed = true;
-    this.toast.show('تم تحديد المحاضرة كـ مُكتمل', 'success');
+    this.toast.show('Lecture marked as completed', 'success');
   }
 
   deleteLecture(): void {
     if (!this.lecture || !this.isInstructor) return;
-    if (confirm('هل أنت متأكد من حذف هذه المحاضرة؟')) {
+    if (confirm('Are you sure you want to delete this lecture?')) {
       this.lectureService.deleteLecture(this.lecture.id).subscribe({
         next: () => {
-          this.toast.show('تم حذف المحاضرة', 'success');
+          this.toast.show('Lecture deleted', 'success');
           this.router.navigate(['/courses', this.course?.id]);
         },
-        error: () => this.toast.show('خطأ في حذف المحاضرة', 'error')
+        error: () => this.toast.show('Error deleting lecture', 'error')
       });
     }
   }

@@ -11,10 +11,12 @@ export interface Certificate {
   certificateNumber: string;
 }
 
+import { environment } from '../../../environment/environment';
+
 @Injectable({ providedIn: 'root' })
 export class CertificateService {
   private http: HttpClient = inject(HttpClient);
-  private BASE_URL = 'http://localhost:5180/api/Certificates';
+  private BASE_URL = `${environment.apiUrl}/api/Certificates`;
 
   // Issue certificate
   issueCertificate(userId: string, courseId: string): Observable<Certificate> {

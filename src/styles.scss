@@ -39,5 +39,35 @@
   .card-hover {
     @apply bg-white rounded-2xl shadow-soft border border-gray-100 overflow-hidden hover:shadow-card transition-all duration-300;
   }
+
+  /* Udemy Style Utilities */
+  .ud-header-link {
+    @apply text-sm font-medium text-gray-700 hover:text-[#0E4D67] transition-colors duration-200 cursor-pointer;
+  }
+
+  .ud-search-input {
+    @apply w-full bg-gray-50 border border-gray-900 rounded-full px-5 py-3 pl-12 text-sm focus:bg-white focus:border-white focus:ring-2 focus:ring-[#0E4D67] outline-none transition-all placeholder-gray-500;
+  }
+
+  .ud-btn-ghost {
+    @apply text-gray-700 font-bold hover:bg-gray-100 px-4 py-2 rounded-md transition-colors text-sm;
+  }
+
+  .ud-btn-primary {
+    @apply bg-[#2d2f31] text-white font-bold px-4 py-2 border border-[#2d2f31] hover:bg-[#0E4D67] hover:border-[#0E4D67] transition-all duration-200 text-sm;
+  }
+
+  .ud-btn-white {
+    @apply bg-white text-[#2d2f31] font-bold px-4 py-2 border border-black hover:bg-gray-100 transition-all duration-200 text-sm;
+  }
+
+  .ud-icon-btn {
+    @apply p-2 text-gray-600 hover:text-[#0E4D67] hover:bg-gray-100 rounded-full transition-all;
+  }
+
+  .ud-avatar-circle {
+    @apply w-10 h-10 rounded-full bg-[#0E4D67] text-white font-bold flex items-center justify-center text-sm cursor-pointer hover:bg-[#0a3d52] transition-colors border-2 border-transparent hover:border-gray-300;
+  }
 }
+
 

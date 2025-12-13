@@ -15,7 +15,7 @@ import { ToastService } from '../../../shared/toast.service';
   styleUrls: ['./question-list.component.css']
 })
 // @if (false) {
-  // This component has hydration issues, render client-side only
+// This component has hydration issues, render client-side only
 // }
 export class QuestionListComponent implements OnInit {
   questions: Question[] = [];
@@ -29,13 +29,13 @@ export class QuestionListComponent implements OnInit {
   private appRef = inject(ApplicationRef);
 
   constructor(
-    private questionService: QuestionService, 
-    private router: Router, 
-    private courseService: CourseService, 
-    private route: ActivatedRoute, 
+    private questionService: QuestionService,
+    private router: Router,
+    private courseService: CourseService,
+    private route: ActivatedRoute,
     private toast: ToastService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     // Route params setup
@@ -50,7 +50,7 @@ export class QuestionListComponent implements OnInit {
       this.loadQuestions();
       this.loadSessionStorage();
       this.loadCourses();
-      
+
       // Timeout fallback - if loading takes more than 5 seconds
       setTimeout(() => {
         if (this.isLoading) {
@@ -67,7 +67,7 @@ export class QuestionListComponent implements OnInit {
 
   private loadSessionStorage() {
     if (!isPlatformBrowser(this.platformId)) return;
-    
+
     const raw = sessionStorage.getItem('selectedQuestionIds');
     if (raw) {
       try {
@@ -80,21 +80,21 @@ export class QuestionListComponent implements OnInit {
   loadQuestions() {
     console.log('🔵 Starting loadQuestions()...');
     this.isLoading = true;
-    
+
     const subscription = this.questionService.getQuestions().subscribe({
       next: (response: any) => {
         console.log('✅ HTTP Response received!');
         console.log('📦 Full response:', response);
-        
+
         // Handle both formats: {value: [...]} and direct array
         const data = response?.value || response || [];
         this.questions = Array.isArray(data) ? [...data] : [];
         this.isLoading = false;
-        
+
         console.log('✅ Questions loaded:', this.questions.length);
         console.log('📝 Questions array:', this.questions);
         console.log('🎯 isLoading =', this.isLoading);
-        
+
         // Force multiple change detection strategies
         setTimeout(() => {
           this.cdr.detectChanges();
@@ -104,7 +104,7 @@ export class QuestionListComponent implements OnInit {
       },
       error: (err) => {
         console.error('❌ HTTP Error in loadQuestions:', err);
-        this.toast.show('فشل تحميل الأسئلة', 'error');
+        this.toast.show('Failed to load questions', 'error');
         this.isLoading = false;
         this.cdr.detectChanges();
       },
@@ -112,7 +112,7 @@ export class QuestionListComponent implements OnInit {
         console.log('✅ Observable completed');
       }
     });
-    
+
     console.log('📡 HTTP request sent, subscription created:', subscription);
   }
 
@@ -132,7 +132,7 @@ export class QuestionListComponent implements OnInit {
 
   remove(q: Question) {
     if (!q.id) return;
-    if (!confirm('هل أنت متأكد من حذف السؤال؟')) return;
+    if (!confirm('Are you sure you want to delete this question?')) return;
 
     this.questionService.deleteQuestion(q.id).subscribe({
       next: (res) => {
@@ -140,27 +140,27 @@ export class QuestionListComponent implements OnInit {
         if (res?.isSuccess || res?.value === true) {
           this.questions = this.questions.filter(item => item.id !== q.id);
           this.cdr.detectChanges();
-          this.toast.show('تم حذف السؤال بنجاح', 'success');
+          this.toast.show('Question deleted successfully', 'success');
         } else {
-          this.toast.show(res?.message || res?.successMessage || 'فشل حذف السؤال', 'error');
+          this.toast.show(res?.message || res?.successMessage || 'Failed to delete question', 'error');
         }
       },
       error: (err) => {
         console.error('❌ Delete error:', err);
-        let errorMsg = 'فشل حذف السؤال';
-        
+        let errorMsg = 'Failed to delete question';
+
         if (err.status === 404) {
-          errorMsg = 'السؤال غير موجود';
+          errorMsg = 'Question not found';
           // Remove from local list anyway
           this.questions = this.questions.filter(item => item.id !== q.id);
           this.cdr.detectChanges();
         } else if (err.status === 500) {
-          errorMsg = 'خطأ في السيرفر - قد يكون السؤال محذوف بالفعل أو غير موجود';
+          errorMsg = 'Server error - Question might be already deleted or not found';
         } else if (err.status === 401) {
-          errorMsg = 'انتهت صلاحية الجلسة';
+          errorMsg = 'Session expired';
           this.router.navigate(['/admin/login']);
         }
-        
+
         this.toast.show(errorMsg, 'error');
       }
     });
@@ -178,7 +178,7 @@ export class QuestionListComponent implements OnInit {
     // store selected ids in sessionStorage then navigate to exam creation
     const ids = Array.from(this.selectedForExam);
     sessionStorage.setItem('selectedQuestionIds', JSON.stringify(ids));
-    if (!this.selectedCourseId) { this.toast.show('اختر كورس قبل المتابعة', 'warning'); return; }
+    if (!this.selectedCourseId) { this.toast.show('Select a course first', 'warning'); return; }
     // include courseId so assemble page can prefill
     this.router.navigate(['/exams/assemble'], { queryParams: { courseId: this.selectedCourseId } });
   }

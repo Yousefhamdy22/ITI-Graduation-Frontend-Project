@@ -6,24 +6,24 @@
 
   <div class="grid grid-cols-2 gap-4 mb-8 p-4 bg-gray-50 rounded-lg">
     <div class="text-center">
-      <p class="text-sm text-gray-600">عدد الأسئلة</p>
+      <p class="text-sm text-gray-600">Questions Count</p>
       <p class="text-2xl font-bold text-blue-600">{{ exam.questions.length }}</p>
     </div>
     <div class="text-center">
-      <p class="text-sm text-gray-600">المدة</p>
-      <p class="text-2xl font-bold text-blue-600">{{ exam.durationMinutes }} دقيقة</p>
+      <p class="text-sm text-gray-600">Duration</p>
+      <p class="text-2xl font-bold text-blue-600">{{ exam.durationMinutes }} min</p>
     </div>
   </div>
 
   <div class="mb-8">
-    <h3 class="text-lg font-semibold mb-4 text-gray-800">الأسئلة:</h3>
+    <h3 class="text-lg font-semibold mb-4 text-gray-800">Questions:</h3>
     <div class="space-y-3">
-      <div *ngFor="let q of exam.questions; let i = index" 
-           class="p-4 bg-blue-50 border-l-4 border-blue-500 rounded">
+      <div *ngFor="let q of exam.questions; let i = index" class="p-4 bg-blue-50 border-l-4 border-blue-500 rounded">
         <p class="font-medium text-gray-800"><span class="font-bold">{{ i + 1 }}.</span> {{ q.text }}</p>
         <div class="mt-2 pl-6 space-y-1">
           <p *ngFor="let opt of q.answerOptions; let j = index" class="text-sm text-gray-600">
-            <span class="inline-block w-6 h-6 rounded-full bg-gray-200 text-center leading-6 text-xs ml-2">{{ String.fromCharCode(65 + j) }}</span>
+            <span class="inline-block w-6 h-6 rounded-full bg-gray-200 text-center leading-6 text-xs ml-2">{{
+              String.fromCharCode(65 + j) }}</span>
             {{ opt.text }}
           </p>
         </div>
@@ -33,18 +33,19 @@
 
   <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-6 rounded">
     <p class="text-yellow-800">
-      <span class="font-bold">⚠️ تنبيه:</span> لا يمكنك الخروج من الاختبار بعد البدء. تأكد من الإنترنت وأن لديك الوقت الكافي.
+      <span class="font-bold">⚠️ Warning:</span> You cannot exit the exam once started. Ensure you have stable internet
+      and enough time.
     </p>
   </div>
 
   <div class="flex gap-4">
     <a [routerLink]="['/exams', exam.id, 'play']"
-       class="flex-1 text-center bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition">
-      ✓ ابدأ الاختبار
+      class="flex-1 text-center bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition">
+      ✓ Start Exam
     </a>
     <a routerLink="/exams"
-       class="flex-1 text-center bg-gray-400 hover:bg-gray-500 text-white font-bold py-3 rounded-lg transition">
-      ← رجوع
+      class="flex-1 text-center bg-gray-400 hover:bg-gray-500 text-white font-bold py-3 rounded-lg transition">
+      ← Back
     </a>
   </div>
 </div>

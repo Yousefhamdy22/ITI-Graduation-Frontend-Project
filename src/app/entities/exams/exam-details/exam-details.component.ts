@@ -17,8 +17,8 @@ export class ExamDetailsComponent {
     const hours = Math.floor(this.exam.durationMinutes / 60);
     const minutes = this.exam.durationMinutes % 60;
     if (hours > 0) {
-      return `${hours} ساعة و ${minutes} دقيقة`;
+      return `${hours} hr and ${minutes} min`;
     }
-    return `${minutes} دقيقة`;
+    return `${minutes} min`;
   }
 }

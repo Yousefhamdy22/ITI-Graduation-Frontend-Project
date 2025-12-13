@@ -3,11 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Admin, CreateAdminRequest, UpdateAdminRequest, AdminResponse, AdminsListResponse } from './admin.model';
 
+import { environment } from '../../../environment/environment';
+
 @Injectable({ providedIn: 'root' })
 export class AdminService {
-  private readonly BASE_URL = 'http://localhost:5180/api/Admin';
+  private readonly BASE_URL = `${environment.apiUrl}/api/Admin`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   /**
    * Get all admins

@@ -1,45 +1,45 @@
-import {Component, OnInit, afterNextRender, Injector, inject} from '@angular/core';
+import { Component, OnInit, afterNextRender, Injector, inject } from '@angular/core';
 
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
-import {Router, RouterLink, RouterModule} from "@angular/router";
+import { Router, RouterLink, RouterModule } from "@angular/router";
 
-import {SidebarComponent} from "../../../core/sidebar/sidebar.component";
+import { SidebarComponent } from "../../../core/sidebar/sidebar.component";
 
-import {TrendChartComponent} from "./trend-chart.component";
+import { TrendChartComponent } from "./trend-chart.component";
 
-import {Observable} from 'rxjs';
+import { Observable } from 'rxjs';
 
-import {DashboardService} from './dashboard.service';
+import { DashboardService } from './dashboard.service';
 
-import {StudentService} from '../../../entities/students/student.service';
+import { StudentService } from '../../../entities/students/student.service';
 
-import {InstructorService} from '../../../entities/instructors/instructor.service';
+import { InstructorService } from '../../../entities/instructors/instructor.service';
 
-import {CourseService} from '../../../entities/courses/course.service';
+import { CourseService } from '../../../entities/courses/course.service';
 
-import {ExamService} from '../../../entities/exams/exam.service';
+import { ExamService } from '../../../entities/exams/exam.service';
 
-import {ToastService} from '../../../shared/toast.service';
+import { ToastService } from '../../../shared/toast.service';
 
-import {AuthService} from '../../auth.service';
+import { AuthService } from '../../auth.service';
 
-import {CommonModule} from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 import { Exam } from '../../../entities/exams/exam.model';
 import { Instructor } from '../../../entities/instructors/instructor.model';
 
-import {RoleHeaderComponent} from '../../../core/header/role-header.component';
+import { RoleHeaderComponent } from '../../../core/header/role-header.component';
 
-import {FooterComponent} from '../../../core/footer/footer.component';
+import { FooterComponent } from '../../../core/footer/footer.component';
 
-import {ExamFormModalComponent} from '../../../shared/exam-form-modal/exam-form-modal.component';
+import { ExamFormModalComponent } from '../../../shared/exam-form-modal/exam-form-modal.component';
 
 @Component({
 
   selector: 'app-admin-dashboard',
 
-  imports: [CommonModule, RouterModule, FormsModule, TrendChartComponent, SidebarComponent, RoleHeaderComponent, FooterComponent, ExamFormModalComponent],
+  imports: [CommonModule, RouterModule, FormsModule, TrendChartComponent, SidebarComponent, RoleHeaderComponent, ExamFormModalComponent],
 
 
 
@@ -87,25 +87,52 @@ export class AdminDashboard implements OnInit {
 
   newInstructorEmail = '';
 
- 
+
 
   // totals
-
   totalStudents = 0;
-
   totalInstructors = 0;
-
   totalCourses = 0;
-
- 
+  totalEnrollments = 0;
+  totalExams = 0;
 
   // Modal
-
   showExamModal = false;
 
-  totalEnrollments = 0;
+  // Enhanced stats from DarElKetab
+  stats = {
+    totalStudents: 0,
+    activeStudents: 0,
+    totalTeachers: 0,
+    activeTeachers: 0,
+    totalGroups: 0,
+    pendingRegistrations: 0,
+    monthlyRevenue: 0,
+    attendanceRate: 0
+  };
 
-  totalExams = 0;
+  // Pending actions that need admin attention
+  pendingActions = [
+    { type: 'registration', title: 'طلبات التسجيل الجديدة', count: 5, priority: 'high', icon: 'pi-user-plus', color: 'blue' },
+    { type: 'payment', title: 'المدفوعات المعلقة', count: 8, priority: 'medium', icon: 'pi-credit-card', color: 'amber' },
+    { type: 'teacher', title: 'طلبات إجازة المعلمين', count: 2, priority: 'medium', icon: 'pi-calendar-times', color: 'purple' },
+    { type: 'complaint', title: 'شكاوى ومقترحات', count: 3, priority: 'low', icon: 'pi-exclamation-triangle', color: 'red' }
+  ];
+
+  // Recent activities
+  recentActivities = [
+    { type: 'student', message: 'تم قبول طالب جديد: أحمد محمد', time: '5 دقائق', icon: 'pi-user-plus', color: 'green' },
+    { type: 'payment', message: 'تم استلام رسوم شهرية: 2,500 جنيه', time: '15 دقيقة', icon: 'pi-money-bill', color: 'blue' },
+    { type: 'teacher', message: 'المعلم خالد العبدالله سجل حضوره', time: '30 دقيقة', icon: 'pi-check-circle', color: 'teal' },
+    { type: 'system', message: 'تم إنشاء تقرير شهري جديد', time: 'ساعة', icon: 'pi-file', color: 'purple' }
+  ];
+
+  // Critical alerts
+  criticalAlerts = [
+    { type: 'attendance', message: 'معدل الحضور انخفض إلى 87%', severity: 'warning' },
+    { type: 'payment', message: '8 طلاب لم يدفعوا الرسوم الشهرية', severity: 'error' },
+    { type: 'capacity', message: 'مجموعة الحفظ المتقدم وصلت للحد الأقصى', severity: 'info' }
+  ];
 
 
 
@@ -151,7 +178,7 @@ export class AdminDashboard implements OnInit {
 
     this.stats$ = this.dashboardservice.stats$;
 
-    
+
 
     // Move HTTP calls to afterNextRender to avoid SSR issues
 
@@ -161,7 +188,7 @@ export class AdminDashboard implements OnInit {
       const token = localStorage.getItem('token');
       if (!token) {
         console.error('❌ No authentication token found! Redirecting to login...');
-        this.toast.show('يجب تسجيل الدخول أولاً', 'error');
+        this.toast.show('You must login first', 'error');
         this.router.navigate(['/admin/login']);
         return;
       }
@@ -175,16 +202,14 @@ export class AdminDashboard implements OnInit {
         error: (err: any) => {
           console.error('❌ Failed to load courses:', err);
           if (err.status === 401) {
-            this.toast.show('انتهت صلاحية الجلسة - الرجاء تسجيل الدخول مجدداً', 'error');
+            this.toast.show('Session expired - Please login again', 'error');
             localStorage.removeItem('token');
             this.router.navigate(['/admin/login']);
-          } else {
-            this.toast.show('فشل تحميل الكورسات', 'error');
           }
         }
       });
 
-     
+
 
       // keep a live list for simple client-side search/pagination
 
@@ -194,13 +219,16 @@ export class AdminDashboard implements OnInit {
           // compute totals and enrollments
           this.totalStudents = (list || []).length;
           this.totalEnrollments = (list || []).reduce((acc: number, s: any) => acc + ((s.enrolledCourseIds || []).length || 0), 0);
+          // Update enhanced stats
+          this.stats.totalStudents = this.totalStudents;
+          this.stats.activeStudents = (list || []).filter((s: any) => s.active !== false).length;
           // compute trend (last 6 months)
           this.computeEnrollmentTrend(list || []);
         },
         error: (err: any) => {
           console.error('❌ Failed to load students:', err);
           if (err.status === 401) {
-            this.toast.show('انتهت صلاحية الجلسة - الرجاء تسجيل الدخول مجدداً', 'error');
+            this.toast.show('Session expired - Please login again', 'error');
             localStorage.removeItem('token');
             this.router.navigate(['/admin/login']);
           }
@@ -213,11 +241,14 @@ export class AdminDashboard implements OnInit {
         next: (list: any) => {
           this.filteredInstructors = list || [];
           this.totalInstructors = (list || []).length;
+          // Update enhanced stats
+          this.stats.totalTeachers = this.totalInstructors;
+          this.stats.activeTeachers = (list || []).filter((i: any) => i.active !== false).length;
         },
         error: (err: any) => {
           console.error('❌ Failed to load instructors:', err);
           if (err.status === 401) {
-            this.toast.show('انتهت صلاحية الجلسة - الرجاء تسجيل الدخول مجدداً', 'error');
+            this.toast.show('Session expired - Please login again', 'error');
             localStorage.removeItem('token');
             this.router.navigate(['/admin/login']);
           }
@@ -237,7 +268,7 @@ export class AdminDashboard implements OnInit {
         error: (err: any) => {
           console.error('❌ Failed to load exams:', err);
           if (err.status === 401) {
-            this.toast.show('انتهت صلاحية الجلسة - الرجاء تسجيل الدخول مجدداً', 'error');
+            this.toast.show('Session expired - Please login again', 'error');
             localStorage.removeItem('token');
             this.router.navigate(['/admin/login']);
           }
@@ -274,7 +305,7 @@ export class AdminDashboard implements OnInit {
 
       const dt = new Date(now.getFullYear(), now.getMonth() - i, 1);
 
-      labels.push(dt.toLocaleString(undefined, {month: 'short'}));
+      labels.push(dt.toLocaleString(undefined, { month: 'short' }));
 
       const keyYear = dt.getFullYear();
 
@@ -376,7 +407,7 @@ export class AdminDashboard implements OnInit {
 
     const nameParts = this.newStudentName.trim().split(' ');
 
-    const s = this.studentService.addStudent({firstName: nameParts[0] || '', lastName: nameParts.slice(1).join(' ') || '', email: this.newStudentEmail});
+    const s = this.studentService.addStudent({ firstName: nameParts[0] || '', lastName: nameParts.slice(1).join(' ') || '', email: this.newStudentEmail });
 
     this.newStudentName = this.newStudentEmail = '';
 
@@ -476,7 +507,7 @@ export class AdminDashboard implements OnInit {
 
     const lastName = nameParts.slice(1).join(' ') || '';
 
-    this.instructorService.createInstructor({firstName, lastName, email: this.newInstructorEmail}).subscribe(() => {
+    this.instructorService.createInstructor({ firstName, lastName, email: this.newInstructorEmail }).subscribe(() => {
 
       this.newInstructorName = this.newInstructorEmail = '';
 
@@ -627,9 +658,44 @@ export class AdminDashboard implements OnInit {
 
 
   switchTab(tab: string): void {
-
     this.activeTab = tab;
+  }
 
+  // Helper methods from DarElKetab
+  handlePendingAction(action: any) {
+    console.log('Handling action:', action);
+    // Navigate to specific management page based on action type
+    switch (action.type) {
+      case 'registration':
+        this.router.navigate(['/students']);
+        break;
+      case 'payment':
+        this.router.navigate(['/financial']);
+        break;
+      case 'teacher':
+        this.router.navigate(['/instructors']);
+        break;
+      default:
+        break;
+    }
+  }
+
+  getPriorityColor(priority: string): string {
+    switch (priority) {
+      case 'high': return 'bg-red-100 text-red-800';
+      case 'medium': return 'bg-amber-100 text-amber-800';
+      case 'low': return 'bg-green-100 text-green-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  }
+
+  getSeverityColor(severity: string): string {
+    switch (severity) {
+      case 'error': return 'bg-red-50 border-red-200 text-red-800';
+      case 'warning': return 'bg-amber-50 border-amber-200 text-amber-800';
+      case 'info': return 'bg-blue-50 border-blue-200 text-blue-800';
+      default: return 'bg-gray-50 border-gray-200 text-gray-800';
+    }
   }
 
 }

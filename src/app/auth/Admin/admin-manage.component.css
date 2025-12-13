@@ -89,6 +89,7 @@
     opacity: 0;
     transform: translateY(-20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -311,14 +312,3 @@
 }
 
 /* RTL Support */
-[dir="rtl"] .header-content {
-  direction: rtl;
-}
-
-[dir="rtl"] .admin-card {
-  direction: rtl;
-}
-
-[dir="rtl"] .admin-name {
-  direction: rtl;
-}

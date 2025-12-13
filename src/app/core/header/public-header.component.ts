@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 /**
  * Public Header Component
@@ -10,51 +11,55 @@ import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-public-header',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   template: `
-    <header class="bg-white shadow-md">
-      <div class="app-container py-4">
-        <div class="flex items-center justify-between">
-          <!-- Logo -->
-          <a routerLink="/" class="text-2xl font-bold text-[#0E4D67]">
-            منصة تعليمية
-          </a>
+    <header class="bg-white shadow-soft sticky top-0 z-50">
+      <div class="h-max mx-auto px-4 md:px-6 flex items-center justify-between py-3 gap-4">
+        <!-- Logo -->
+        <a routerLink="/" class="flex items-center gap-2 font-bold text-xl text-gray-900 shrink-0">
+          <span class="w-8 h-8 rounded-lg bg-[#0E4D67] text-white flex items-center justify-center text-lg">T</span>
+          Future Tech
+        </a>
 
-          <!-- Navigation -->
-          <nav class="flex items-center gap-4">
-            <a routerLink="/courses" class="text-gray-700 hover:text-[#0E4D67] transition">
-              الكورسات
-            </a>
-            
-            <!-- Login Dropdown -->
-            <div class="relative group">
-              <button class="btn-outline flex items-center gap-2">
-                تسجيل الدخول
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              
-              <!-- Dropdown Menu -->
-              <div class="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                <a routerLink="/login" class="block px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-t-lg">
-                  دخول كطالب
-                </a>
-                <a routerLink="/instructor-login" class="block px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-b-lg">
-                  دخول كمدرس
-                </a>
-              </div>
-            </div>
+        <!-- Courses -->
+        <a routerLink="/courses" class="hidden md:block text-sm font-medium text-gray-600 hover:text-[#0E4D67] transition-colors">
+          Courses
+        </a>
 
-            <!-- Browse as Guest Button -->
-            <a routerLink="/courses" class="btn-primary">
-              الدخول كزائر
-            </a>
-          </nav>
+        <!-- Search Bar -->
+        <div class="flex-1 max-w-2xl px-4 hidden md:block relative">
+          <span class="absolute left-7 top-1/2 -translate-y-1/2 text-gray-400">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </span>
+          <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="search()" placeholder="Search for anything" class="ud-search-input py-2.5">
         </div>
+
+        <!-- Navigation -->
+        <nav class="flex items-center gap-2 sm:gap-4 shrink-0">
+          <a routerLink="/instructor-login" class="hidden lg:block ud-header-link">Teach on Future Tech</a>
+          
+
+
+          <div class="flex items-center gap-2 ml-2">
+            <a routerLink="/login" class="ud-btn-white">Log in</a>
+            <a routerLink="/register" class="ud-btn-primary">Sign up</a>
+          </div>
+        </nav>
       </div>
     </header>
   `,
   styles: []
 })
-export class PublicHeaderComponent { }
+export class PublicHeaderComponent {
+  searchQuery = '';
+
+  constructor(private router: Router) { }
+
+  search() {
+    if (this.searchQuery.trim()) {
+      this.router.navigate(['/search'], { queryParams: { q: this.searchQuery } });
+    }
+  }
+}

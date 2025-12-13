@@ -1,116 +1,51 @@
-<!-- <div class="min-h-screen p-6 bg-gray-50">
-  <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
-    <h2 class="text-xl font-bold mb-4">إنشاء/تعديل سؤال</h2>
-
-    <div class="mb-3">
-      <label class="block text-sm mb-1">نوع السؤال</label>
-      <label class="block text-sm mb-1">تابع للكورس</label>
-      <select [(ngModel)]="courseId" name="courseId" class="w-full border rounded px-3 py-2 mb-2">
-        <option value="">-- اختر كورس --</option>
-        <option *ngFor="let c of courses" [value]="c.id">{{ c.title }}</option>
-      </select>
-      <select [(ngModel)]="type" name="type" class="w-full border rounded px-3 py-2">
-        <option value="mcq">اختياري (اختيار من متعدد)</option>
-        <option value="tf">صح/خطأ</option>
-        <option value="text">نصي (إجابة مفتوحة)</option>
-      </select>
-    </div>
-
-    <div class="mb-3">
-      <label class="block text-sm mb-1">نص السؤال</label>
-      <textarea [(ngModel)]="text" name="text" class="w-full border rounded px-3 py-2" rows="3"></textarea>
-    </div>
-
-    <div *ngIf="type === 'mcq'" class="mb-3">
-      <label class="block text-sm mb-1">الخيارات</label>
-      <div *ngFor="let opt of options; let i = index" class="flex gap-2 items-center mb-2">
-        <input [(ngModel)]="options[i]" name="opt{{i}}" class="flex-1 border rounded px-3 py-2" />
-        <input type="radio" [(ngModel)]="correctOptionIndex" name="correct" [value]="i" />
-        <button (click)="removeOption(i)" type="button" class="px-2 py-1 bg-red-500 text-white rounded">حذف</button>
-      </div>
-      <button (click)="addOption()" type="button" class="px-3 py-2 bg-gray-100 rounded">أضف خيار</button>
-    </div>
-
-    <div *ngIf="type === 'tf'" class="mb-3">
-      <label class="block text-sm mb-1">الإجابة الصحيحة</label>
-      <select [(ngModel)]="correctBoolean" name="correctBoolean" class="w-full border rounded px-3 py-2">
-        <option [ngValue]="true">صح</option>
-        <option [ngValue]="false">خطأ</option>
-      </select>
-    </div>
-
-    <div class="flex gap-3 mt-4">
-      <button (click)="save()" class="bg-[#0E4D67] text-white px-4 py-2 rounded">حفظ</button>
-      <button (click)="cancel()" class="bg-gray-100 px-4 py-2 rounded">إلغاء</button>
-    </div>
-  </div>
-</div> -->
 <div class="min-h-screen p-6 bg-gray-50">
   <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
-    <h2 class="text-xl font-bold mb-4">إنشاء/تعديل سؤال</h2>
+    <h2 class="text-xl font-bold mb-4">Create/Edit Question</h2>
 
     <div class="mb-3">
-      <label class="block text-sm mb-1">تابع للكورس</label>
+      <label class="block text-sm mb-1">Course</label>
       <select [(ngModel)]="courseId" name="courseId" class="w-full border rounded px-3 py-2 mb-2" required>
-        <option value="">-- اختر كورس --</option>
+        <option value="">-- Select Course --</option>
         <option *ngFor="let c of courses" [value]="c.id">{{ c.title }}</option>
       </select>
     </div>
 
     <div class="mb-3">
-      <label class="block text-sm mb-1">نقاط السؤال</label>
-      <input 
-        type="number" 
-        [(ngModel)]="points" 
-        name="points" 
-        class="w-full border rounded px-3 py-2" 
-        min="1" 
-        required
-      />
+      <label class="block text-sm mb-1">Points</label>
+      <input type="number" [(ngModel)]="points" name="points" class="w-full border rounded px-3 py-2" min="1"
+        required />
     </div>
 
     <div class="mb-3">
-      <label class="block text-sm mb-1">نص السؤال</label>
+      <label class="block text-sm mb-1">Question Text</label>
       <textarea [(ngModel)]="text" name="text" class="w-full border rounded px-3 py-2" rows="3" required></textarea>
     </div>
 
     <div class="mb-3">
-      <label class="block text-sm mb-1">الخيارات (حدد الإجابة/الإجابات الصحيحة)</label>
+      <label class="block text-sm mb-1">Options (Select Correct Answer/s)</label>
       <div *ngFor="let opt of options; let i = index" class="flex gap-2 items-center mb-2">
-        <input 
-          [(ngModel)]="opt.text" 
-          [ngModelOptions]="{standalone: true}" 
-          placeholder="نص الخيار" 
-          class="flex-1 border rounded px-3 py-2" 
-        />
-        
-        <input 
-          type="radio" 
-          [checked]="opt.isCorrect"
-          (change)="selectCorrectOption(i)" 
-          [name]="'correctOption'" 
-          class="w-5 h-5 text-[#0E4D67]"
-        />
-        
-        <button 
-          (click)="removeOption(i)" 
-          type="button" 
-          class="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition"
-        >
-          حذف
+        <input [(ngModel)]="opt.text" [ngModelOptions]="{standalone: true}" placeholder="Option Text"
+          class="flex-1 border rounded px-3 py-2" />
+
+        <input type="radio" [checked]="opt.isCorrect" (change)="selectCorrectOption(i)" [name]="'correctOption'"
+          class="w-5 h-5 text-[#0E4D67]" />
+
+        <button (click)="removeOption(i)" type="button"
+          class="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition">
+          Delete
         </button>
       </div>
       <button (click)="addOption()" type="button" class="px-3 py-2 bg-gray-100 rounded hover:bg-gray-200 transition">
-        أضف خيار
+        Add Option
       </button>
     </div>
 
     <div class="flex gap-3 mt-4">
       <button (click)="save()" class="bg-[#0E4D67] text-white px-4 py-2 rounded hover:bg-[#0a3a4c] transition">
-        حفظ
+        Save
       </button>
       <button (click)="cancel()" class="bg-gray-100 px-4 py-2 rounded hover:bg-gray-200 transition">
-        إلغاء
+        Cancel
       </button>
     </div>
   </div>

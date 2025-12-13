@@ -18,10 +18,10 @@ export class ExamCoursePickerComponent implements OnInit {
   loading = false;
 
   constructor(
-    private courseService: CourseService, 
-    private router: Router, 
+    private courseService: CourseService,
+    private router: Router,
     private toast: ToastService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loading = true;
@@ -31,7 +31,7 @@ export class ExamCoursePickerComponent implements OnInit {
         this.loading = false;
       },
       error: () => {
-        this.toast.show('خطأ في تحميل الكورسات', 'error');
+        this.toast.show('Error loading courses', 'error');
         this.loading = false;
       }
     });
@@ -44,12 +44,12 @@ export class ExamCoursePickerComponent implements OnInit {
 
   choose(): void {
     if (!this.selectedCourseId) {
-      this.toast.show('اختر كورس أولاً', 'warning');
+      this.toast.show('Select a course first', 'warning');
       return;
     }
-    // الانتقال لصفحة الأسئلة المفلترة حسب الكورس
-    this.router.navigate(['/exams/form'], { 
-      queryParams: { courseId: this.selectedCourseId } 
+    // Navigate to exam form with filtered questions
+    this.router.navigate(['/exams/form'], {
+      queryParams: { courseId: this.selectedCourseId }
     });
   }
 

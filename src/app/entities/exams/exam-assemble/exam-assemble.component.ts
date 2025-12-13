@@ -35,7 +35,7 @@ export class ExamAssembleComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // تحميل الأسئلة المختارة من sessionStorage
+    // Load selected questions from sessionStorage
     const raw = sessionStorage.getItem('selectedQuestionIds');
     if (raw) {
       try {
@@ -43,7 +43,7 @@ export class ExamAssembleComponent implements OnInit {
       } catch { }
     }
 
-    // تحميل الأسئلة المختارة
+    // Load selected questions
     this.questionService.getQuestions().subscribe({
       next: (response) => {
         const allQuestions = response.value || [];
@@ -54,18 +54,18 @@ export class ExamAssembleComponent implements OnInit {
           }
         }
       },
-      error: () => this.toast.show('خطأ في تحميل الأسئلة', 'error')
+      error: () => this.toast.show('Error loading questions', 'error')
     });
 
-    // تحميل الكورسات
+    // Load courses
     this.courseService.getCourses().subscribe({
       next: (list) => {
         this.courses = list || [];
       },
-      error: () => this.toast.show('خطأ في تحميل الكورسات', 'error')
+      error: () => this.toast.show('Error loading courses', 'error')
     });
 
-    // قراءة معرف الكورس من query parameters
+    // Read courseId from query parameters
     this.route.queryParams.subscribe(params => {
       if (params['courseId']) {
         this.courseId = params['courseId'];
@@ -99,21 +99,21 @@ export class ExamAssembleComponent implements OnInit {
   }
 
   createExam(): void {
-    // التحقق من البيانات
+    // Validate data
     if (!this.title.trim()) {
-      this.toast.show('من فضلك أدخل عنوان الاختبار', 'warning');
+      this.toast.show('Please enter exam title', 'warning');
       return;
     }
     if (!this.courseId) {
-      this.toast.show('من فضلك اختر كورس', 'warning');
+      this.toast.show('Please select a course', 'warning');
       return;
     }
     if (this.selectedIds.length === 0) {
-      this.toast.show('من فضلك اختر أسئلة للاختبار', 'warning');
+      this.toast.show('Please select questions for the exam', 'warning');
       return;
     }
 
-    // بناء أسئلة الاختبار
+    // Build exam questions
     const mappedQuestions = this.selectedIds.map(id => {
       const q = this.questions.find((x: any) => x.id === id);
 
@@ -128,7 +128,7 @@ export class ExamAssembleComponent implements OnInit {
       };
     });
 
-    // إنشاء كائن الاختبار
+    // Create exam object
     const newExam: Partial<Exam> = {
       courseId: this.courseId,
       title: this.title.trim(),
@@ -139,16 +139,16 @@ export class ExamAssembleComponent implements OnInit {
       questions: mappedQuestions
     };
 
-    // حفظ الاختبار
+    // Save exam
     this.examService.createExam(newExam).subscribe({
       next: (createdExam) => {
         sessionStorage.removeItem('selectedQuestionIds');
-        this.toast.show('تم إنشاء الاختبار بنجاح', 'success');
+        this.toast.show('Exam created successfully', 'success');
         this.router.navigate(['/exams']);
       },
       error: (err) => {
         console.error('Error creating exam:', err);
-        this.toast.show('فشل إنشاء الاختبار', 'error');
+        this.toast.show('Failed to create exam', 'error');
       }
     });
   }

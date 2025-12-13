@@ -1,20 +1,85 @@
-<header class="bg-white border-b border-gray-100">
-  <div class="app-container flex items-center justify-between py-3">
-    <a routerLink="/student" class="flex items-center gap-2 font-bold text-xl text-gray-900">
-      <span class="w-9 h-9 rounded-xl bg-[#0E4D67] text-white flex items-center justify-center">T</span>
-      مستقبل تِك
+<header class="bg-white shadow-soft sticky top-0 z-50">
+  <div class="h-max mx-auto px-4 md:px-6 flex items-center justify-between py-3 gap-4">
+    <!-- Logo -->
+    <a routerLink="/home" class="flex items-center gap-2 font-bold text-xl text-gray-900 shrink-0">
+      <span class="w-8 h-8 rounded-lg bg-[#0E4D67] text-white flex items-center justify-center text-lg">T</span>
+      Future Tech
     </a>
 
-    <nav class="flex items-center gap-4 text-gray-700 font-medium">
-      <a routerLink="/student" routerLinkActive="text-[#0E4D67]" class="hover:text-[#0E4D67] transition">الرئيسية</a>
-      <a routerLink="/courses" routerLinkActive="text-[#0E4D67]" class="hover:text-[#0E4D67] transition">الكورسات</a>
-      <a routerLink="/instructors" routerLinkActive="text-[#0E4D67]" class="hover:text-[#0E4D67] transition">المدربين</a>
-      <a routerLink="/certificates" routerLinkActive="text-[#0E4D67]" class="hover:text-[#0E4D67] transition">شهاداتي</a>
-    </nav>
+    <!-- Courses -->
+    <a routerLink="/courses"
+      class="hidden md:block text-sm font-medium text-gray-600 hover:text-[#0E4D67] transition-colors">
+      Courses
+    </a>
 
-    <div class="flex items-center gap-3">
-      <div class="text-sm text-gray-700">مرحبًا، <span class="font-semibold">{{ user?.name }}</span></div>
-      <button (click)="logout()" class="bg-red-500 text-white px-3 py-1 rounded">خروج</button>
+    <!-- Search Bar -->
+    <div class="flex-1 max-w-2xl px-4 hidden md:block relative">
+      <span class="absolute left-7 top-1/2 -translate-y-1/2 text-gray-400">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </span>
+      <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="search()" placeholder="Search for anything"
+        class="ud-search-input py-2.5">
     </div>
+
+    <!-- Navigation Links & Icons -->
+    <nav class="flex items-center gap-2 md:gap-4 shrink-0">
+      <a routerLink="/student" class="hidden lg:block ud-header-link">My learning</a>
+
+      <!-- Icons -->
+      <button class="ud-icon-btn hidden sm:block">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
+          </path>
+        </svg>
+      </button>
+
+      <button class="ud-icon-btn hidden sm:block">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+          </path>
+        </svg>
+      </button>
+
+      <!-- User Avatar with Dropdown -->
+      <div class="relative group">
+        <div class="ud-avatar-circle">
+          {{ user?.name?.slice(0, 2)?.toUpperCase() || 'ST' }}
+        </div>
+
+        <!-- Dropdown Menu -->
+        <div
+          class="absolute right-0 mt-2 w-72 bg-white rounded-lg shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+
+          <!-- User Info Header -->
+          <div class="p-4 border-b border-gray-100 flex items-center gap-3">
+            <div
+              class="w-12 h-12 rounded-full bg-[#0E4D67] text-white flex items-center justify-center font-bold text-xl">
+              {{ user?.name?.slice(0, 2)?.toUpperCase() }}
+            </div>
+            <div class="overflow-hidden">
+              <div class="font-bold text-gray-900 truncate">{{ user?.name }}</div>
+              <div class="text-xs text-gray-500 truncate">{{ user?.email }}</div>
+            </div>
+          </div>
+
+          <!-- Student Menu Items -->
+          <div class="border-b border-gray-100 py-2">
+            <a routerLink="/student" class="block px-4 py-2 hover:bg-gray-50 text-sm text-gray-700">My learning</a>
+            <a routerLink="/certificates" class="block px-4 py-2 hover:bg-gray-50 text-sm text-gray-700">My
+              certificates</a>
+          </div>
+
+          <div class="py-2">
+            <button (click)="logout()" class="w-full text-left px-4 py-2 hover:bg-gray-50 text-sm text-gray-700">Log
+              out</button>
+          </div>
+        </div>
+      </div>
+    </nav>
   </div>
 </header>

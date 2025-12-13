@@ -4,19 +4,19 @@
       <div class="w-12 h-12 rounded-lg bg-[#0E4D67] text-white flex items-center justify-center text-xl font-bold">T
       </div>
       <div>
-        <h1 class="text-2xl font-bold">مرحبًا بكم في مستقبل تِك</h1>
-        <p class="text-sm text-gray-500">سجّل دخولك للمتابعة إلى المنصة</p>
+        <h1 class="text-2xl font-bold">Welcome to Future Tech</h1>
+        <p class="text-sm text-gray-500">Log in to continue to the platform</p>
       </div>
     </div>
 
     <form (ngSubmit)="login()" class="space-y-4">
       <div>
-        <label class="block text-sm mb-1">البريد الإلكتروني</label>
+        <label class="block text-sm mb-1">Email</label>
         <input [(ngModel)]="email" name="email" type="email" required class="w-full border rounded px-3 py-2" />
       </div>
 
       <div>
-        <label class="block text-sm mb-1">كلمة المرور</label>
+        <label class="block text-sm mb-1">Password</label>
         <input [(ngModel)]="password" name="password" type="password" required
           class="w-full border rounded px-3 py-2" />
       </div>
@@ -24,18 +24,17 @@
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
           <input id="remember" type="checkbox" class="w-4 h-4" />
-          <label for="remember" class="text-sm text-gray-600">تذكرني</label>
+          <label for="remember" class="text-sm text-gray-600">Remember me</label>
         </div>
-        <a class="text-sm text-blue-600" routerLink="/register">لا تملك حساب؟ سجل الآن</a>
+        <a class="text-sm text-blue-600" routerLink="/register">Don't have an account? Register now</a>
       </div>
 
       <div class="flex gap-3">
         <button type="submit"
-          class="flex-1 bg-[#0E4D67] hover:bg-[#0a3d52] active:bg-[#083344] text-white px-4 py-2 rounded transition-colors cursor-pointer">تسجيل
-          الدخول</button>
+          class="flex-1 bg-[#0E4D67] hover:bg-[#0a3d52] active:bg-[#083344] text-white px-4 py-2 rounded transition-colors cursor-pointer">Login</button>
         <button type="button" (click)="guest()"
-          class="flex-1 bg-gray-100 hover:bg-gray-200 active:bg-gray-300 px-4 py-2 rounded transition-colors cursor-pointer">دخول
-          كزائر</button>
+          class="flex-1 bg-gray-100 hover:bg-gray-200 active:bg-gray-300 px-4 py-2 rounded transition-colors cursor-pointer text-gray-700">Browse
+          as Guest</button>
       </div>
     </form>
 

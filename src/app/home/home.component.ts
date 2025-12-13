@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit {
     private auth: AuthService,
     private studentService: StudentService,
     private instructorService: InstructorService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // load featured courses always

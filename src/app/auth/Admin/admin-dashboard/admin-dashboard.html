@@ -1,351 +1,112 @@
-<div dir="rtl" class="min-h-screen bg-gray-50 text-right font-sans">
-  <!-- Header -->
-  <app-role-header></app-role-header>
-  
-  <div class="flex">
-    <app-sidebar></app-sidebar>
-    <div class="flex-1 p-4 sm:p-8">
-            
-            <div class="mb-8 pb-4 border-b border-gray-200 flex flex-col sm:flex-row items-start sm:items-center justify-between">
+<div class="min-h-screen bg-gray-50 font-sans">
+    <!-- Header -->
+    <app-role-header></app-role-header>
+
+    <div class="flex">
+        <app-sidebar></app-sidebar>
+        <div class="flex-1 p-4 sm:p-8">
+
+            <div
+                class="mb-8 pb-4 border-b border-gray-200 flex flex-col sm:flex-row items-start sm:items-center justify-between">
                 <div>
                     <h1 class="text-3xl font-extrabold text-gray-900 flex items-center gap-2">
-                        لوحة المشرف ✨
+                        Admin Dashboard ✨
                     </h1>
-                    <p class="text-base text-gray-500 mt-1">إدارة النظام، المستخدمين، والدورات التعليمية.</p>
+                    <p class="text-base text-gray-500 mt-1">Manage system, users, and courses.</p>
                 </div>
             </div>
 
             <div class="flex flex-col items-center mb-12">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-7xl">
-                    
+
                     <div
                         class="bg-white rounded-3xl shadow-xl p-6 flex items-center justify-between border-t-4 border-purple-600 transform hover:shadow-2xl transition-all duration-300">
                         <div>
-                            <p class="text-sm text-gray-500 mb-2">إجمالي الطلاب</p>
-                            <p class="text-4xl font-extrabold text-gray-900">{{ totalStudents || 0 }}</p>
-                            <p class="text-xs text-green-600 mt-2 font-medium bg-green-50 p-1 rounded-md inline-block">تسجيلات جديدة: {{ totalEnrollments || 0 }}</p>
+                            <p class="text-sm text-gray-500 mb-2">Total Students</p>
+                            <p class="text-4xl font-extrabold text-gray-900">{{ stats.totalStudents || 0 }}</p>
+                            <p class="text-xs text-green-600 mt-2 font-medium bg-green-50 p-1 rounded-md inline-block">
+                                {{ stats.activeStudents || 0 }} Active</p>
                         </div>
-                        <div class="w-16 h-16 rounded-full bg-purple-100 text-purple-600 grid place-items-center text-3xl shadow-inner">
+                        <div
+                            class="w-16 h-16 rounded-full bg-purple-100 text-purple-600 grid place-items-center text-3xl shadow-inner">
                             <i class="fas fa-user-graduate"></i>
-                            </div>
+                        </div>
                     </div>
 
                     <div
-                        class="bg-white rounded-3xl shadow-xl p-6 flex items-center justify-between border-t-4 border-blue-600 transform hover:shadow-2xl transition-all duration-300">
+                        class="bg-white rounded-3xl shadow-xl p-6 flex items-center justify-between border-t-4 border-[#0E4D67] transform hover:shadow-2xl transition-all duration-300">
                         <div>
-                            <p class="text-sm text-gray-500 mb-2">إجمالي المدربين</p>
-                            <p class="text-4xl font-extrabold text-gray-900">{{ totalInstructors || 0 }}</p>
-                            <p class="text-xs text-blue-600 mt-2 font-medium bg-blue-50 p-1 rounded-md inline-block">مدربين نشطين</p>
+                            <p class="text-sm text-gray-500 mb-2">Total Instructors</p>
+                            <p class="text-4xl font-extrabold text-gray-900">{{ stats.totalTeachers || 0 }}</p>
+                            <p
+                                class="text-xs text-[#0E4D67] mt-2 font-medium bg-[#0E4D67]/10 p-1 rounded-md inline-block">
+                                {{ stats.activeTeachers || 0 }} Available</p>
                         </div>
-                        <div class="w-16 h-16 rounded-full bg-blue-100 text-blue-600 grid place-items-center text-3xl shadow-inner">
+                        <div
+                            class="w-16 h-16 rounded-full bg-[#0E4D67]/10 text-[#0E4D67] grid place-items-center text-3xl shadow-inner">
                             <i class="fas fa-chalkboard-teacher"></i>
-                            </div>
+                        </div>
                     </div>
 
                     <div
                         class="bg-white rounded-3xl shadow-xl p-6 flex items-center justify-between border-t-4 border-yellow-600 transform hover:shadow-2xl transition-all duration-300">
                         <div>
-                            <p class="text-sm text-gray-500 mb-2">إجمالي الدورات</p>
+                            <p class="text-sm text-gray-500 mb-2">Total Courses</p>
                             <p class="text-4xl font-extrabold text-gray-900">{{ totalCourses || 0 }}</p>
-                            <p class="text-xs text-yellow-600 mt-2 font-medium bg-yellow-50 p-1 rounded-md inline-block">دورات متاحة حاليًا</p>
+                            <p
+                                class="text-xs text-yellow-600 mt-2 font-medium bg-yellow-50 p-1 rounded-md inline-block">
+                                Active Courses</p>
                         </div>
-                        <div class="w-16 h-16 rounded-full bg-yellow-100 text-yellow-600 grid place-items-center text-3xl shadow-inner">
+                        <div
+                            class="w-16 h-16 rounded-full bg-yellow-100 text-yellow-600 grid place-items-center text-3xl shadow-inner">
                             <i class="fas fa-book-open"></i>
-                            </div>
+                        </div>
                     </div>
 
                     <div
                         class="bg-white rounded-3xl shadow-xl p-6 flex items-center justify-between border-t-4 border-green-600 transform hover:shadow-2xl transition-all duration-300">
                         <div>
-                            <p class="text-sm text-gray-500 mb-2">إجمالي التسجيلات</p>
+                            <p class="text-sm text-gray-500 mb-2">Total Enrollments</p>
                             <p class="text-4xl font-extrabold text-gray-900">{{ totalEnrollments || 0 }}</p>
-                            <p class="text-xs text-green-600 mt-2 font-medium bg-green-50 p-1 rounded-md inline-block">إجمالي عمليات التسجيل</p>
+                            <p class="text-xs text-green-600 mt-2 font-medium bg-green-50 p-1 rounded-md inline-block">
+                                All Enrollments</p>
                         </div>
-                        <div class="w-16 h-16 rounded-full bg-green-100 text-green-600 grid place-items-center text-3xl shadow-inner">
+                        <div
+                            class="w-16 h-16 rounded-full bg-green-100 text-green-600 grid place-items-center text-3xl shadow-inner">
                             <i class="fas fa-clipboard-list"></i>
-                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <hr class="my-8 border-gray-200">
 
+
+
+            <!-- Management Tools -->
             <div class="flex justify-start gap-4 mb-12 max-w-7xl mx-auto flex-wrap">
-                <a routerLink="/admin/manage"
-                   class="px-6 py-3 bg-red-600 text-white font-medium rounded-xl hover:bg-red-700 transition-colors duration-200 shadow-lg shadow-red-500/50 flex items-center gap-2">
-                    <i class="fas fa-user-shield"></i> إدارة المشرفين
-                </a>
-                <a routerLink="/courses/new"
-                   class="px-6 py-3 bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-700 transition-colors duration-200 shadow-lg shadow-indigo-500/50 flex items-center gap-2">
-                    <i class="fas fa-plus-circle"></i> أضف دورة جديدة
-                </a>
-                <button (click)="createNewExam()"
-                   class="px-6 py-3 bg-green-600 text-white font-medium rounded-xl hover:bg-green-700 transition-colors duration-200 shadow-lg shadow-green-500/50 flex items-center gap-2">
-                    <i class="fas fa-edit"></i> أنشئ اختبارًا جديدًا
+                <button routerLink="/students"
+                    class="px-6 py-3 bg-[#0E4D67] text-white font-medium rounded-xl hover:bg-[#0c3d52] transition-colors duration-200 shadow-lg shadow-[#0E4D67]/50 flex items-center gap-2">
+                    <i class="pi pi-users"></i> Manage Students
                 </button>
-                <a routerLink="/certificates/new"
-                   class="px-6 py-3 bg-yellow-600 text-white font-medium rounded-xl hover:bg-yellow-700 transition-colors duration-200 shadow-lg shadow-yellow-500/50 flex items-center gap-2">
-                    <i class="fas fa-medal"></i> إنشاء شهادة
-                </a>
+
+                <button routerLink="/instructors"
+                    class="px-6 py-3 bg-green-600 text-white font-medium rounded-xl hover:bg-green-700 transition-colors duration-200 shadow-lg shadow-green-500/50 flex items-center gap-2">
+                    <i class="pi pi-user-edit"></i> Manage Instructors
+                </button>
+
+                <button routerLink="/courses"
+                    class="px-6 py-3 bg-purple-600 text-white font-medium rounded-xl hover:bg-purple-700 transition-colors duration-200 shadow-lg shadow-purple-500/50 flex items-center gap-2">
+                    <i class="pi pi-book"></i> Manage Courses
+                </button>
+
+                <button (click)="createNewExam()"
+                    class="px-6 py-3 bg-amber-600 text-white font-medium rounded-xl hover:bg-amber-700 transition-colors duration-200 shadow-lg shadow-amber-500/50 flex items-center gap-2">
+                    <i class="pi pi-file-edit"></i> Manage Exams
+                </button>
             </div>
-            <div class="max-w-7xl mx-auto mb-12">
-                <div class="bg-white rounded-2xl shadow-xl p-6 border border-gray-100">
-                    <div class="flex items-center justify-between mb-5 border-b pb-3 border-gray-100">
-                        <div>
-                            <h3 class="text-2xl font-bold text-gray-800 flex items-center gap-2">📈 اتجاه التسجيلات</h3>
-                            <p class="text-sm text-gray-500 mt-1">معدل التسجيلات الجديدة (آخر 6 أشهر)</p>
-                        </div>
-                        <div class="text-lg font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-lg">المجموع: {{ totalEnrollments || 0 }}</div>
-                    </div>
 
-                    <div class="p-4">
-                        <app-trend-chart [data]="enrollmentTrend" [labels]="trendLabels" [width]="640"
-                                         [height]="150"></app-trend-chart>
-                    </div>
-                    </div>
-            </div>
-            <div class="grid lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
-                <section class="bg-white rounded-2xl shadow-xl p-6 border border-gray-100">
-                    <div
-                        class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-5 border-b pb-4 border-gray-100">
-                        <div>
-                            <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">قائمة الطلاب 🧑‍🎓</h2>
-                            <p class="text-sm text-gray-500 mt-1">قائمة كاملة بجميع الطلاب المسجلين</p>
-                        </div>
+        </div>
 
-                        <div class="flex items-center gap-3 mt-4 sm:mt-0 w-full sm:w-auto">
-                            <div class="relative w-full">
-                                <i class="fas fa-search absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                                <input [(ngModel)]="query" (input)="onSearch()" type="text" placeholder="بحث بالاسم أو الهاتف..."
-                                       class="border border-gray-300 rounded-xl pr-10 pl-4 py-2 w-full sm:w-64 focus:ring-indigo-500 focus:border-indigo-500 transition-all"/>
-                                <button *ngIf="query" (click)="clearSearch()"
-                                        class="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 hover:text-red-500 transition-colors">
-                                    مسح
-                                </button>
-                            </div>
-                            <button class="hidden sm:inline-block px-4 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors">تصفية</button>
-                        </div>
-                    </div>
-
-                    <div class="mb-5 flex flex-wrap gap-3 p-4 bg-indigo-50 rounded-xl border border-indigo-200">
-                        <input [(ngModel)]="newStudentName" placeholder="اسم الطالب الكامل"
-                               class="flex-1 border border-indigo-300 rounded-lg px-3 py-2 min-w-[150px] focus:ring-indigo-500 focus:border-indigo-500"/>
-                        <input [(ngModel)]="newStudentEmail" placeholder="البريد الإلكتروني" type="email"
-                               class="flex-1 border border-indigo-300 rounded-lg px-3 py-2 min-w-[150px] focus:ring-indigo-500 focus:border-indigo-500"/>
-                        <button (click)="addStudent()"
-                                class="px-5 py-2 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors shadow-md">
-                            <i class="fas fa-user-plus ml-1"></i> أضف طالب
-                        </button>
-                    </div>
-
-                    <div class="overflow-x-auto rounded-lg border border-gray-200">
-                        <table class="w-full text-sm table-auto border-collapse">
-                            <thead>
-                            <tr class="bg-indigo-600 text-white uppercase text-xs">
-                                <th class="p-3 font-semibold rounded-tr-lg">ID</th>
-                                <th class="p-3 font-semibold">اسم الطالب</th>
-                                <th class="p-3 font-semibold">الهاتف</th>
-                                <th class="p-3 font-semibold">الدورات</th>
-                                <th class="p-3 font-semibold">تاريخ الانضمام</th>
-                                <th class="p-3 font-semibold rounded-tl-lg">إجراء</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr *ngFor="let s of pagedStudents" class="border-b border-gray-100 even:bg-indigo-50 hover:bg-indigo-100 transition-colors">
-                                <td class="p-3 text-center text-gray-600">{{ s.id }}</td>
-                                <td class="p-3 font-medium text-gray-800 whitespace-nowrap">{{ s.name }}</td>
-                                <td class="p-3 text-gray-600">{{ s.phone }}</td>
-                                <td class="p-3 text-center text-indigo-700 font-bold">{{ s.enrolledCourseIds?.length || 0 }}</td>
-                                <td class="p-3 text-gray-500 whitespace-nowrap">{{ s.joinDate }}</td>
-                                <td class="p-3">
-                                    <div class="flex gap-2 justify-center">
-                                        <button (click)="goToStudent(s.id)"
-                                                class="px-3 py-1 text-xs bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors font-medium">
-                                            <i class="fas fa-eye"></i> عرض
-                                        </button>
-                                        <button (click)="deleteStudent(s.id)"
-                                                class="px-3 py-1 text-xs bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors shadow-sm">
-                                            <i class="fas fa-trash-alt"></i> حذف
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr *ngIf="!pagedStudents || pagedStudents.length === 0">
-                                <td colspan="6" class="p-5 text-center text-gray-500">لا يوجد طلاب مطابقون لنتائج البحث.</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="flex items-center justify-between mt-5 pt-3 border-t border-gray-100">
-                        <div class="text-sm text-gray-600 font-medium">إجمالي الطلاب: <span
-                            class="font-bold text-gray-800">{{ filteredStudents.length }}</span></div>
-                        <div class="flex items-center gap-2">
-                            <button (click)="prevPage()" [disabled]="page === 1"
-                                    class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg disabled:opacity-50 hover:bg-gray-200 transition-colors flex items-center gap-1">
-                                <i class="fas fa-arrow-right"></i> السابق
-                            </button>
-                            <div class="px-3 py-2 text-sm font-bold text-gray-800 border border-gray-300 rounded-lg bg-white">الصفحة: {{ page }}
-                                من {{ totalPages() }}
-                            </div>
-                            <button (click)="nextPage()" [disabled]="page === totalPages()"
-                                    class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg disabled:opacity-50 hover:bg-gray-200 transition-colors flex items-center gap-1">
-                                التالي <i class="fas fa-arrow-left"></i>
-                            </button>
-                        </div>
-                    </div>
-                    </section>
-                <section class="bg-white rounded-2xl shadow-xl p-6 border border-gray-100">
-                    <div
-                        class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-5 border-b pb-4 border-gray-100">
-                        <div>
-                            <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">قائمة المدربين 👨‍🏫</h2>
-                            <p class="text-sm text-gray-500 mt-1">عرض سريع لجميع المدربين والمشرفين</p>
-                        </div>
-                        <div class="flex items-center gap-3 mt-4 sm:mt-0 w-full sm:w-auto">
-                            <input [(ngModel)]="instructorQuery" (input)="onInstructorSearch()" placeholder="بحث بالاسم..."
-                                   class="border border-gray-300 rounded-xl px-4 py-2 w-full sm:w-48 focus:ring-blue-500 focus:border-blue-500 transition-all"/>
-                            <button (click)="onInstructorSearch()"
-                                    class="hidden sm:inline-block px-4 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors">تصفية
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="mb-5 flex flex-wrap gap-3 p-4 bg-blue-50 rounded-xl border border-blue-200">
-                        <input [(ngModel)]="newInstructorName" placeholder="اسم المدرب الكامل"
-                               class="flex-1 border border-blue-300 rounded-lg px-3 py-2 min-w-[150px] focus:ring-blue-500 focus:border-blue-500"/>
-                        <input [(ngModel)]="newInstructorEmail" placeholder="البريد الإلكتروني" type="email"
-                               class="flex-1 border border-blue-300 rounded-lg px-3 py-2 min-w-[150px] focus:ring-blue-500 focus:border-blue-500"/>
-                        <button (click)="addInstructor()"
-                                class="px-5 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-md">
-                            <i class="fas fa-user-plus ml-1"></i> أضف مدرب
-                        </button>
-                    </div>
-
-                    <div class="overflow-x-auto rounded-lg border border-gray-200">
-                        <table class="w-full text-sm table-auto border-collapse">
-                            <thead>
-                            <tr class="bg-blue-600 text-white uppercase text-xs">
-                                <th class="p-3 font-semibold rounded-tr-lg">ID</th>
-                                <th class="p-3 font-semibold">الاسم</th>
-                                <th class="p-3 font-semibold">البريد الإلكتروني</th>
-                                <th class="p-3 font-semibold">الدورات</th>
-                                <th class="p-3 font-semibold rounded-tl-lg">إجراء</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr *ngFor="let i of filteredInstructors"
-                                class="border-b border-gray-100 even:bg-blue-50 hover:bg-blue-100 transition-colors">
-                                <td class="p-3 text-center text-gray-600">{{ i.id }}</td>
-                                <td class="p-3 font-medium text-gray-800 whitespace-nowrap">{{ i.name }}</td>
-                                <td class="p-3 text-gray-600 truncate max-w-[150px]">{{ i.email }}</td>
-                                <td class="p-3 text-center text-blue-700 font-bold">{{ i.coursesCount || 0 }}</td>
-                                <td class="p-3">
-                                    <div class="flex gap-2 justify-center">
-                                        <button (click)="goToInstructor(i.id)"
-                                                class="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors font-medium">
-                                            <i class="fas fa-eye"></i> عرض
-                                        </button>
-                                        <button (click)="deleteInstructor(i.id)"
-                                                class="px-3 py-1 text-xs bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors shadow-sm">
-                                            <i class="fas fa-trash-alt"></i> حذف
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr *ngIf="!filteredInstructors || filteredInstructors.length === 0">
-                                <td colspan="5" class="p-5 text-center text-gray-500">لا يوجد مدربون مطابقون لنتائج البحث.</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    </section>
-                </div>
-            <hr class="my-10 border-gray-200">
-
-            <!-- Exams Section -->
-            <section class="bg-white rounded-2xl shadow-xl p-6 border border-gray-100 max-w-7xl mx-auto mb-12">
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-5 border-b pb-4 border-gray-100">
-                    <div>
-                        <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">📝 إدارة الاختبارات</h2>
-                        <p class="text-sm text-gray-500 mt-1">إدارة جميع الاختبارات في النظام</p>
-                    </div>
-                    <div class="flex items-center gap-3 mt-4 sm:mt-0 w-full sm:w-auto">
-                        <div class="relative w-full">
-                            <i class="fas fa-search absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                            <input [(ngModel)]="examQuery" (input)="onExamSearch()" type="text" placeholder="بحث بالعنوان..."
-                                   class="border border-gray-300 rounded-xl pr-10 pl-4 py-2 w-full sm:w-64 focus:ring-green-500 focus:border-green-500 transition-all"/>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="overflow-x-auto rounded-lg border border-gray-200">
-                    <table class="w-full text-sm table-auto border-collapse">
-                        <thead>
-                        <tr class="bg-green-600 text-white uppercase text-xs">
-                            <th class="p-3 font-semibold rounded-tr-lg text-right">العنوان</th>
-                            <th class="p-3 font-semibold text-right">الوصف</th>
-                            <th class="p-3 font-semibold text-center">عدد الأسئلة</th>
-                            <th class="p-3 font-semibold text-center">المدة (دقيقة)</th>
-                            <th class="p-3 font-semibold text-center">الدرجة</th>
-                            <th class="p-3 font-semibold rounded-tl-lg text-center">إجراء</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr *ngFor="let exam of filteredExams" class="border-b border-gray-100 even:bg-green-50 hover:bg-green-100 transition-colors">
-                            <td class="p-3 font-medium text-gray-800">{{ exam.title }}</td>
-                            <td class="p-3 text-gray-600 truncate max-w-[200px]">{{ exam.description || '-' }}</td>
-                            <td class="p-3 text-center text-green-700 font-bold">{{ (exam.questions || []).length }}</td>
-                            <td class="p-3 text-center text-gray-600">{{ exam.duration || '-' }}</td>
-                            <td class="p-3 text-center text-gray-600 font-semibold">{{ exam.totalScore || '-' }}</td>
-                            <td class="p-3">
-                                <div class="flex gap-2 justify-center">
-                                    <button (click)="viewExamDetails(exam.id)"
-                                            class="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors font-medium">
-                                        <i class="fas fa-eye"></i> عرض
-                                    </button>
-                                    <button (click)="editExam(exam.id)"
-                                            class="px-3 py-1 text-xs bg-yellow-100 text-yellow-700 rounded-lg hover:bg-yellow-200 transition-colors font-medium">
-                                        <i class="fas fa-edit"></i> تعديل
-                                    </button>
-                                    <button (click)="deleteExam(exam.id)"
-                                            class="px-3 py-1 text-xs bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors shadow-sm">
-                                        <i class="fas fa-trash-alt"></i> حذف
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr *ngIf="!filteredExams || filteredExams.length === 0">
-                            <td colspan="6" class="p-5 text-center text-gray-500">لا يوجد اختبارات متطابقة.</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="flex items-center justify-between mt-5 pt-3 border-t border-gray-100">
-                    <div class="text-sm text-gray-600 font-medium">إجمالي الاختبارات: <span
-                        class="font-bold text-gray-800">{{ totalExams }}</span></div>
-                    <button (click)="createNewExam()"
-                            class="px-5 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors shadow-md flex items-center gap-2">
-                        <i class="fas fa-plus-circle"></i> إنشاء اختبار جديد
-                    </button>
-                </div>
-            </section>
-
-            <hr class="my-10 border-gray-200">
-
-            <footer class="text-center py-4 text-sm text-gray-500">
-                <p>&copy; 2025 نظام إدارة التعليم الإلكتروني. جميع الحقوق محفوظة.</p>
-                <p class="mt-1">تم التصميم بـ Tailwind CSS</p>
-            </footer>
+        <!-- Exam Form Modal -->
+        <app-exam-form-modal *ngIf="showExamModal" (close)="closeExamModal()" (success)="onExamFormSuccess()">
+        </app-exam-form-modal>
     </div>
-  </div>
-
-  <!-- Footer -->
-  <app-footer></app-footer>
-
-  <!-- Exam Form Modal -->
-  <app-exam-form-modal 
-    *ngIf="showExamModal"
-    (close)="closeExamModal()"
-    (success)="onExamFormSuccess()">
-  </app-exam-form-modal>
-</div>

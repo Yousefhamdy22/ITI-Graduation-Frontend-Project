@@ -22,7 +22,7 @@ export class StudentsComponent implements OnInit {
 
   query = { search: '' };
 
-  constructor(private studentService: StudentService, private auth: AuthService, private courseService: CourseService) {}
+  constructor(private studentService: StudentService, private auth: AuthService, private courseService: CourseService) { }
 
   ngOnInit(): void {
     this.loadStudents();
@@ -50,13 +50,13 @@ export class StudentsComponent implements OnInit {
 
     this.studentService.getStudents().subscribe({
       next: (students: any) => {
-        console.log('✅ الطلاب وصلوا:', students);
+        console.log('✅ Students loaded:', students);
         this.students = students;
         this.filteredStudents = students;
         this.loading = false;
       },
       error: (err: any) => {
-        console.error('❌ خطأ:', err);
+        console.error('❌ Error:', err);
         this.loading = false;
       }
     });

@@ -3,17 +3,17 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Question, ServerResponse } from './question.model';
 
-// Hardcoded API URL - environment import not working with SSR
-const BASE_URL = 'http://localhost:5180/api/Question';
+import { environment } from '../../../environment/environment';
 
 @Injectable({ providedIn: 'root' })
 export class QuestionService {
   private http: HttpClient = inject(HttpClient);
+  private BASE_URL = `${environment.apiUrl}/api/Question`;
 
   // GET all questions - Backend returns Result<List<QuestionDto>> via Ardalis.Result
   // Auth token is added automatically by AuthInterceptor
   getQuestions(): Observable<ServerResponse<Question[]>> {
-    const url = `${BASE_URL}/GetAllQuestions`;
+    const url = `${this.BASE_URL}/GetAllQuestions`;
     console.log('🔵 getQuestions URL:', url);
     return this.http.get<ServerResponse<Question[]>>(url);
   }
@@ -41,14 +41,14 @@ export class QuestionService {
       }))
     );
     form.append('AnswerOptions', optionsJson);
-    
+
     // Add CourseId if provided
     if (question.courseId) {
       form.append('CourseId', question.courseId);
       console.log('🔵 Adding CourseId to question:', question.courseId);
     }
 
-    return this.http.post<Question>(`${BASE_URL}/CreateQuestion`, form);
+    return this.http.post<Question>(`${this.BASE_URL}/CreateQuestion`, form);
   }
 
   // PUT update question (multipart/form-data)
@@ -73,12 +73,12 @@ export class QuestionService {
     );
     form.append('AnswerOptions', optionsJson);
 
-    return this.http.put<ServerResponse<Question>>(`${BASE_URL}/UpdateQuestion`, form);
+    return this.http.put<ServerResponse<Question>>(`${this.BASE_URL}/UpdateQuestion`, form);
   }
 
   // DELETE question
   // Auth token is added automatically by AuthInterceptor
   deleteQuestion(id: string): Observable<ServerResponse<boolean>> {
-    return this.http.delete<ServerResponse<boolean>>(`${BASE_URL}/RemoveQuestion/${id}`);
+    return this.http.delete<ServerResponse<boolean>>(`${this.BASE_URL}/RemoveQuestion/${id}`);
   }
 }

@@ -1,19 +1,17 @@
-<div dir="rtl" class="page-wrapper text-right font-sans">
-  <!-- Header -->
-  <app-role-header></app-role-header>
-  
-    <div class="flex">
-    <app-sidebar></app-sidebar>
-        <div class="flex-1 px-4 py-4 sm:px-8 sm:py-8">
-            
-            <div class="mb-8 pb-6 border-b-2 border-primary-200 flex flex-col sm:flex-row items-start sm:items-center justify-between">
-                <div>
-                    <h1 class="page-title text-primary-700 flex items-center gap-2">
-                        <i class="fas fa-tachometer-alt"></i> لوحة المشرف
-                    </h1>
-                    <p class="page-subtitle mt-2">إدارة النظام، المستخدمين، والدورات التعليمية.</p>
+<div dir="ltr" class="page-wrapper text-left font-sans min-h-screen bg-gray-50 flex flex-col">
+    <div class="flex-1">
+        <div class="flex">
+            <app-sidebar></app-sidebar>
+            <div class="flex-1 px-4 py-6 sm:px-8 sm:py-8">
+
+                <div class="mb-8 pb-6 border-b-2 border-primary-200 flex flex-col sm:flex-row items-start sm:items-center justify-between">
+                    <div>
+                        <h1 class="page-title text-primary-700 flex items-center gap-2">
+                            <i class="fas fa-tachometer-alt"></i> Admin Dashboard
+                        </h1>
+                        <p class="page-subtitle mt-2">Manage the system, users and courses.</p>
+                    </div>
                 </div>
-            </div>
 
             <div class="flex flex-col items-center mb-12">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-7xl">
@@ -21,9 +19,9 @@
                     <div class="stat-card border-t-4 border-primary-600">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="stat-label">إجمالي الطلاب</p>
+                                <p class="stat-label">Total Students</p>
                                 <p class="stat-value text-primary-700">{{ totalStudents || 0 }}</p>
-                                <span class="badge badge-success mt-2">تسجيلات: {{ totalEnrollments || 0 }}</span>
+                                <span class="badge badge-success mt-2">Enrollments: {{ totalEnrollments || 0 }}</span>
                             </div>
                             <div class="stat-icon bg-primary-100 text-primary-600">
                                 <i class="fas fa-user-graduate"></i>
@@ -34,9 +32,9 @@
                     <div class="stat-card border-t-4 border-secondary-600">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="stat-label">إجمالي المدربين</p>
+                                <p class="stat-label">Total Instructors</p>
                                 <p class="stat-value text-secondary-700">{{ totalInstructors || 0 }}</p>
-                                <span class="badge badge-primary mt-2">مدربين نشطين</span>
+                                <span class="badge badge-primary mt-2">Active Instructors</span>
                             </div>
                             <div class="stat-icon bg-secondary-100 text-secondary-600">
                                 <i class="fas fa-chalkboard-teacher"></i>
@@ -47,9 +45,9 @@
                     <div class="stat-card border-t-4 border-accent-info">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="stat-label">إجمالي الدورات</p>
+                                <p class="stat-label">Total Courses</p>
                                 <p class="stat-value text-indigo-700">{{ totalCourses || 0 }}</p>
-                                <span class="badge bg-indigo-100 text-indigo-700 mt-2">دورات متاحة</span>
+                                <span class="badge bg-indigo-100 text-indigo-700 mt-2">Available Courses</span>
                             </div>
                             <div class="stat-icon bg-indigo-100 text-indigo-600">
                                 <i class="fas fa-book-open"></i>
@@ -60,9 +58,9 @@
                     <div class="stat-card border-t-4 border-accent-success">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="stat-label">إجمالي التسجيلات</p>
+                                <p class="stat-label">Total Enrollments</p>
                                 <p class="stat-value text-green-700">{{ totalEnrollments || 0 }}</p>
-                                <span class="badge badge-success mt-2">عمليات التسجيل</span>
+                                <span class="badge badge-success mt-2">Enrollment Actions</span>
                             </div>
                             <div class="stat-icon bg-green-100 text-green-600">
                                 <i class="fas fa-clipboard-list"></i>
@@ -74,12 +72,12 @@
             <hr class="my-8 border-gray-200">
 
             <div class="flex flex-col sm:flex-row justify-start gap-3 sm:gap-4 mb-12 max-w-7xl mx-auto flex-wrap">
-                <a routerLink="/admin/manage"
-                   class="btn btn-danger w-full sm:w-auto px-6 py-3 flex items-center justify-center sm:justify-start gap-2">
-                    <i class="fas fa-user-shield"></i> إدارة المشرفين
-                </a>
-                <a routerLink="/courses/new"
-                   class="btn btn-info w-full sm:w-auto px-6 py-3 flex items-center justify-center sm:justify-start gap-2">
+                     <a routerLink="/admin/manage"
+                         class="btn btn-danger w-full sm:w-auto px-6 py-3 flex items-center justify-center sm:justify-start gap-2">
+                        <i class="fas fa-user-shield"></i> Manage Admins
+                     </a>
+                     <a routerLink="/courses/new"
+                         class="btn btn-info w-full sm:w-auto px-6 py-3 flex items-center justify-center sm:justify-start gap-2">
                     <i class="fas fa-plus-circle"></i> أضف دورة جديدة
                 </a>
                 <button (click)="createNewExam()"

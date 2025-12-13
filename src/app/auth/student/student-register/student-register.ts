@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ToastService } from '../../../shared/toast.service';
 import { RoleHeaderComponent } from '../../../core/header/role-header.component';
+import { FooterComponent } from '../../../core/footer/footer.component';
 
 @Component({
   selector: 'app-student-register',
@@ -12,7 +13,8 @@ import { RoleHeaderComponent } from '../../../core/header/role-header.component'
     FormsModule,
     ReactiveFormsModule,
     CommonModule,
-    RoleHeaderComponent
+    RoleHeaderComponent,
+    FooterComponent
   ],
   templateUrl: './student-register.html',
   styleUrl: './student-register.scss',

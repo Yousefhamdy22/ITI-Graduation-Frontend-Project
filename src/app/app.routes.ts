@@ -8,6 +8,13 @@ export const routes: Routes = [
     loadComponent: () => import('./home/home-wrapper.component').then(m => m.HomeWrapperComponent),
   },
 
+  // Payment page (client-side simulated flow)
+  {
+    path: 'payment',
+    loadComponent: () => import('./entities/payments/payment.component').then(m => m.PaymentComponent),
+  },
+
+
   // Login page
   {
     path: 'login',
@@ -244,6 +251,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./entities/certificates/certificate-form/certificate-form.component')
             .then(m => m.CertificateFormComponent),
+        data: { roles: ['admin', 'instructor'] },
+        canActivate: [
+          () => import('./auth/auth.guard').then(m => m.AuthGuard as any),
+          () => import('./auth/role.guard').then(m => m.RoleGuard as any)
+        ],
       },
       {
         path: ':id',
@@ -273,9 +285,22 @@ export const routes: Routes = [
   },
   {
     path: 'instructor',
-    loadComponent: () => import('./auth/instructor/instructor-dashboard/instructor-dashboard').then(m => m.InstructorDashboard),
     data: { role: 'instructor' },
     canActivate: [() => import('./auth/role.guard').then(m => m.RoleGuard as any)],
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./auth/instructor/instructor-dashboard/instructor-dashboard').then(m => m.InstructorDashboard),
+      },
+      {
+        path: 'courses',
+        loadComponent: () => import('./entities/courses/courses.component').then(m => m.CoursesComponent),
+      },
+      {
+        path: 'students',
+        loadComponent: () => import('./entities/students/students.component').then(m => m.StudentsComponent),
+      },
+    ],
   },
 
   // Page not found / errors

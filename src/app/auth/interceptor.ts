@@ -34,10 +34,20 @@ export class AuthInterceptor implements HttpInterceptor {
 
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
-        // Handle 404 Not Found errors
+        // Only redirect to not-found for navigation-level 404s (HTML requests, lazy-loaded chunks)
+        // Don't redirect for regular API 404s (like missing backend endpoints)
         if (error.status === 404 && isPlatformBrowser(this.platformId)) {
-          console.warn('⚠️ 404 Not Found - redirecting to not-found page');
-          this.router.navigate(['/not-found'], { skipLocationChange: false });
+          const isNavigationRequest = 
+            authReq.url.endsWith('.html') || 
+            authReq.url.includes('chunk') ||
+            error.message.includes('lazy') ||
+            error.statusText === 'Not Found' && !authReq.url.includes('/api/');
+          
+          if (isNavigationRequest) {
+            console.warn('⚠️ 404 Not Found (navigation) - redirecting to not-found page');
+            this.router.navigate(['/not-found'], { skipLocationChange: false });
+          }
+          // For API 404s, just pass the error through - let components handle it
         }
         
         // If unauthorized and we have a refresh token, try to refresh

@@ -1,15 +1,94 @@
-<div class="fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
-  <!-- Admin Header -->
-  <app-admin-header *ngIf="snapshotUser?.role === 'admin'" [user]="snapshotUser"></app-admin-header>
-  
-  <!-- Instructor Header -->
-  <app-instructor-header *ngIf="snapshotUser?.role === 'instructor'" [user]="snapshotUser"></app-instructor-header>
-  
-  <!-- Student Header -->
-  <app-student-header *ngIf="snapshotUser?.role === 'student'" [user]="snapshotUser"></app-student-header>
-  
-  <!-- Guest/Public Header (when not logged in) -->
-  <app-public-header *ngIf="!snapshotUser"></app-public-header>
+<!-- Modern Gradient Header with Glass Effect -->
+<div class="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-primary-600 via-primary-500 to-secondary-600 shadow-lg-blue backdrop-blur-md border-b border-white/10">
+  <div class="app-container flex items-center justify-between py-4 px-4">
+    <!-- Modern Logo with Animation -->
+    <a [routerLink]="getHomeRoute()" class="flex items-center gap-3 font-bold text-2xl text-white hover:scale-105 transition-transform duration-300">
+      <span class="w-12 h-12 rounded-2xl bg-gradient-to-br from-white to-gray-100 text-primary-600 flex items-center justify-center shadow-lg transform hover:rotate-12 transition-transform duration-300">
+        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
+        </svg>
+      </span>
+      <span class="hidden md:inline bg-gradient-to-r from-white to-gray-100 bg-clip-text text-transparent">مستقبل تِك</span>
+    </a>
+
+    <!-- Navigation based on role -->
+    <nav class="flex items-center gap-8 text-white font-semibold">
+      <!-- Admin Navigation -->
+      <ng-container *ngIf="snapshotUser?.role === 'admin'">
+        <a routerLink="/admin" routerLinkActive="bg-white/20 border-b-2 border-white" 
+           class="px-4 py-2 rounded-lg hover:bg-white/15 transition-all duration-300">لوحة التحكم</a>
+        <a routerLink="/admin/instructors" routerLinkActive="bg-white/20 border-b-2 border-white" 
+           class="px-4 py-2 rounded-lg hover:bg-white/15 transition-all duration-300">المدربين</a>
+        <a routerLink="/admin/students" routerLinkActive="bg-white/20 border-b-2 border-white" 
+           class="px-4 py-2 rounded-lg hover:bg-white/15 transition-all duration-300">الطلاب</a>
+        <a routerLink="/admin/courses" routerLinkActive="bg-white/20 border-b-2 border-white" 
+           class="px-4 py-2 rounded-lg hover:bg-white/15 transition-all duration-300">الكورسات</a>
+      </ng-container>
+
+      <!-- Instructor Navigation -->
+      <ng-container *ngIf="snapshotUser?.role === 'instructor'">
+        <a routerLink="/instructor" routerLinkActive="bg-white/20 border-b-2 border-white" 
+           class="px-4 py-2 rounded-lg hover:bg-white/15 transition-all duration-300">الرئيسية</a>
+        <a routerLink="/instructor/courses" routerLinkActive="bg-white/20 border-b-2 border-white" 
+           class="px-4 py-2 rounded-lg hover:bg-white/15 transition-all duration-300">كورساتي</a>
+        <a routerLink="/instructor/students" routerLinkActive="bg-white/20 border-b-2 border-white" 
+           class="px-4 py-2 rounded-lg hover:bg-white/15 transition-all duration-300">الطلاب</a>
+      </ng-container>
+
+      <!-- Student Navigation -->
+      <ng-container *ngIf="snapshotUser?.role === 'student'">
+        <a routerLink="/student" routerLinkActive="bg-white/20 border-b-2 border-white" 
+           class="px-4 py-2 rounded-lg hover:bg-white/15 transition-all duration-300">الرئيسية</a>
+        <a routerLink="/courses" routerLinkActive="bg-white/20 border-b-2 border-white" 
+           class="px-4 py-2 rounded-lg hover:bg-white/15 transition-all duration-300">الكورسات</a>
+        <a routerLink="/instructors" routerLinkActive="bg-white/20 border-b-2 border-white" 
+           class="px-4 py-2 rounded-lg hover:bg-white/15 transition-all duration-300">المدربون</a>
+      </ng-container>
+
+      <!-- Public/Guest Navigation -->
+      <ng-container *ngIf="!snapshotUser">
+        <a routerLink="/" routerLinkActive="bg-white/20 border-b-2 border-white" [routerLinkActiveOptions]="{exact: true}" 
+           class="px-4 py-2 rounded-lg hover:bg-white/15 transition-all duration-300">الرئيسية</a>
+        <a routerLink="/courses" routerLinkActive="bg-white/20 border-b-2 border-white" 
+           class="px-4 py-2 rounded-lg hover:bg-white/15 transition-all duration-300">الكورسات</a>
+        <a routerLink="/instructors" routerLinkActive="bg-white/20 border-b-2 border-white" 
+           class="px-4 py-2 rounded-lg hover:bg-white/15 transition-all duration-300">المدربين</a>
+      </ng-container>
+    </nav>
+
+    <!-- User Actions with Modern Style -->
+    <div class="flex items-center gap-3">
+      <!-- If logged in -->
+      <ng-container *ngIf="snapshotUser">
+        <div class="text-sm text-white bg-white/15 px-5 py-2.5 rounded-xl backdrop-blur-md border border-white/20 shadow-inner-light">
+          <span class="opacity-80">مرحبًا،</span> <span class="font-bold">{{ snapshotUser.name || 'مستخدم' }}</span>
+        </div>
+        <button (click)="logout()" 
+                class="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 
+                       text-white px-5 py-2.5 rounded-xl transition-all duration-300 shadow-lg 
+                       hover:shadow-xl active:scale-95 font-semibold">
+          خروج
+        </button>
+      </ng-container>
+
+      <!-- If NOT logged in -->
+      <ng-container *ngIf="!snapshotUser">
+        <a routerLink="/login" 
+           class="bg-white text-primary-600 px-5 py-2.5 rounded-xl hover:bg-gray-50 
+                  transition-all duration-300 shadow-lg hover:shadow-xl font-semibold 
+                  hover:scale-105 active:scale-95">
+          دخول طالب
+        </a>
+        <a routerLink="/instructor-login" 
+           class="bg-white/15 backdrop-blur-md border-2 border-white/30 text-white 
+                  px-5 py-2.5 rounded-xl hover:bg-white/20 hover:border-white/50
+                  transition-all duration-300 shadow-lg font-semibold
+                  hover:scale-105 active:scale-95">
+          دخول مدرب
+        </a>
+      </ng-container>
+    </div>
+  </div>
 </div>
 
 <app-toast-container></app-toast-container>

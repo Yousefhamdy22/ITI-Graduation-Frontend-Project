@@ -1,7 +1,6 @@
 <section class="rtl:text-right min-h-screen bg-gray-50 flex flex-col" dir="rtl">
-  <app-role-header></app-role-header>
 
-  <div class="flex-1 pt-20">
+  <div class="flex-1 pt-6">
     <!-- ====================== -->
     <!-- 1) Loading State       -->
     <!-- ====================== -->
@@ -207,11 +206,11 @@
                 </div>
               </div>
 
-              <button *ngIf="!isInstructor && auth.currentUser?.role === 'student'" (click)="toggleEnroll()"
+              <button *ngIf="!isInstructor && auth.currentUser?.role === 'student'" (click)="goToPayment()"
                 class="btn-primary w-full py-4 text-lg mb-3">
                 {{ enrolled ? 'إلغاء التسجيل' : 'اشترك الآن' }}
               </button>
-              <button *ngIf="!isInstructor && !auth.currentUser" (click)="toggleEnroll()"
+              <button *ngIf="!isInstructor && !auth.currentUser" (click)="goToPayment()"
                 class="btn-primary w-full py-4 text-lg mb-3">اشترك الآن</button>
 
               <div *ngIf="isInstructor" class="mt-4 border-t pt-4">

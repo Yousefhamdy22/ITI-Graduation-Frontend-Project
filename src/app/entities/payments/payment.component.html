@@ -1,0 +1,33 @@
+<section class="min-h-screen app-container py-12">
+  <div class="max-w-2xl mx-auto">
+    <div class="card p-8">
+      <h2 class="text-2xl font-bold mb-4">Payment</h2>
+      <p *ngIf="price !== null" class="text-gray-700 mb-4">Course Price: <strong>{{ price }} ج.م</strong></p>
+
+      <form (ngSubmit)="submitPayment()" #f="ngForm">
+        <label class="block mb-2">Name on card</label>
+        <input name="payerName" [(ngModel)]="payerName" class="input w-full mb-4" required />
+
+        <label class="block mb-2">Card number</label>
+        <input name="cardNumber" [(ngModel)]="cardNumber" class="input w-full mb-4" required />
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block mb-2">Expiry</label>
+            <input name="expiry" [(ngModel)]="expiry" class="input w-full mb-4" required />
+          </div>
+          <div>
+            <label class="block mb-2">CVV</label>
+            <input name="cvv" [(ngModel)]="cvv" class="input w-full mb-4" required />
+          </div>
+        </div>
+
+        <div class="flex gap-3">
+          <button type="button" (click)="cancel()" class="btn-secondary">Cancel</button>
+          <button type="submit" class="btn-primary" [disabled]="processing">{{ processing ? 'Processing...' : 'Pay Now' }}</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</section>

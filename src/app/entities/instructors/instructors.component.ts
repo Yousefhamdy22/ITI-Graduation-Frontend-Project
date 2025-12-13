@@ -28,6 +28,18 @@ export class InstructorsComponent implements OnInit {
 
   loadInstructors() {
     this.loading = true;
+
+    // Avoid calling secured API when there's no auth token to prevent 401s
+    let token: string | null = null;
+    try { token = typeof window !== 'undefined' ? localStorage.getItem('token') : null; } catch {}
+    if (!token) {
+      console.warn('Skipping instructors fetch: no auth token present');
+      this.loading = false;
+      this.instructors = [];
+      this.filteredInstructors = [];
+      return;
+    }
+
     this.instructorService.getInstructors().subscribe({
       next: (instructors) => {
         console.log('✅ المدربين وصلوا:', instructors);

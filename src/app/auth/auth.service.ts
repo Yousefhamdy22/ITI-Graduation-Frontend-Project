@@ -155,14 +155,32 @@ export class AuthService {
       const refreshToken = res.refreshToken;
       const apiUser = res.user;
 
+      // Determine role from API response
+      let userRole: Role = null;
+      if (apiUser.role) {
+        const roleLower = apiUser.role.toLowerCase();
+        if (roleLower === 'admin' || roleLower === 'student' || roleLower === 'instructor') {
+          userRole = roleLower as Role;
+        }
+      }
+      
+      // Fallback: guess role from endpoint if role is missing
+      if (!userRole) {
+        console.warn('Role missing from API response, defaulting to student');
+        userRole = 'student';
+      }
+
       const user: User = {
         id: apiUser.id,
         email: apiUser.email,
         name: `${apiUser.firstName} ${apiUser.lastName}`,
         firstName: apiUser.firstName,
         lastName: apiUser.lastName,
-        role: apiUser.role.toLowerCase() as Role
+        role: userRole
       };
+
+      console.log('AuthService - Saving user:', user);
+      console.log('AuthService - User role:', user.role);
 
       if (this.isBrowser()) {
         localStorage.setItem('token', token);
@@ -181,6 +199,16 @@ export class AuthService {
     if (token && userStr) {
       try {
         const user = JSON.parse(userStr);
+        // Normalize role to lowercase to match our Role type
+        if (user.role && typeof user.role === 'string') {
+          user.role = user.role.toLowerCase();
+        }
+        // Ensure role is valid
+        if (!user.role || user.role === '') {
+          console.warn('AutoLogin: User role is empty, defaulting to student');
+          user.role = 'student';
+        }
+        console.log('AutoLogin: Restored user:', user);
         this.userSubject.next(user);
       } catch {
         this.logout();

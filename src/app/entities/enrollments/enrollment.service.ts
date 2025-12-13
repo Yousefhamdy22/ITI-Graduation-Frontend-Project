@@ -19,6 +19,11 @@ export class EnrollmentService {
         return this.http.get<EnrollmentDetails>(`${this.BASE_URL}/${id}`);
     }
 
+    // Get enrollments for a specific student
+    getEnrollmentsByStudentId(studentId: string): Observable<EnrollmentDetails[]> {
+        return this.http.get<EnrollmentDetails[]>(`${this.BASE_URL}/student/${studentId}`);
+    }
+
     // Create enrollment
     createEnrollment(studentId: string, courseId: string): Observable<any> {
         return this.http.post<any>(this.BASE_URL, {

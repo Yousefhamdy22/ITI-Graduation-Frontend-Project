@@ -32,32 +32,15 @@ export class CoursesComponent implements OnInit {
     { key: 'security', label: 'الأمن السيبراني' }
   ];
 
-  constructor(private courseService: CourseService, public auth: AuthService, private studentService: StudentService, private toast: ToastService) {}
+  constructor(private courseService: CourseService, public auth: AuthService, private studentService: StudentService, private toast: ToastService) {
+    console.log('✅ CoursesComponent loaded successfully');
+  }
 
   ngOnInit() {
+    console.log('✅ CoursesComponent ngOnInit called');
     this.loadCourses();
-    const user = this.auth.currentUser;
-    if (user && user.role === 'student') {
-      this.studentService.getStudentById(user.id).subscribe({
-        next: (s) => {
-          if (s && s.enrolledCourseIds) {
-            this.enrolledIds = new Set(s.enrolledCourseIds);
-          }
-        },
-        error: (err) => {
-          console.warn('Could not fetch student enrollments:', err);
-          this.enrolledIds = new Set();
-        }
-      });
-      // Subscribe to updates to keep enrolledIds in sync
-      this.studentService.getStudents().subscribe(list => {
-        const u = this.auth.currentUser;
-        if (u && u.role === 'student') {
-          const me = (list || []).find(x => x.id === u.id);
-          if (me && me.enrolledCourseIds) this.enrolledIds = new Set(me.enrolledCourseIds);
-        }
-      });
-    }
+    // enrolledIds is not checked here - each course page handles its own enrollment
+    // This list is just for browsing, actual enrollment happens in course-details
   }
 
   loadCourses() {
@@ -126,17 +109,8 @@ export class CoursesComponent implements OnInit {
   }
 
   toggleEnroll(courseId: string) {
-    const user = this.auth.currentUser;
-    if (!user || user.role !== 'student') { this.toast.show('سجل دخول كطالب أولاً', 'warning'); return; }
-    const enrolled = this.enrolledIds.has(courseId);
-    if (enrolled) {
-      this.studentService.unenrollStudentFromCourse(user.id, courseId);
-      this.enrolledIds.delete(courseId);
-      this.toast.show('تم إلغاء التسجيل', 'info');
-    } else {
-      this.studentService.enrollStudentInCourse(user.id, courseId);
-      this.enrolledIds.add(courseId);
-      this.toast.show('تم التسجيل في الكورس', 'success');
-    }
+    // Simply ignore - enrollment is handled in course-details page
+    // This is just for UI display purposes
+    this.toast.show('اضغط على الكورس لعرض التفاصيل والتسجيل', 'info');
   }
 }

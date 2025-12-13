@@ -88,13 +88,13 @@ export class StudentService {
     return this.getStudentById(id);
   }
 
+  // DEPRECATED: Use EnrollmentService.createEnrollment() instead
   enrollStudentInCourse(studentId: string, courseId: string): void {
-    // This should use Enrollment service instead
-    console.warn('Use EnrollmentService.createEnrollment() instead');
+    console.warn('⚠️ DEPRECATED: Use EnrollmentService.createEnrollment() instead');
   }
 
+  // DEPRECATED: Use EnrollmentService.cancelEnrollment() instead
   unenrollStudentFromCourse(studentId: string, courseId: string): void {
-    // This should use Enrollment service instead
-    console.warn('Use EnrollmentService.cancelEnrollment() instead');
+    console.warn('⚠️ DEPRECATED: Use EnrollmentService.cancelEnrollment() instead');
   }
 }

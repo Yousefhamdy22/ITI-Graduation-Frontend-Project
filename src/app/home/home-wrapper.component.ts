@@ -10,8 +10,7 @@ import { FooterComponent } from '../core/footer/footer.component';
   imports: [CommonModule, HomeComponent, RoleHeaderComponent, FooterComponent],
   template: `
     <div class="min-h-screen">
-      <app-role-header></app-role-header>
-      <div class="pt-20">
+      <div class="pt-6">
         <app-home></app-home>
       </div>
       <app-footer></app-footer>

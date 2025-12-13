@@ -16,11 +16,12 @@ import {Component} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './auth/interceptor';
+import { RoleHeaderComponent } from './core/header/role-header.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, RoleHeaderComponent],
   templateUrl: './app.html',
   providers: [
     {
